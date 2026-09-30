@@ -1,5 +1,5 @@
 /* Offline-Speicher. Bei Änderungen die Versionsnummer erhöhen. */
-var VERSION = 'pilger-1';
+var VERSION = 'pilger-2';
 var FILES = ['./', 'aussen.webp', 'bilder.js', 'garten-0.webp', 'garten-1.webp', 'garten-2.webp', 'garten-3.webp', 'icon-192.png', 'icon-512.png', 'index.html', 'kapelle-0.webp', 'kapelle-1.webp', 'kapelle-2.webp', 'kapelle-3.webp', 'kapitel-1-fatima.js', 'kapitel-2-lourdes.js', 'manifest.webmanifest', 'schiff-0.webp', 'schiff-1.webp', 'schiff-2.webp', 'schiff-3.webp', 'spiel.js', 'style.css'];
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(VERSION).then(function (c) { return c.addAll(FILES); }).then(function () { return self.skipWaiting(); }));

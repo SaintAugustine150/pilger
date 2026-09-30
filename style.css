@@ -52,7 +52,6 @@ h1,h2{line-height:1.2;margin:0;}
 .t-card .link{display:inline-block;margin-top:14px;}
 
 /* Map */
-.maphead{display:flex;flex-wrap:wrap;gap:0 12px;justify-content:space-between;align-items:center;margin-bottom:8px;}
 .chapter{font-family:'Alegreya SC','Alegreya',Georgia,serif;font-weight:700;font-size:26px;color:var(--muted);margin-top:8px;}
 .chapter span{display:block;font-size:52px;line-height:1;color:var(--azul-deep);}
 .lead{margin:12px 0 0;max-width:34em;}
@@ -325,3 +324,18 @@ h1,h2{line-height:1.2;margin:0;}
 .sheet textarea{display:block;width:100%;min-height:90px;margin-top:10px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;border:1.5px solid var(--line);border-radius:8px;padding:8px;background:var(--bg);color:var(--text);}
 .sheet .link{display:block;margin:14px auto 0;}
 .reset .btn{max-width:320px;margin:0 auto 6px;}
+/* Navigation: Zurück-Pfeil und Leiste unten */
+.back{flex:0 0 auto;display:grid;place-items:center;width:40px;height:40px;margin:-4px 0 -4px -8px;padding:0;background:none;border:0;border-radius:10px;color:#ECE5D2;cursor:pointer;}
+.back svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;}
+.back:active{background:rgba(255,255,255,.12);}
+.stagebar .back{color:var(--azul);}
+.stagebar .back:active{background:var(--line);}
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:7;background:linear-gradient(#123470,#0B2150);border-top:2px solid #B0822A;box-shadow:0 -3px 10px rgba(6,12,25,.25);padding-bottom:env(safe-area-inset-bottom,0px);}
+.tabbar-in{max-width:520px;margin:0 auto;display:flex;}
+.tb{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:58px;padding:8px 4px 7px;background:none;border:0;color:#AFC0DE;font-size:14px;font-weight:700;line-height:1.2;cursor:pointer;}
+.tb svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.tb.on{color:#F3D98E;box-shadow:inset 0 3px 0 #D9AE55;}
+.tb:active{background:rgba(255,255,255,.08);}
+.tabbar ~ .wrap{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px));}
+.overlay.ask{-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);}
+.btn.ghost.danger{border-color:var(--rot);color:var(--rot);box-shadow:0 3px 0 rgba(166,58,46,.2);}

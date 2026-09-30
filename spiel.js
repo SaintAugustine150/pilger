@@ -18,9 +18,13 @@ function save(){
 /* ---------- Hilfen ---------- */
 function shuffle(a){for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-var stopFns=[];
-function stopAll(){stopFns.forEach(function(f){try{f();}catch(e){}});stopFns=[];}
-function render(html){stopAll();app.innerHTML=html;window.scrollTo(0,0);}
+var stopFns=[],pauseFns=[];
+function stopAll(){stopFns.forEach(function(f){try{f();}catch(e){}});stopFns=[];pauseFns=[];}
+/* Pause, solange die Rückfrage beim Abbrechen offen ist */
+function onPause(p,r){pauseFns.push([p,r]);}
+function pauseGame(){pauseFns.forEach(function(f){try{f[0]();}catch(e){}});}
+function resumeGame(){pauseFns.forEach(function(f){try{f[1]();}catch(e){}});}
+function render(html){stopAll();app.innerHTML=html;window.scrollTo(0,0);if(app.querySelector('.back'))armBack();}
 
 /* ---------- Symbole ---------- */
 function starPath(cx,cy,R,r){var p='';for(var i=0;i<10;i++){var a=-Math.PI/2+i*Math.PI/5;var rad=i%2?r:R;p+=(i?'L':'M')+(cx+rad*Math.cos(a)).toFixed(1)+' '+(cy+rad*Math.sin(a)).toFixed(1);}return p+'Z';}
@@ -49,11 +53,24 @@ var IMG={},CIMG={};
 ((window.BILDER&&window.BILDER.karten)||[]).forEach(function(id){CIMG[id]='karte-'+id+'.webp';});
 
 var CARD_ICON='<svg class="cico" viewBox="0 0 16 20" aria-hidden="true"><rect x="1" y="1" width="14" height="18" rx="2"/><path d="M4.5 7 H11.5 M4.5 10 H11.5"/></svg>';
-function hud(){
+var BACK_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 L8 12 L15 19"/></svg>';
+var BACK_LABEL={title:'Zurück zum Titel',cathedral:'Zurück zur Kathedrale'};
+function hud(back){
   var n=CARD_ORDER.filter(function(id){return S.cards[id];}).length;
-  return '<div class="hud"><div class="hud-in"><span class="hud-t">Pilger durch die Zeit</span>'+
+  return '<div class="hud"><div class="hud-in">'+(back?'<button class="back" data-act="'+back+'" aria-label="'+BACK_LABEL[back]+'">'+BACK_SVG+'</button>':'')+'<span class="hud-t">Pilger durch die Zeit</span>'+
     '<span class="chip" aria-label="'+stonesTxt(S.stones||0)+'">'+STONE_SVG+'<span>'+(S.stones||0)+'</span></span>'+
     '<span class="chip" aria-label="'+n+' von '+CARD_ORDER.length+' Karten">'+CARD_ICON+'<span>'+n+'/'+CARD_ORDER.length+'</span></span></div></div>';
+}
+var NAV=[
+  ['map','Pilgerweg','<path d="M12 20 L3.5 10 A9 9 0 0 1 20.5 10 Z"/><path d="M12 20 L7.5 4.6 M12 20 L12 3.2 M12 20 L16.5 4.6"/><path d="M9 21.5 H15"/>'],
+  ['cathedral','Kathedrale','<path d="M4 21 V11 L12 5 L20 11 V21 Z"/><path d="M12 5 V1.5 M10.3 3 H13.7"/><path d="M10 21 V17 A2 2 0 0 1 14 17 V21"/>'],
+  ['album','Album','<rect x="4" y="6" width="12" height="15" rx="1.5"/><path d="M8 3 H18.5 A1.5 1.5 0 0 1 20 4.5 V18"/>']
+];
+function tabbar(active){
+  return '<nav class="tabbar" aria-label="Hauptnavigation"><div class="tabbar-in">'+NAV.map(function(x){
+    var on=x[0]===active;
+    return '<button class="tb'+(on?' on':'')+'" data-act="'+x[0]+'"'+(on?' aria-current="page"':'')+'><svg viewBox="0 0 24 24" aria-hidden="true">'+x[2]+'</svg><span>'+x[1]+'</span></button>';
+  }).join('')+'</div></nav>';
 }
 
 /* Rosettenfenster */
@@ -331,7 +348,7 @@ function showCathedral(){
       '<span class="nstat"><b>'+hint+'</b>'+l+' von '+r.steps.length+'</span></button></li>';
   }).join('');
   var fut=ROOMS.length-active.length;
-  render(hud()+'<div class="wrap"><div class="maphead"><button class="link" data-act="map">Zum Pilgerweg</button><button class="link" data-act="album">Kartenalbum</button></div>'+
+  render(hud('title')+tabbar('cathedral')+'<div class="wrap">'+
     '<h1 class="chapter"><span>Die Kathedrale</span></h1>'+
     '<p class="lead">Aus der Ruine wird nach und nach wieder ein Gotteshaus. Jede bestandene Etappe bringt einen Pilgerstein, das erste Gold einer Etappe drei weitere. Tippe einen Raum an.</p>'+
     (IMG.aussen?'<figure class="roomimg wide"><img src="'+IMG.aussen+'" alt="Die Kathedrale von außen"></figure>':'')+
@@ -345,7 +362,7 @@ function showCathedral(){
 function showRoom(id,msg,prevL){
   var r=ROOM[id];if(!r)return;
   var st=roomState(r),l=lvl(id),h;
-  h=hud()+'<div class="wrap"><div class="maphead"><button class="link" data-act="cathedral">Zur Kathedrale</button></div>'+
+  h=hud('cathedral')+tabbar('cathedral')+'<div class="wrap">'+
     '<h1 class="chapter"><span>'+esc(r.name)+'</span></h1>'+
     '<p class="state-line">'+STATE_LABEL[st]+'</p>';
   if(msg)h+='<div class="notice">'+esc(msg)+'</div>';
@@ -410,7 +427,7 @@ function showTitle(){
   });
 }
 function showRules(){
-  render('<div class="wrap rules"><div class="maphead"><button class="link" data-act="title">Zurück</button></div>'+
+  render(hud('title')+'<div class="wrap rules">'+
     '<h1 class="chapter"><span>So wird gespielt</span></h1>'+
     '<p>Du pilgerst zu den großen Marienwallfahrtsorten, zuerst von Lissabon nach Fátima, dann von Pau nach Lourdes. An jeder Etappe wirst du in die Zeit der Erscheinungen zurückversetzt und musst eine Prüfung bestehen: Wissensfragen gegen die Zeit, Aussagen als wahr oder falsch erkennen, Ereignisse ordnen, ein Gesätz des Rosenkranzes im Rhythmus beten oder den Lichtern einer Prozession folgen.</p>'+
     '<p>Ein neues Kapitel öffnet sich, sobald du alle Etappen des vorigen geschafft hast.</p>'+
@@ -426,7 +443,6 @@ var viewChap=null;
 function showMap(cid){
   cid=cid||viewChap||currentChapter();viewChap=cid;
   var c=CH[cid],open=chapterOpen(c);
-  var owned=CARD_ORDER.filter(function(id){return S.cards[id];}).length;
   var nextFound=false;
   var nodes=stagesOf(cid).map(function(i,pos){
     var st=STAGES[i],state=stageState(i),cls=state,stat;
@@ -443,7 +459,7 @@ function showMap(cid){
   var tabs='<div class="tabs">'+CHAPTERS.map(function(x){
     return '<button class="tab'+(x.id===cid?' on':'')+'" data-chap="'+x.id+'">Kapitel '+x.n+'<small>'+esc(x.name)+(chapterOpen(x)?'':', gesperrt')+'</small></button>';
   }).join('')+'</div>';
-  render(hud()+'<div class="wrap"><div class="maphead"><button class="link" data-act="title">Titel</button><button class="link" data-act="cathedral">Kathedrale</button><button class="link" data-act="album">Karten ('+owned+' von '+CARD_ORDER.length+')</button></div>'+
+  render(hud('title')+tabbar('map')+'<div class="wrap">'+
     tabs+
     '<h1 class="chapter">Kapitel '+c.n+'<span>'+esc(c.name)+'</span></h1>'+
     '<p class="lead">'+esc(c.lead)+'</p>'+
@@ -463,7 +479,7 @@ function showAlbum(){
       return '<div class="slot"><span>?</span>'+esc(CARDS[id].hint)+'</div>';
     }).join('')+'</div>';
   }).join('');
-  render(hud()+'<div class="wrap"><div class="maphead"><button class="link" data-act="map">Zum Pilgerweg</button><button class="link" data-act="cathedral">Kathedrale</button></div>'+
+  render(hud('title')+tabbar('album')+'<div class="wrap">'+
     '<h1 class="chapter"><span>Kartenalbum</span></h1>'+
     '<p class="lead">'+owned+' von '+CARD_ORDER.length+' Karten, davon '+golds+' in Gold.</p>'+
     items+
@@ -504,12 +520,29 @@ function loseCandle(){
 }
 function startStage(idx,skipStory){
   var st=STAGES[idx];
-  R={idx:idx,candles:CANDLES,lost:0};
-  render('<div class="stagebar"><div class="stagebar-in"><button class="link" data-act="map">Abbrechen</button>'+
+  R={idx:idx,candles:CANDLES,lost:0,over:false};
+  render('<div class="stagebar"><div class="stagebar-in"><button class="back" id="quit" aria-label="Etappe verlassen">'+BACK_SVG+'</button>'+
     '<div class="st-title">'+esc(st.title)+'</div><div class="candles" id="candles" role="img"></div></div></div>'+
     '<div class="wrap" id="sb"></div>');
   updateCandles();
+  document.getElementById('quit').addEventListener('click',function(){if(R.over)showMap();else confirmQuit();});
   if(skipStory)runChallenge(0);else showScene(0);
+}
+function confirmQuit(){
+  if(document.querySelector('.overlay.ask'))return;
+  pauseGame();
+  var ov=document.createElement('div');ov.className='overlay ask';ov.setAttribute('role','alertdialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-labelledby','ask-h');
+  ov.innerHTML='<div class="sheet"><h2 id="ask-h">Etappe abbrechen?</h2><p>Wenn du jetzt gehst, beginnt die Etappe beim nächsten Mal von vorn.</p>'+
+    '<button class="btn primary" id="ask-stay">Weiterpilgern</button><button class="btn ghost danger" id="ask-quit">Etappe abbrechen</button></div>';
+  document.body.appendChild(ov);
+  function close(){ov.remove();document.removeEventListener('keydown',onk);}
+  function stay(){close();resumeGame();}
+  function onk(e){if(e.key==='Escape')stay();}
+  document.getElementById('ask-stay').addEventListener('click',stay);
+  document.getElementById('ask-quit').addEventListener('click',function(){close();R.over=true;showMap();});
+  ov.addEventListener('click',function(e){if(e.target===ov)stay();});
+  document.addEventListener('keydown',onk);
+  document.getElementById('ask-stay').focus();
 }
 function body(){return document.getElementById('sb');}
 function showScene(p){
@@ -561,6 +594,9 @@ function runQuiz(cfg,done){
     }
     raf=requestAnimationFrame(tick);
     stopFns.push(function(){cancelAnimationFrame(raf);});
+    var pausedAt=0;
+    onPause(function(){if(answered)return;cancelAnimationFrame(raf);pausedAt=performance.now();},
+      function(){if(answered||!pausedAt)return;t0+=performance.now()-pausedAt;pausedAt=0;raf=requestAnimationFrame(tick);});
     b.querySelectorAll('.opt').forEach(function(btn){btn.addEventListener('click',function(){answer(+btn.dataset.k);});});
     function answer(k){
       if(answered)return;answered=true;cancelAnimationFrame(raf);
@@ -696,6 +732,14 @@ function runRosary(cfg,done){
   go.addEventListener('click',start);
   draw(performance.now());
   stopFns.push(function(){running=false;cancelAnimationFrame(raf);clearTimeout(fbTimer);document.removeEventListener('keydown',onKey);window.removeEventListener('resize',size);});
+  var paused=false,pausedAt=0;
+  onPause(function(){if(!running)return;paused=true;running=false;cancelAnimationFrame(raf);pausedAt=performance.now();},
+    function(){
+      if(!paused)return;paused=false;if(ended)return;
+      var d=performance.now()-pausedAt;
+      beads.forEach(function(x){x.at+=d;if(x.rt)x.rt+=d;});
+      running=true;raf=requestAnimationFrame(frame);
+    });
 }
 
 /* ---------- Prüfung: Lichterprozession ---------- */
@@ -707,7 +751,7 @@ function tone(f){
   o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+.65);
 }
 function runProcession(cfg,done){
-  var b=body(),N=6,r=0,seq=[],pos=0,phase='idle',timers=[],over=false;
+  var b=body(),N=6,r=0,seq=[],pos=0,phase='idle',timers=[],over=false,nextStep=null,resumeWith=null;
   var FREQ=[392,440,523.25,587.33,659.25,783.99],cells='';
   for(var k=0;k<N;k++)cells+='<button class="pc" data-k="'+k+'" disabled aria-label="Licht '+(k+1)+'">'+CANDLE_SVG+'</button>';
   b.innerHTML='<div class="challenge-head"><h2>'+esc(cfg.title)+'</h2><p class="muted">Die Lichter leuchten nacheinander auf. Merke dir die Reihenfolge und tippe sie genauso an. Jeder Fehler kostet eine Kerze.</p></div>'+
@@ -715,7 +759,19 @@ function runProcession(cfg,done){
     '<button class="btn primary" id="pgo">Beginnen</button><div id="fb"></div>';
   var btns=b.querySelectorAll('.pc'),pst=document.getElementById('pst');
   function later(f,ms){timers.push(setTimeout(f,ms));}
+  function after(f,ms){nextStep=f;later(function(){nextStep=null;f();},ms);}
   stopFns.push(function(){timers.forEach(clearTimeout);});
+  /* Pause: laufende Vorführung wird danach von vorn gezeigt */
+  onPause(function(){
+    if(over)return;
+    resumeWith=phase==='show'?show:nextStep;
+    timers.forEach(clearTimeout);timers=[];nextStep=null;
+    btns.forEach(function(x){x.classList.remove('on');});setEnabled(false);
+  },function(){
+    if(over)return;
+    var f=resumeWith;resumeWith=null;
+    if(f)f();else if(phase==='input')setEnabled(true);
+  });
   function setEnabled(on){btns.forEach(function(x){x.disabled=!on;});}
   function light(k,ms){var x=btns[k];x.classList.add('on');tone(FREQ[k]);later(function(){x.classList.remove('on');},ms);}
   function label(t){pst.textContent='Runde '+(r+1)+' von '+cfg.rounds.length+': '+t;}
@@ -741,13 +797,13 @@ function runProcession(cfg,done){
       if(pos===seq.length){
         phase='wait';setEnabled(false);r++;
         if(r>=cfg.rounds.length){finish(true);return;}
-        pst.textContent='Richtig. Die Prozession wird länger.';later(startRound,1000);
+        pst.textContent='Richtig. Die Prozession wird länger.';after(startRound,1000);
       }
     }else{
       x.classList.remove('bad');void x.offsetWidth;x.classList.add('bad');
       phase='wait';setEnabled(false);
       if(loseCandle()){finish(false);return;}
-      pst.textContent='Nicht dieses Licht. Schau noch einmal hin.';later(show,1200);
+      pst.textContent='Nicht dieses Licht. Schau noch einmal hin.';after(show,1200);
     }
   });});
   document.getElementById('pgo').addEventListener('click',function(){this.style.display='none';startRound();});
@@ -762,6 +818,7 @@ function award(id,gold){
 function finishStage(ok){
   stopAll();
   var st=STAGES[R.idx],idx=R.idx;
+  R.over=true;
   if(!ok){
     body().innerHTML='<div class="reward"><h2>Die Kerzen sind erloschen</h2><p>Die Etappe beginnt von vorn. Fragen und Rhythmus werden neu gemischt.</p>'+
       '<button class="btn primary" id="again">Etappe neu versuchen</button><button class="btn ghost" data-act="map">Zum Pilgerweg</button></div>';
@@ -856,6 +913,18 @@ app.addEventListener('click',function(e){
 app.addEventListener('keydown',function(e){
   var rm=e.target.closest&&e.target.closest('g[data-room]');
   if(rm&&(e.key==='Enter'||e.key===' ')){e.preventDefault();showRoom(rm.getAttribute('data-room'));}
+});
+
+/* Zurück-Taste des Handys: schließt zuerst ein offenes Fenster, sonst wie der Pfeil oben links.
+   Auf der Titelseite verlässt sie die App. */
+var backArmed=false;
+function armBack(){if(backArmed)return;try{history.pushState({pilger:1},'');backArmed=true;}catch(e){}}
+window.addEventListener('popstate',function(){
+  backArmed=false;
+  var ov=document.querySelector('.overlay'),b;
+  if(ov){b=ov.querySelector('#ask-stay,#bk-close,.close');if(b)b.click();else ov.remove();}
+  else{b=app.querySelector('.back');if(!b){history.back();return;}b.click();}
+  if(app.querySelector('.back')||document.querySelector('.overlay'))armBack();
 });
 
 /* ---------- Offline-Fähigkeit ---------- */
