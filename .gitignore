@@ -1,0 +1,4 @@
+# Eingang für neue Bilder: wird nicht hochgeladen
+neue-bilder/*
+!neue-bilder/.gitkeep
+.DS_Store

@@ -1,6 +1,11 @@
 /* Offline-Speicher. Bei Änderungen die Versionsnummer erhöhen. */
-var VERSION = 'pilger-2';
-var FILES = ['./', 'aussen.webp', 'bilder.js', 'garten-0.webp', 'garten-1.webp', 'garten-2.webp', 'garten-3.webp', 'icon-192.png', 'icon-512.png', 'index.html', 'kapelle-0.webp', 'kapelle-1.webp', 'kapelle-2.webp', 'kapelle-3.webp', 'kapitel-1-fatima.js', 'kapitel-2-lourdes.js', 'manifest.webmanifest', 'schiff-0.webp', 'schiff-1.webp', 'schiff-2.webp', 'schiff-3.webp', 'spiel.js', 'style.css'];
+var VERSION = 'pilger-3';
+/* Die Bilder kommen automatisch aus bilder.js, hier stehen nur Code und Symbole */
+self.window = self;
+importScripts('bilder.js');
+var FILES = ['./', 'bilder.js', 'icon-192.png', 'icon-512.png', 'index.html', 'kapitel-1-fatima.js', 'kapitel-2-lourdes.js', 'manifest.webmanifest', 'spiel.js', 'style.css']
+  .concat(self.BILDER.kathedrale.map(function (k) { return 'bilder/kathedrale/' + k + '.webp'; }))
+  .concat(self.BILDER.karten.map(function (k) { return 'bilder/karten/' + k + '.webp'; }));
 self.addEventListener('install', function (e) {
   e.waitUntil(caches.open(VERSION).then(function (c) { return c.addAll(FILES); }).then(function () { return self.skipWaiting(); }));
 });

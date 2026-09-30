@@ -47,10 +47,10 @@ function stonesTxt(n){return n===1?'1 Pilgerstein':n+' Pilgersteine';}
 
 /* ---------- Bilder (werden später eingefügt) ----------
    Schlüssel: 'aussen' für die Außenansicht, sonst '<raum>-<stufe>', z. B. 'kapelle-0' (Ruine) bis 'kapelle-3' (vollendet). */
-/* Bilder: werden in bilder.js aufgelistet */
+/* Bilder: werden in bilder.js aufgelistet und liegen im Ordner bilder/ */
 var IMG={},CIMG={};
-((window.BILDER&&window.BILDER.kathedrale)||[]).forEach(function(k){IMG[k]=k+'.webp';});
-((window.BILDER&&window.BILDER.karten)||[]).forEach(function(id){CIMG[id]='karte-'+id+'.webp';});
+((window.BILDER&&window.BILDER.kathedrale)||[]).forEach(function(k){IMG[k]='bilder/kathedrale/'+k+'.webp';});
+((window.BILDER&&window.BILDER.karten)||[]).forEach(function(id){CIMG[id]='bilder/karten/'+id+'.webp';});
 
 var CARD_ICON='<svg class="cico" viewBox="0 0 16 20" aria-hidden="true"><rect x="1" y="1" width="14" height="18" rx="2"/><path d="M4.5 7 H11.5 M4.5 10 H11.5"/></svg>';
 var BACK_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 L8 12 L15 19"/></svg>';
