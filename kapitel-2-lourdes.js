@@ -14,6 +14,10 @@
                k (Sortierschlüssel JJJJMMTT)
    etappen     scenes = Erzählszenen (era heute/damals, k Ort, t Text),
                ch = Prüfungen der Etappe
+   weg         Landkarte (Bild bilder/wege/<id>.webp): groesse = Bildgröße,
+               pfad = Wegpunkte [x, y] in Bildpixeln entlang des gemalten Weges,
+               orte = für jede Etappe die Nummer des Wegpunkts (ab 0), an dem
+               ihre Markierung steht. Claude pflegt diese Werte.
    ===================================================================== */
 window.KAPITEL = window.KAPITEL || [];
 KAPITEL.push({
@@ -24,6 +28,11 @@ KAPITEL.push({
   "lead": "Von Pau nach Lourdes, gut 40 Kilometer den Gave hinauf bis an den Fuß der Pyrenäen, und immer wieder zurück ins Jahr 1858.",
   "bonusAll": "basilika",
   "bonusGold": "lourdes",
+  "weg": {
+    "groesse": [1024, 1536],
+    "pfad": [[360, 1150], [400, 1132], [440, 1116], [500, 1097], [520, 1076], [500, 1052], [470, 1035], [445, 1012], [470, 985], [500, 950], [530, 915], [560, 885], [590, 848], [625, 812], [595, 785], [575, 765], [620, 735], [680, 702], [725, 670], [760, 630], [765, 595], [745, 560], [700, 540], [645, 518], [600, 500], [570, 475], [552, 445], [548, 420], [560, 395], [555, 370], [530, 350], [490, 340], [455, 322], [420, 305], [460, 330], [500, 342], [545, 345], [600, 335], [660, 325], [720, 332], [775, 330], [810, 322], [840, 350], [860, 385]],
+    "orte": [0, 6, 13, 18, 33, 41, 43]
+  },
   "karten": {
     "bernadette": {
       "name": "Bernadette Soubirous",

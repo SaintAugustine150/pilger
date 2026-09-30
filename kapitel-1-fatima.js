@@ -14,6 +14,10 @@
                k (Sortierschlüssel JJJJMMTT)
    etappen     scenes = Erzählszenen (era heute/damals, k Ort, t Text),
                ch = Prüfungen der Etappe
+   weg         Landkarte (Bild bilder/wege/<id>.webp): groesse = Bildgröße,
+               pfad = Wegpunkte [x, y] in Bildpixeln entlang des gemalten Weges,
+               orte = für jede Etappe die Nummer des Wegpunkts (ab 0), an dem
+               ihre Markierung steht. Claude pflegt diese Werte.
    ===================================================================== */
 window.KAPITEL = window.KAPITEL || [];
 KAPITEL.push({
@@ -24,6 +28,11 @@ KAPITEL.push({
   "lead": "Von Lissabon nach Fátima, rund 140 Kilometer auf den blauen Pfeilen, und immer wieder zurück in die Jahre 1916 und 1917.",
   "bonusAll": "capelinha",
   "bonusGold": "fatima",
+  "weg": {
+    "groesse": [1024, 1536],
+    "pfad": [[400, 1180], [470, 1140], [545, 1110], [500, 1075], [450, 1045], [410, 1020], [385, 995], [410, 955], [450, 925], [500, 912], [555, 905], [600, 890], [640, 870], [640, 840], [600, 815], [560, 795], [545, 760], [545, 735], [590, 690], [630, 665], [655, 640], [650, 615], [610, 600], [540, 592], [470, 582], [420, 570], [385, 555], [400, 535], [440, 520], [490, 505], [540, 488], [575, 462], [560, 440], [510, 425], [470, 410], [475, 385], [505, 350], [490, 325], [470, 305], [490, 285], [530, 270], [580, 255], [620, 240], [645, 215], [660, 190], [690, 160]],
+    "orte": [0, 5, 17, 25, 36, 41, 45]
+  },
   "karten": {
     "engel": {
       "name": "Der Engel des Friedens",

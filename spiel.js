@@ -51,6 +51,8 @@ function stonesTxt(n){return n===1?'1 Pilgerstein':n+' Pilgersteine';}
 var IMG={},CIMG={};
 ((window.BILDER&&window.BILDER.kathedrale)||[]).forEach(function(k){IMG[k]='bilder/kathedrale/'+k+'.webp';});
 ((window.BILDER&&window.BILDER.karten)||[]).forEach(function(id){CIMG[id]='bilder/karten/'+id+'.webp';});
+var WIMG={};
+((window.BILDER&&window.BILDER.wege)||[]).forEach(function(id){WIMG[id]='bilder/wege/'+id+'.webp';});
 
 var CARD_ICON='<svg class="cico" viewBox="0 0 16 20" aria-hidden="true"><rect x="1" y="1" width="14" height="18" rx="2"/><path d="M4.5 7 H11.5 M4.5 10 H11.5"/></svg>';
 var BACK_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5 L8 12 L15 19"/></svg>';
@@ -438,12 +440,24 @@ function showRules(){
     '<button class="btn primary" data-act="map">Zum Pilgerweg</button></div>');
 }
 
-/* ---------- Karte des Weges ---------- */
+/* ---------- Pilgerweg ---------- */
 var viewChap=null;
+function chapterTabs(cid,cls){
+  return '<div class="'+cls+'">'+CHAPTERS.map(function(x){
+    return '<button class="tab'+(x.id===cid?' on':'')+'" data-chap="'+x.id+'"'+(x.id===cid?' aria-current="true"':'')+'>Kapitel '+x.n+'<small>'+esc(x.name)+(chapterOpen(x)?'':', gesperrt')+'</small></button>';
+  }).join('')+'</div>';
+}
+function hasMap(c){
+  return !!(c.weg&&WIMG[c.id]&&c.weg.orte&&c.weg.orte.length===stagesOf(c.id).length);
+}
 function showMap(cid){
   cid=cid||viewChap||currentChapter();viewChap=cid;
-  var c=CH[cid],open=chapterOpen(c);
-  var nextFound=false;
+  var c=CH[cid];
+  if(hasMap(c))showWorldMap(c);else showPathList(c);
+}
+/* Ohne Landkarte: Etappen als Liste */
+function showPathList(c){
+  var cid=c.id,open=chapterOpen(c),nextFound=false;
   var nodes=stagesOf(cid).map(function(i,pos){
     var st=STAGES[i],state=stageState(i),cls=state,stat;
     if(state==='open'&&!nextFound){cls+=' next';nextFound=true;}
@@ -456,17 +470,132 @@ function showMap(cid){
       '<span class="nt"><span class="nleg">'+esc(st.leg)+'</span><span class="ntitle">'+esc(st.title)+'</span><span class="ndate">'+esc(st.date)+'</span></span>'+
       '<span class="nstat">'+stat+'</span></button></li>';
   }).join('');
-  var tabs='<div class="tabs">'+CHAPTERS.map(function(x){
-    return '<button class="tab'+(x.id===cid?' on':'')+'" data-chap="'+x.id+'">Kapitel '+x.n+'<small>'+esc(x.name)+(chapterOpen(x)?'':', gesperrt')+'</small></button>';
-  }).join('')+'</div>';
   render(hud('title')+tabbar('map')+'<div class="wrap">'+
-    tabs+
+    chapterTabs(cid,'tabs')+
     '<h1 class="chapter">Kapitel '+c.n+'<span>'+esc(c.name)+'</span></h1>'+
     '<p class="lead">'+esc(c.lead)+'</p>'+
     (open?'':'<div class="notice">Dieses Kapitel öffnet sich, sobald du alle Etappen von Kapitel '+(c.n-1)+' geschafft hast.</div>')+
     '<ol class="path">'+nodes+'</ol>'+
-    '<div class="later"><h2>Kapitel 3: Guadalupe, 1531</h2><p>Noch nicht begehbar.</p></div>'+
   '</div>');
+}
+
+/* Landkarte: der Pilger steht an der ersten offenen Etappe und läuft nach jeder geschafften Etappe weiter */
+var PILGER_SVG='<svg viewBox="0 0 32 46" aria-hidden="true"><ellipse class="pg-sh" cx="16" cy="43" rx="9" ry="2.6"/>'+
+  '<path class="pg-staff" d="M26 5 L25 43"/><circle class="pg-gourd" cx="26.2" cy="9" r="2.2"/>'+
+  '<path class="pg-cloak" d="M9 42 L11.5 19 Q16 14.5 20.5 19 L23 42 Z"/><circle class="pg-shell" cx="16" cy="25" r="2.3"/>'+
+  '<circle class="pg-head" cx="16" cy="12.5" r="4.4"/><path class="pg-hat" d="M7.5 9.6 Q16 5.6 24.5 9.6 Q16 12 7.5 9.6 Z M11.8 8.6 Q12.3 4 16 4 Q19.7 4 20.2 8.6 Z"/></svg>';
+function pathLengths(P){var L=[0];for(var i=1;i<P.length;i++)L.push(L[i-1]+Math.hypot(P[i][0]-P[i-1][0],P[i][1]-P[i-1][1]));return L;}
+function pointAt(P,L,d){
+  if(d<=0)return {x:P[0][0],y:P[0][1],i:0};
+  for(var i=1;i<P.length;i++){if(L[i]>=d){var f=(d-L[i-1])/((L[i]-L[i-1])||1);return {x:P[i-1][0]+(P[i][0]-P[i-1][0])*f,y:P[i-1][1]+(P[i][1]-P[i-1][1])*f,i:i};}}
+  var e=P[P.length-1];return {x:e[0],y:e[1],i:P.length};
+}
+function pilgrimStation(cid){
+  var list=stagesOf(cid);
+  for(var k=0;k<list.length;k++){var x=S.stages[STAGES[list[k]].id];if(!x||!x.done)return k;}
+  return list.length-1;
+}
+function showWorldMap(c){
+  var cid=c.id,W=c.weg.groesse[0],H=c.weg.groesse[1],P=c.weg.pfad,O=c.weg.orte,L=pathLengths(P);
+  var list=stagesOf(cid),open=chapterOpen(c);
+  if(!S.pos)S.pos={};
+  var target=pilgrimStation(cid);
+  if(S.pos[cid]==null||S.pos[cid]>target){S.pos[cid]=target;save();}
+  var from=S.pos[cid],walk=open&&from<target;
+  var sel=target;
+  function pct(x,y){return 'left:'+(x/W*100).toFixed(3)+'%;top:'+(y/H*100).toFixed(3)+'%';}
+  var marks=list.map(function(i,k){
+    var p=P[O[k]],state=stageState(i),st=STAGES[i];
+    var lab='Etappe '+(k+1)+': '+st.title+', '+({open:'offen',locked:'gesperrt',done:'geschafft',gold:'in Gold geschafft'})[state];
+    return '<button class="mk '+state+'" data-mk="'+k+'" style="'+pct(p[0],p[1])+'" aria-label="'+esc(lab)+'">'+(k+1)+'</button>';
+  }).join('');
+  var route=P.map(function(p){return p[0]+','+p[1];}).join(' ');
+  render(hud('title')+tabbar('map')+
+    '<div class="mapview" id="mv"><div class="mapscroll" id="ms"><div class="mapworld'+(open?'':' locked')+'" id="mw">'+
+      '<img src="'+WIMG[cid]+'" alt="Gemalte Karte des Pilgerwegs '+esc(c.name)+'" draggable="false">'+
+      '<svg class="route" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="none" aria-hidden="true"><polyline class="rt-all" points="'+route+'"/><polyline class="rt-done" id="trail" points=""/></svg>'+
+      marks+
+      (open?'<div class="pilger" id="pg">'+PILGER_SVG+'</div>':'')+
+    '</div></div>'+
+    chapterTabs(cid,'mapchips')+
+    '<div class="mapcard" id="mc"></div>'+
+  '</div>');
+  var mv=document.getElementById('mv'),ms=document.getElementById('ms'),mw=document.getElementById('mw'),mc=document.getElementById('mc');
+  var pg=document.getElementById('pg'),trail=document.getElementById('trail');
+  var chips=mv.querySelector('.mapchips'),sc=1,padTop=0,curD=L[O[from]],walking=false;
+
+  function layout(){
+    var hd=document.querySelector('.hud'),tb=document.querySelector('.tabbar');
+    mv.style.top=(hd?hd.getBoundingClientRect().bottom:0)+'px';
+    mv.style.bottom=(tb?tb.offsetHeight:0)+'px';
+    /* Karte füllt die ganze Breite und mindestens die Höhe zwischen Kapitel-Knöpfen und Etappenkarte */
+    var vw=ms.clientWidth,vh=ms.clientHeight,ch=mc.offsetHeight+16;
+    padTop=chips.offsetHeight+16;
+    sc=Math.max(vw/W,(vh-ch-padTop)/H);
+    mw.style.width=Math.round(W*sc)+'px';mw.style.height=Math.round(H*sc)+'px';
+    ms.style.paddingTop=padTop+'px';ms.style.paddingBottom=ch+'px';
+  }
+  function focusOn(x,y,smooth){
+    var vis=ms.clientHeight-(mc.offsetHeight+16)-padTop;
+    var o={left:x*sc-ms.clientWidth/2,top:y*sc-Math.max(vis,120)/2};
+    if(smooth&&!reduceMotion&&ms.scrollTo)ms.scrollTo({left:o.left,top:o.top,behavior:'smooth'});else{ms.scrollLeft=o.left;ms.scrollTop=o.top;}
+  }
+  function placePilgrim(d){
+    curD=d;var q=pointAt(P,L,d);
+    if(pg)pg.style.cssText=pct(q.x,q.y);
+    var pts=[];for(var i=0;i<q.i&&i<P.length;i++)pts.push(P[i][0]+','+P[i][1]);
+    pts.push(q.x.toFixed(1)+','+q.y.toFixed(1));
+    trail.setAttribute('points',open&&d>0?pts.join(' '):'');
+    return q;
+  }
+  function stateText(state){return ({open:'Offen',locked:'Gesperrt',done:'Geschafft, Gold fehlt noch',gold:'In Gold geschafft'})[state];}
+  function showCard(k){
+    sel=k;
+    mw.querySelectorAll('.mk').forEach(function(m){m.classList.toggle('sel',+m.dataset.mk===k);});
+    var i=list[k],st=STAGES[i],state=stageState(i),h='';
+    if(!open)h+='<p class="mc-note">Dieses Kapitel öffnet sich, sobald du alle Etappen von Kapitel '+(c.n-1)+' geschafft hast.</p>';
+    else if(k===0&&state==='open')h+='<p class="mc-lead">'+esc(c.lead)+'</p>';
+    h+='<div class="mc-row"><button class="mc-nav" data-sel="'+(k-1)+'" aria-label="Vorige Etappe"'+(k>0?'':' disabled')+'>‹</button>'+
+      '<div class="mc-main"><p class="mc-leg">Etappe '+(k+1)+' von '+list.length+' · '+esc(st.leg)+'</p>'+
+      '<h2 class="mc-title">'+esc(st.title)+'</h2><p class="mc-date">'+esc(st.date)+'<span class="mc-st '+state+'">'+stateText(state)+'</span></p></div>'+
+      '<button class="mc-nav" data-sel="'+(k+1)+'" aria-label="Nächste Etappe"'+(k<list.length-1?'':' disabled')+'>›</button></div>';
+    if(state==='locked')h+='<button class="btn primary" disabled>'+(open?'Erst Etappe '+k+' schaffen':'Noch gesperrt')+'</button>';
+    else h+='<button class="btn '+(state==='open'?'primary':'ghost')+'" data-stage="'+i+'"'+(walking?' disabled':'')+'>'+(state==='open'?'Etappe beginnen':(state==='gold'?'Nochmal spielen':'Nochmal für Gold'))+'</button>';
+    mc.innerHTML=h;
+  }
+  function walkTo(){
+    var d0=L[O[from]],d1=L[O[target]],dur=Math.min(4200,Math.max(1400,(d1-d0)/230*1000)),t0=null,raf=0;
+    walking=true;pg.classList.add('walking');showCard(target);
+    var lastMk=mw.querySelector('.mk[data-mk="'+target+'"]');if(lastMk)lastMk.classList.add('await');
+    function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
+    function frame(now){
+      if(t0===null)t0=now;
+      var f=Math.min(1,(now-t0)/dur),q=placePilgrim(d0+(d1-d0)*ease(f));
+      focusOn(q.x,q.y,false);
+      if(f<1){raf=requestAnimationFrame(frame);return;}
+      walking=false;pg.classList.remove('walking');
+      S.pos[cid]=target;save();
+      if(lastMk){lastMk.classList.remove('await');lastMk.classList.add('arrive');}
+      bell(523.25,1.8,.07);showCard(target);
+    }
+    setTimeout(function(){raf=requestAnimationFrame(frame);},450);
+    stopFns.push(function(){cancelAnimationFrame(raf);if(walking){S.pos[cid]=target;save();}});
+  }
+
+  showCard(sel);layout();
+  placePilgrim(curD);
+  var p0=pointAt(P,L,curD);focusOn(p0.x,p0.y,false);
+  if(walk&&!reduceMotion)walkTo();
+  else if(walk){S.pos[cid]=target;save();placePilgrim(L[O[target]]);}
+
+  mv.addEventListener('click',function(e){
+    var m=e.target.closest('[data-mk]'),n=e.target.closest('[data-sel]');
+    if(m){var k=+m.dataset.mk;showCard(k);var p=P[O[k]];focusOn(p[0],p[1],true);}
+    else if(n&&!n.disabled){var k2=+n.dataset.sel;showCard(k2);var p2=P[O[k2]];focusOn(p2[0],p2[1],true);}
+  });
+  function onResize(){layout();var p=P[O[sel]];focusOn(p[0],p[1],false);}
+  window.addEventListener('resize',onResize);
+  stopFns.push(function(){window.removeEventListener('resize',onResize);});
 }
 
 /* ---------- Album ---------- */

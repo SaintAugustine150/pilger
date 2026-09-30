@@ -297,7 +297,9 @@ h1,h2{line-height:1.2;margin:0;}
 .tab small{display:block;font-weight:500;font-size:13px;font-style:italic;}
 .tab.on{border-color:var(--ouro);color:var(--text);box-shadow:inset 0 -3px 0 var(--ouro);}
 .alb-h{font-size:20px;margin:26px 0 0;}
-.card-art.img{overflow:hidden;}
+.card-art.img{overflow:hidden;width:88%;}
+.card.lg .card-art.img{width:84%;}
+.card.sm .card-art.img+.card-name{margin-top:7%;}
 .card-art.img img{width:100%;height:100%;object-fit:cover;display:block;}
 .proc{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px;padding:18px 14px;border-radius:14px;background-color:var(--night);
   background-image:radial-gradient(1.2px 1.2px at 18% 22%,rgba(255,255,255,.55),transparent),radial-gradient(1px 1px at 72% 14%,rgba(255,255,255,.45),transparent),radial-gradient(1.4px 1.4px at 86% 78%,rgba(255,255,255,.35),transparent);}
@@ -339,3 +341,57 @@ h1,h2{line-height:1.2;margin:0;}
 .tabbar ~ .wrap{padding-bottom:calc(112px + env(safe-area-inset-bottom,0px));}
 .overlay.ask{-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);}
 .btn.ghost.danger{border-color:var(--rot);color:var(--rot);box-shadow:0 3px 0 rgba(166,58,46,.2);}
+/* Pilgerweg als gemalte Landkarte */
+.mapview{position:fixed;left:0;right:0;margin:0 auto;max-width:600px;background:var(--night);overflow:hidden;z-index:1;}
+.mapscroll{position:absolute;inset:0;overflow:auto;overscroll-behavior:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.mapscroll::-webkit-scrollbar{display:none;}
+.mapworld{position:relative;user-select:none;-webkit-user-select:none;box-shadow:0 0 0 1px rgba(217,174,85,.35);}
+.mapworld>img{display:block;width:100%;height:100%;pointer-events:none;}
+.mapworld.locked>img{filter:grayscale(.75) brightness(.7) sepia(.2);}
+.route{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;}
+.route polyline{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke;}
+.rt-all{stroke:rgba(255,248,225,.55);stroke-width:2.5;stroke-dasharray:1 7;}
+.rt-done{stroke:#FFD86B;stroke-width:6;stroke-dasharray:0.1 10;filter:drop-shadow(0 0 1.5px rgba(60,35,5,1)) drop-shadow(0 0 5px rgba(255,210,100,.9));}
+.mapworld.locked .rt-all{display:none;}
+.mk{position:absolute;z-index:2;width:34px;height:34px;margin:0;padding:0;transform:translate(-50%,-50%);border-radius:50%;border:2px solid #FFF8E6;
+  background:radial-gradient(circle at 50% 35%,#3470CC,#1A4488);color:#fff;font-family:'Alegreya SC','Alegreya',Georgia,serif;font-weight:700;font-size:18px;line-height:1;
+  display:grid;place-items:center;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.5),0 0 0 1px rgba(0,0,0,.25);transition:transform .2s;}
+.mk::before{content:"";position:absolute;inset:-9px;border-radius:50%;}
+.mk.gold{background:radial-gradient(circle at 50% 35%,#FBE7A8,#C9952F);color:#4A300A;border-color:#FFF6D6;}
+.mk.locked{background:rgba(245,238,220,.9);color:#8C7F66;border-color:#B7A67F;box-shadow:0 1px 4px rgba(0,0,0,.35);}
+.mk.open{box-shadow:0 0 0 3px #E0B656,0 2px 6px rgba(0,0,0,.5);animation:mkpulse 1.8s ease-in-out infinite;}
+.mk.await{animation:none;}
+.mk.arrive{animation:mkarrive .7s ease-out,mkpulse 1.8s ease-in-out .7s infinite;}
+.mk.sel{transform:translate(-50%,-50%) scale(1.22);z-index:3;border-color:#F6DB8E;}
+@keyframes mkpulse{50%{box-shadow:0 0 0 6px rgba(224,182,86,.45),0 0 18px 6px rgba(240,200,100,.55),0 2px 6px rgba(0,0,0,.5);}}
+@keyframes mkarrive{0%{transform:translate(-50%,-50%) scale(1)}40%{transform:translate(-50%,-50%) scale(1.55)}100%{transform:translate(-50%,-50%) scale(1.22)}}
+.pilger{position:absolute;z-index:1;width:30px;height:43px;pointer-events:none;transform:translate(-50%,-100%);}
+.pilger svg{display:block;width:100%;height:100%;overflow:visible;filter:drop-shadow(0 0 4px rgba(255,236,170,.95));transform:translate(-18px,-6px);transition:transform .45s ease-out;}
+.pilger.walking svg{transform:none;animation:pgbob .32s ease-in-out infinite alternate;}
+@keyframes pgbob{from{transform:translateY(0) rotate(-3deg)}to{transform:translateY(-2.5px) rotate(3deg)}}
+.pg-sh{fill:rgba(0,0,0,.35);}
+.pg-staff{stroke:#4A2E16;stroke-width:2.2;stroke-linecap:round;fill:none;}
+.pg-gourd{fill:#C9952F;stroke:#4A2E16;stroke-width:1;}
+.pg-cloak{fill:#7B4B2A;stroke:#3A2212;stroke-width:1.2;stroke-linejoin:round;}
+.pg-shell{fill:#F3DE9A;stroke:#8A6420;stroke-width:.8;}
+.pg-head{fill:#F0CFAA;stroke:#3A2212;stroke-width:1;}
+.pg-hat{fill:#5A3A20;stroke:#3A2212;stroke-width:.8;}
+.mapchips{position:absolute;top:10px;left:10px;right:10px;z-index:5;display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;}
+.mapchips::-webkit-scrollbar{display:none;}
+.mapchips .tab{flex:0 0 auto;background:rgba(11,33,80,.82);-webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);border:1.5px solid rgba(217,174,85,.55);color:#C9D5EC;padding:6px 14px;box-shadow:0 2px 8px rgba(0,0,0,.3);}
+.mapchips .tab small{color:#AFC0DE;}
+.mapchips .tab.on{border-color:#E0B656;color:#FFF6DC;box-shadow:inset 0 -3px 0 #E0B656,0 2px 8px rgba(0,0,0,.3);}
+.mapcard{position:absolute;left:10px;right:10px;bottom:10px;z-index:5;background:var(--surface);color:var(--text);border:1.5px solid var(--ouro);border-radius:16px;padding:12px 14px 14px;box-shadow:0 6px 24px rgba(6,12,25,.45);}
+.mapcard .btn{margin-top:10px;padding:12px 18px;}
+.mc-row{display:flex;align-items:center;gap:6px;}
+.mc-main{flex:1;min-width:0;text-align:center;}
+.mc-nav{flex:0 0 38px;height:38px;border-radius:50%;border:1.5px solid var(--line);background:var(--bg);color:var(--azul);font-size:24px;line-height:1;cursor:pointer;padding:0 0 3px;}
+.mc-nav:disabled{opacity:.3;cursor:default;}
+.mc-leg{margin:0;font-size:14px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mc-title{font-size:20px;line-height:1.2;margin:1px 0 0;}
+.mc-date{margin:2px 0 0;font-size:14px;font-style:italic;color:var(--ouro);}
+.mc-st{font-style:normal;font-weight:700;color:var(--muted);margin-left:8px;}
+.mc-st.gold{color:var(--ouro);} .mc-st.open{color:var(--azul);}
+.mc-lead,.mc-note{margin:0 4px 8px;font-size:14px;line-height:1.4;font-style:italic;color:var(--muted);text-align:center;}
+.mc-note{color:var(--text);}
+@media (prefers-reduced-motion: reduce){.mk.open,.mk.arrive,.pilger.walking svg{animation:none !important;}.pilger svg{transition:none;}}
