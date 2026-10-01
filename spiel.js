@@ -24,7 +24,7 @@ function stopAll(){stopFns.forEach(function(f){try{f();}catch(e){}});stopFns=[];
 function onPause(p,r){pauseFns.push([p,r]);}
 function pauseGame(){pauseFns.forEach(function(f){try{f[0]();}catch(e){}});}
 function resumeGame(){pauseFns.forEach(function(f){try{f[1]();}catch(e){}});}
-function render(html){stopAll();app.innerHTML=html;window.scrollTo(0,0);if(app.querySelector('.back'))armBack();}
+function render(html){stopAll();endWarp();setEra('heute');app.innerHTML=html;window.scrollTo(0,0);if(app.querySelector('.back'))armBack();}
 
 /* ---------- Symbole ---------- */
 function starPath(cx,cy,R,r){var p='';for(var i=0;i<10;i++){var a=-Math.PI/2+i*Math.PI/5;var rad=i%2?r:R;p+=(i?'L':'M')+(cx+rad*Math.cos(a)).toFixed(1)+' '+(cy+rad*Math.sin(a)).toFixed(1);}return p+'Z';}
@@ -195,6 +195,61 @@ function stageState(i){
   if(pos===0)return chapterOpen(CH[STAGES[i].chap])?'open':'locked';
   var pr=S.stages[STAGES[list[pos-1]].id];
   return pr&&pr.done?'open':'locked';
+}
+
+/* ---------- Zeitreise zwischen heute und damals ---------- */
+var curEra='heute',warp=null,inWarpCb=false;
+function nowYear(){return new Date().getFullYear();}
+function setEra(era,year){
+  curEra=era;
+  document.documentElement.classList.toggle('era-damals',era==='damals');
+  var el=document.getElementById('era');
+  if(el){el.textContent=era==='damals'?String(year):'heute';el.className='era '+era;el.setAttribute('aria-label',era==='damals'?'Im Jahr '+year:'In der Gegenwart');}
+}
+function endWarp(){
+  if(!warp||inWarpCb)return;
+  warp.timers.forEach(clearTimeout);if(warp.el.parentNode)warp.el.remove();warp=null;
+}
+function warpSound(back){
+  var a=audio();if(!a)return;
+  try{
+    var t=a.currentTime,len=1.8,buf=a.createBuffer(1,Math.floor(a.sampleRate*len),a.sampleRate),d=buf.getChannelData(0);
+    for(var i=0;i<d.length;i++)d[i]=Math.random()*2-1;
+    var src=a.createBufferSource(),bp=a.createBiquadFilter(),g=a.createGain();
+    src.buffer=buf;bp.type='bandpass';bp.Q.value=1.2;
+    bp.frequency.setValueAtTime(back?1400:300,t);bp.frequency.exponentialRampToValueAtTime(back?260:1400,t+len);
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.05,t+.5);g.gain.exponentialRampToValueAtTime(.0001,t+len);
+    src.connect(bp);bp.connect(g);g.connect(a.destination);src.start(t);src.stop(t+len);
+  }catch(e){}
+  bell(back?196:293.66,3.2,.06);
+}
+/* Übergang mit rückwärts (oder vorwärts) laufender Jahreszahl. cb baut den neuen Inhalt unter dem Schleier auf. */
+function travel(era,year,cb){
+  endWarp();
+  var back=era==='damals',from=back?nowYear():year,to=back?year:nowYear();
+  var el=document.createElement('div');el.className='timewarp '+(back?'to-damals':'to-heute');el.setAttribute('role','status');
+  el.innerHTML='<div class="tw-in"><div class="tw-year" aria-hidden="true">'+from+'</div><div class="tw-sub">'+(back?'Zurück ins Jahr '+year:'Zurück in die Gegenwart')+'</div></div>';
+  document.body.appendChild(el);
+  var w=warp={el:el,timers:[]},yr=el.querySelector('.tw-year'),done=false;
+  function later(f,ms){w.timers.push(setTimeout(f,ms));}
+  function swap(){
+    if(done)return;done=true;
+    setEra(era,year);
+    inWarpCb=true;try{cb();}finally{inWarpCb=false;}
+    yr.textContent=to;
+    el.classList.add('out');
+    later(function(){if(el.parentNode)el.remove();if(warp===w)warp=null;},reduceMotion?150:600);
+  }
+  el.addEventListener('click',function(){w.timers.forEach(clearTimeout);w.timers=[];swap();});
+  warpSound(back);
+  requestAnimationFrame(function(){el.classList.add('on');});
+  setTimeout(function(){el.classList.add('on');},30);
+  if(reduceMotion){yr.textContent=to;later(swap,700);return;}
+  var steps=26,dur=1500;
+  for(var k=1;k<=steps;k++)(function(k){
+    later(function(){var f=k/steps,e=f<.5?2*f*f:1-Math.pow(-2*f+2,2)/2;yr.textContent=Math.round(from+(to-from)*e);},380+dur*k/steps);
+  })(k);
+  later(swap,380+dur+450);
 }
 
 /* ---------- Kathedrale: Daten ---------- */
@@ -406,7 +461,7 @@ function showRoom(id,msg,prevL){
   var p=document.getElementById('pray');
   if(p)p.addEventListener('click',function(){
     var pr=r.prayer;
-    document.getElementById('prayer').innerHTML='<div class="panel damals prayer'+(reduceMotion?'':' enter')+'"><p class="kicker">'+esc(pr.t)+'</p><p class="txt">'+esc(pr.x)+'</p><p class="note">'+esc(pr.n)+'</p></div>';
+    document.getElementById('prayer').innerHTML='<div class="panel nacht prayer'+(reduceMotion?'':' enter')+'"><p class="kicker">'+esc(pr.t)+'</p><p class="txt">'+esc(pr.x)+'</p><p class="note">'+esc(pr.n)+'</p></div>';
     p.remove();
   });
 }
@@ -647,14 +702,16 @@ function loseCandle(){
   try{if(navigator.vibrate)navigator.vibrate(90);}catch(e){}
   return R.candles<=0;
 }
+function stageYear(st){return st.jahr||nowYear();}
 function startStage(idx,skipStory){
-  var st=STAGES[idx];
+  var st=STAGES[idx],wasEra=curEra;
   R={idx:idx,candles:CANDLES,lost:0,over:false};
   render('<div class="stagebar"><div class="stagebar-in"><button class="back" id="quit" aria-label="Etappe verlassen">'+BACK_SVG+'</button>'+
-    '<div class="st-title">'+esc(st.title)+'</div><div class="candles" id="candles" role="img"></div></div></div>'+
+    '<div class="st-title">'+esc(st.title)+'</div><span class="era heute" id="era">heute</span><div class="candles" id="candles" role="img"></div></div></div>'+
     '<div class="wrap" id="sb"></div>');
   updateCandles();
   document.getElementById('quit').addEventListener('click',function(){if(R.over)showMap();else confirmQuit();});
+  if(skipStory&&wasEra==='damals')setEra('damals',stageYear(st));
   if(skipStory)runChallenge(0);else showScene(0);
 }
 function confirmQuit(){
@@ -676,10 +733,10 @@ function confirmQuit(){
 function body(){return document.getElementById('sb');}
 function showScene(p){
   var st=STAGES[R.idx],sc=st.scenes[p],last=p===st.scenes.length-1;
-  var prev=p>0?st.scenes[p-1].era:'heute';
+  if(sc.era!==curEra){travel(sc.era,stageYear(st),function(){showScene(p);});return;}
   var canSkip=!!(S.stages[st.id]&&S.stages[st.id].done);
   var dots='';for(var i=0;i<st.scenes.length;i++)dots+='<i class="'+(i<=p?'on':'')+'"></i>';
-  body().innerHTML='<div class="panel '+sc.era+(sc.era==='damals'&&prev==='heute'&&!reduceMotion?' enter':'')+'">'+
+  body().innerHTML='<div class="panel '+sc.era+(reduceMotion?'':' enter')+'">'+
     '<p class="kicker">'+esc(sc.k)+'</p><p class="txt">'+esc(sc.t)+'</p></div>'+
     '<button class="btn primary" id="nx">'+(last?'Prüfung beginnen':'Weiter')+'</button>'+
     '<div class="scene-foot"><div class="dots" aria-hidden="true">'+dots+'</div>'+(canSkip&&!last?'<button class="link" id="skip">Geschichte überspringen</button>':'')+'</div>';
@@ -689,6 +746,7 @@ function showScene(p){
 }
 function runChallenge(c){
   var st=STAGES[R.idx];
+  if(c===0&&curEra!=='damals'){travel('damals',stageYear(st),function(){runChallenge(0);});return;}
   if(c>=st.ch.length){finishStage(true);return;}
   var cfg=st.ch[c];
   var done=function(ok){stopAll();if(ok)runChallenge(c+1);else finishStage(false);};
@@ -950,7 +1008,8 @@ function finishStage(ok){
   R.over=true;
   if(!ok){
     body().innerHTML='<div class="reward"><h2>Die Kerzen sind erloschen</h2><p>Die Etappe beginnt von vorn. Fragen und Rhythmus werden neu gemischt.</p>'+
-      '<button class="btn primary" id="again">Etappe neu versuchen</button><button class="btn ghost" data-act="map">Zum Pilgerweg</button></div>';
+      '<button class="btn primary" id="again">Etappe neu versuchen</button><button class="btn ghost" id="home">Zum Pilgerweg</button></div>';
+    document.getElementById('home').addEventListener('click',function(){travel('heute',stageYear(st),showMap);});
     document.getElementById('again').addEventListener('click',function(){startStage(idx,true);});
     return;
   }
@@ -980,9 +1039,9 @@ function finishStage(ok){
     bonus.forEach(function(x){h+='<div style="margin-top:18px">'+cardHTML(x[0],x[1],'md')+'</div>';});
     h+='</div>';
   }
-  if(unlocked)h+='<div class="notice" style="text-align:left">Kapitel '+nextCh.n+' ist offen: '+esc(nextCh.name)+', '+esc(nextCh.years)+'.</div><button class="btn primary" data-chap="'+nextCh.id+'">Weiter nach '+esc(nextCh.name)+'</button>';
-  if(!gold&&main.variant!=='gold')h+='<button class="btn '+(unlocked?'ghost':'primary')+'" id="again">Nochmal für Gold</button><button class="btn ghost" data-act="map">Zum Pilgerweg</button>';
-  else h+='<button class="btn '+(unlocked?'ghost':'primary')+'" data-act="map">Zum Pilgerweg</button>';
+  if(unlocked)h+='<div class="notice" style="text-align:left">Kapitel '+nextCh.n+' ist offen: '+esc(nextCh.name)+', '+esc(nextCh.years)+'.</div>';
+  h+='<button class="btn primary" id="home">'+(st.rueckkehr?'Zurück in die Gegenwart':'Zum Pilgerweg')+'</button>';
+  if(!gold&&main.variant!=='gold')h+='<button class="btn ghost" id="again">Nochmal für Gold</button>';
   h+='<button class="btn ghost" data-act="cathedral">Zur Kathedrale</button>';
   h+='</div>';
   body().innerHTML=h;
@@ -996,6 +1055,15 @@ function finishStage(ok){
   fl.addEventListener('click',reveal);
   fl.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();reveal();}});
   var ag=document.getElementById('again');if(ag)ag.addEventListener('click',function(){startStage(idx,true);});
+  document.getElementById('home').addEventListener('click',function(){
+    travel('heute',stageYear(st),function(){if(st.rueckkehr)showReturn(st,unlocked?nextCh:null);else showMap();});
+  });
+  window.scrollTo(0,0);
+}
+function showReturn(st,nextCh){
+  body().innerHTML='<div class="panel heute'+(reduceMotion?'':' enter')+'"><p class="kicker">'+esc(st.rueckkehr.k)+'</p><p class="txt">'+esc(st.rueckkehr.t)+'</p></div>'+
+    (nextCh?'<button class="btn primary" data-chap="'+nextCh.id+'">Weiter nach '+esc(nextCh.name)+'</button><button class="btn ghost" data-act="map">Zum Pilgerweg</button>':
+      '<button class="btn primary" data-act="map">Weiterpilgern</button>');
   window.scrollTo(0,0);
 }
 

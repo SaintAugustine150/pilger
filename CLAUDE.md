@@ -5,6 +5,7 @@ Katholisches Handyspiel von Philipp. Er ist technisch nicht versiert: Erkläre S
 ## Das Spiel
 - Der Spieler pilgert zu Pilgerorten und reist an jeder Etappe in die Zeit zurück, in der dort Entscheidendes geschah. Jede Etappe erzählt Szenen („heute“ und „damals“) und endet mit einer Prüfung.
 - **Nicht nur Marienerscheinungen:** Fátima und Lourdes sind nur der Anfang. Langfristig kommen Kapitel zu biblischen Geschichten an Pilgerorten (etwa im Heiligen Land), zur Kirchengeschichte und zu Heiligen der katholischen Kirche hinzu. Texte, Code und Gestaltung nicht auf Maria oder Erscheinungen festlegen (zum Beispiel feste Begriffe wie „Erscheinung“ in allgemeinen Spieltexten vermeiden).
+- **Jede Etappe ist ein Kreislauf:** heute auf dem Weg → Schwelle → Zeitreise ins Jahr `jahr` → Szenen damals → Prüfung (damals) → Belohnung → Rückreise → Rückkehr-Szene heute (`rueckkehr`) → weiter auf der Landkarte. Die letzte Heute-Szene endet an einem Gegenstand oder Sinneseindruck (Fluss, Glocken, Kerze, Fels), den die erste Damals-Szene wieder aufgreift. Neue Etappen immer so schreiben: erst alle Heute-, dann alle Damals-Szenen. Optisch ist damals altes Papier in Sepia (Klasse `era-damals` am `html`-Element), heute klar und blau; dazwischen läuft die Jahreszahl als Übergang.
 - **Kapitel sind unterschiedlich lang.** Nicht jede Pilgerreise hat sieben Etappen; Code und Layout (etwa die Landkarte) müssen mit beliebig vielen Etappen funktionieren.
 - Kapitel 1: Fátima (1916/17), Kapitel 2: Lourdes (1858). Ein Kapitel öffnet sich, wenn alle Etappen des vorigen geschafft sind.
 - Drei Kerzen pro Etappe, jeder Fehler löscht eine. Gold gibt es nur, wenn keine Kerze erlischt. Das Spiel soll bewusst nicht zu leicht sein.
@@ -15,6 +16,7 @@ Katholisches Handyspiel von Philipp. Er ist technisch nicht versiert: Erkläre S
 ## Theologische Leitlinien
 - Echtes Gebet ist nie eine Währung. Gebete sind Belohnung und Einladung, nicht Mittel zum Farmen.
 - Historische und theologische Fakten sorgfältig prüfen. Im Zweifel weglassen statt raten.
+- Alle Inhalte bleiben innerhalb der Lehre der katholischen Kirche (Maßstab: Katechismus und kirchliche Dokumente). Anerkannte Privatoffenbarungen wie Fátima und Lourdes als von der Kirche für glaubwürdig erklärt darstellen, nicht als Glaubenssatz; Dogmen korrekt formulieren (etwa Unbefleckte Empfängnis nicht mit Jungfrauengeburt verwechseln).
 
 ## Dateien (Code liegt flach im Hauptordner, weil GitHub Pages direkt daraus ausliefert; Bilder liegen in `bilder/`)
 - `index.html`: lädt Stil, Daten und Spielcode
@@ -46,7 +48,7 @@ Ein vorhandenes Bild mit gleichem Namen wird ersetzt; das ist so gewollt (etwa f
 ## Arbeitsweise
 - Spielstand liegt in `localStorage` unter dem Schlüssel `pilger-durch-die-zeit-v1`. Nie die Struktur brechen, sondern bei Bedarf in `migrate()` umwandeln. `pos` merkt sich je Kapitel, an welcher Etappe der Pilger auf der Landkarte steht; ist die nächste Etappe weiter, läuft er beim Öffnen der Karte dorthin.
 - Nach Änderungen testen: lokalen Server starten, die betroffenen Abläufe durchspielen und Philipp einen Link zur Vorschau geben.
-- Erst hochladen (commit und push), wenn Philipp es freigibt.
+- Erst hochladen (commit und push), wenn Philipp es freigibt. Er bündelt lieber mehrere Änderungen zu einem Upload; nach einer Aufgabe nicht von sich aus hochladen, sondern sagen, dass die Änderungen bereitliegen.
 
 ## Geplante Verbesserungen
 Erledigt: Navigation (Leiste unten, Zurück-Pfeil, Abbrechen mit Rückfrage, Zurück-Taste des Handys); gemalte Landkarten für Fátima und Lourdes mit laufendem Pilger.

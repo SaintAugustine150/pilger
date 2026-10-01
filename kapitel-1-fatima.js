@@ -12,8 +12,12 @@
                Wahr/falsch: s (Aussage), v (true = wahr, false = falsch)
    ereignisse  Für die Zeitstrahl-Prüfung: t (Text), d (Datum),
                k (Sortierschlüssel JJJJMMTT)
-   etappen     scenes = Erzählszenen (era heute/damals, k Ort, t Text),
-               ch = Prüfungen der Etappe
+   etappen     jahr = Jahr, in das die Zeitreise führt,
+               scenes = Erzählszenen (era heute/damals, k Ort, t Text). Die
+               letzte Heute-Szene endet an einer Schwelle (ein Gegenstand oder
+               Sinneseindruck), die erste Damals-Szene greift sie wieder auf.
+               ch = Prüfungen der Etappe,
+               rueckkehr = Szene zurück in der Gegenwart nach der Prüfung (k, t)
    weg         Landkarte (Bild bilder/wege/<id>.webp): groesse = Bildgröße,
                pfad = Wegpunkte [x, y] in Bildpixeln entlang des gemalten Weges,
                orte = für jede Etappe die Nummer des Wegpunkts (ab 0), an dem
@@ -175,6 +179,99 @@ KAPITEL.push({
           "Kirchenlieder auf Latein",
           "Ihre Tiere zu segnen"
         ]
+      },
+      {
+        "q": "Wo erschien der Engel bei seinem zweiten Besuch?",
+        "a": "Am Brunnen hinter Lúcias Elternhaus",
+        "w": [
+          "In der Pfarrkirche von Fátima",
+          "In der Cova da Iria",
+          "Auf dem Marktplatz von Ourém"
+        ],
+        "e": "Der erste und der dritte Besuch fanden an einem Felsen namens Loca do Cabeço statt."
+      },
+      {
+        "q": "In welchem Weiler lebten die drei Kinder?",
+        "a": "In Aljustrel",
+        "w": [
+          "In Ourém",
+          "In Batalha",
+          "In Leiria"
+        ]
+      },
+      {
+        "q": "Mit welchen Worten beginnt das Gebet, das der Engel die Kinder beim ersten Besuch lehrte?",
+        "a": "„Mein Gott, ich glaube an dich, ich bete dich an …“",
+        "w": [
+          "„Gegrüßet seist du, Maria …“",
+          "„Heiliger Michael, Erzengel …“",
+          "„Komm, Heiliger Geist …“"
+        ]
+      },
+      {
+        "q": "Wie betete der Engel vor den Kindern?",
+        "a": "Er kniete nieder und neigte die Stirn bis zur Erde",
+        "w": [
+          "Er stand mit weit erhobenen Armen",
+          "Er saß still auf einem Felsen",
+          "Er sang ein Lied auf Latein"
+        ]
+      },
+      {
+        "q": "Was sahen die Kinder beim dritten Besuch über dem Kelch?",
+        "a": "Eine Hostie, aus der Blutstropfen in den Kelch fielen",
+        "w": [
+          "Eine weiße Taube",
+          "Eine brennende Kerze",
+          "Einen Kranz aus Rosen"
+        ]
+      },
+      {
+        "q": "An wen richtet sich das Gebet, das der Engel beim dritten Besuch lehrte?",
+        "a": "An die Heiligste Dreifaltigkeit",
+        "w": [
+          "An den Erzengel Michael",
+          "An den heiligen Josef",
+          "An die Seelen im Fegefeuer"
+        ]
+      },
+      {
+        "q": "Wie hieß Lúcias Mutter, die den Erscheinungen lange nicht glaubte?",
+        "a": "Maria Rosa",
+        "w": [
+          "Olímpia",
+          "Maria da Conceição",
+          "Teresa"
+        ],
+        "e": "Olímpia war die Mutter von Francisco und Jacinta."
+      },
+      {
+        "q": "Wie beteten die Kinder den Rosenkranz manchmal, bevor der Engel kam?",
+        "a": "Auf jeder Perle sagten sie nur „Gegrüßet seist du, Maria“",
+        "w": [
+          "Sie kannten ihn noch gar nicht",
+          "Nur sonntags mit dem Pfarrer",
+          "Immer vollständig auf Latein"
+        ],
+        "e": "So waren sie schneller wieder beim Spielen. Nach den Besuchen des Engels beteten sie ihn ganz."
+      },
+      {
+        "q": "Was sagte der Engel als Erstes zu den Kindern?",
+        "a": "„Fürchtet euch nicht!“",
+        "w": [
+          "„Seid gegrüßt!“",
+          "„Folgt mir!“",
+          "„Wer seid ihr?“"
+        ]
+      },
+      {
+        "q": "Wessen Herzen, sagte der Engel, hätten mit den Kindern „Pläne der Barmherzigkeit“?",
+        "a": "Die heiligsten Herzen Jesu und Mariens",
+        "w": [
+          "Die Herzen ihrer Eltern",
+          "Die Herzen aller Engel",
+          "Das Herz des Papstes"
+        ]
       }
     ],
     "mai": [
@@ -254,6 +351,109 @@ KAPITEL.push({
           "Sieben Tage hintereinander",
           "Nur noch ein einziges Mal"
         ]
+      },
+      {
+        "q": "Was antwortete die Frau auf Lúcias Frage, woher sie komme?",
+        "a": "„Ich komme vom Himmel.“",
+        "w": [
+          "„Aus Jerusalem.“",
+          "„Aus Lissabon.“",
+          "„Das sage ich dir im Oktober.“"
+        ]
+      },
+      {
+        "q": "Was musste Francisco laut Maria tun, um in den Himmel zu kommen?",
+        "a": "Viele Rosenkränze beten",
+        "w": [
+          "Priester werden",
+          "Nach Rom pilgern",
+          "Drei Tage fasten"
+        ]
+      },
+      {
+        "q": "Maria fragte, ob die Kinder bereit seien, Leiden für die Bekehrung der Sünder anzunehmen. Was antworteten sie?",
+        "a": "„Ja, wir wollen.“",
+        "w": [
+          "Sie schwiegen",
+          "Sie wollten erst ihre Eltern fragen",
+          "Sie liefen davon"
+        ]
+      },
+      {
+        "q": "Wer erzählte zu Hause als Erste, dass die Kinder eine Frau gesehen hatten?",
+        "a": "Jacinta",
+        "w": [
+          "Lúcia",
+          "Francisco",
+          "Ein Nachbar, der sie beobachtet hatte"
+        ],
+        "e": "Dabei hatten die drei vereinbart, nichts zu verraten."
+      },
+      {
+        "q": "Was sahen die Kinder im Juni vor Marias rechter Hand?",
+        "a": "Ein Herz, von Dornen umgeben",
+        "w": [
+          "Eine weiße Taube",
+          "Einen goldenen Schlüssel",
+          "Eine Lilie"
+        ],
+        "e": "Es war das Unbefleckte Herz Mariens, verwundet von den Sünden der Menschen."
+      },
+      {
+        "q": "Worum bat Maria Lúcia im Juni außerdem?",
+        "a": "Lesen zu lernen",
+        "w": [
+          "Ins Kloster einzutreten",
+          "Ihre Herde zu verkaufen",
+          "Nach Lissabon zu ziehen"
+        ]
+      },
+      {
+        "q": "Wofür steht die Verehrung des Unbefleckten Herzens Mariens?",
+        "a": "Für Marias reine, ganz Gott zugewandte Liebe",
+        "w": [
+          "Für eine Reliquie in Fátima",
+          "Für ein Wunder der Herzheilung",
+          "Für einen portugiesischen Orden"
+        ]
+      },
+      {
+        "q": "Wie verhielt sich der Pfarrer von Fátima zunächst?",
+        "a": "Er war vorsichtig und zweifelte",
+        "w": [
+          "Er führte sofort Prozessionen an",
+          "Er ließ eine Kapelle bauen",
+          "Er schrieb an den Papst"
+        ],
+        "e": "Er hielt es sogar für möglich, dass eine Täuschung dahinterstecke."
+      },
+      {
+        "q": "In welche Richtung entschwand Maria am Ende der Erscheinung?",
+        "a": "Nach Osten",
+        "w": [
+          "Nach Westen",
+          "Nach Norden",
+          "Nach Süden"
+        ]
+      },
+      {
+        "q": "Welcher Gedenktag wird am 13. Mai gefeiert?",
+        "a": "Unsere Liebe Frau von Fátima",
+        "w": [
+          "Unsere Liebe Frau von Lourdes",
+          "Mariä Himmelfahrt",
+          "Mariä Geburt"
+        ]
+      },
+      {
+        "q": "Wie alt war Lúcia bei der ersten Erscheinung?",
+        "a": "10 Jahre",
+        "w": [
+          "7 Jahre",
+          "13 Jahre",
+          "16 Jahre"
+        ],
+        "e": "Francisco war 8, Jacinta 7 Jahre alt."
       }
     ],
     "august": [
@@ -329,6 +529,118 @@ KAPITEL.push({
           "Das Salve Regina",
           "Das Magnificat",
           "Den Engel des Herrn"
+        ]
+      },
+      {
+        "q": "An welchem Festtag brachte man die Kinder aus Ourém zurück?",
+        "a": "Mariä Himmelfahrt, 15. August",
+        "w": [
+          "Allerheiligen",
+          "Fronleichnam",
+          "Mariä Geburt"
+        ]
+      },
+      {
+        "q": "Welchen Beruf hatte der Administrator von Ourém?",
+        "a": "Blechschmied",
+        "w": [
+          "Arzt",
+          "Lehrer",
+          "Bäcker"
+        ],
+        "e": "Die Leute nannten ihn deshalb „den Blechschmied“."
+      },
+      {
+        "q": "Was taten die Kinder im Gefängnis von Ourém mit den Gefangenen?",
+        "a": "Sie beteten mit ihnen den Rosenkranz",
+        "w": [
+          "Sie sangen Volkslieder",
+          "Sie planten eine Flucht",
+          "Sie schliefen den ganzen Tag"
+        ]
+      },
+      {
+        "q": "Was zeigte der erste Teil des Geheimnisses?",
+        "a": "Eine Vision der Hölle",
+        "w": [
+          "Den Papst in Rom",
+          "Den Bau der Basilika",
+          "Das Ende des Krieges"
+        ]
+      },
+      {
+        "q": "Worum bat Maria im zweiten Teil des Geheimnisses unter anderem?",
+        "a": "Um die Weihe Russlands an ihr Unbeflecktes Herz",
+        "w": [
+          "Um eine Kirche in Moskau",
+          "Um einen Kreuzzug",
+          "Um das Ende aller Wallfahrten"
+        ]
+      },
+      {
+        "q": "Welche Andacht kündigte Maria im Juli an?",
+        "a": "Die Sühnekommunion an den ersten Samstagen",
+        "w": [
+          "Die Herz-Jesu-Freitage",
+          "Die Maiandacht",
+          "Die Pfingstnovene"
+        ]
+      },
+      {
+        "q": "Wer kommt im dritten Teil des Geheimnisses vor?",
+        "a": "Ein „in Weiß gekleideter Bischof“",
+        "w": [
+          "Ein König auf einem Thron",
+          "Ein Hirte mit seiner Herde",
+          "Ein Kind in einer Krippe"
+        ]
+      },
+      {
+        "q": "Wann wurde der dritte Teil des Geheimnisses veröffentlicht?",
+        "a": "Im Jahr 2000",
+        "w": [
+          "1917",
+          "1960",
+          "1981"
+        ],
+        "e": "Kardinal Ratzinger, der spätere Papst Benedikt XVI., schrieb dazu einen theologischen Kommentar."
+      },
+      {
+        "q": "In welchem Jahr schrieb Lúcia den dritten Teil des Geheimnisses nieder?",
+        "a": "1944",
+        "w": [
+          "1917",
+          "1930",
+          "1981"
+        ],
+        "e": "Sie tat es auf Anweisung ihres Bischofs."
+      },
+      {
+        "q": "Wen schickte Lúcia am 19. August los, um Jacinta zu holen?",
+        "a": "Franciscos Bruder João",
+        "w": [
+          "Ihren Vater",
+          "Den Pfarrer",
+          "Einen Nachbarsjungen aus Ourém"
+        ]
+      },
+      {
+        "q": "Was sollte laut Maria mit dem Geld geschehen, das die Leute in der Cova da Iria zurückließen?",
+        "a": "Davon sollten Tragegestelle für das Rosenkranzfest gemacht werden",
+        "w": [
+          "Es sollte den Kindern gehören",
+          "Es sollte für eine Straße verwendet werden",
+          "Es sollte nach Rom geschickt werden"
+        ],
+        "e": "Was übrig blieb, sollte für die Kapelle bestimmt sein."
+      },
+      {
+        "q": "Wozu ermahnte Maria die Kinder in Valinhos?",
+        "a": "Viel zu beten und Opfer für die Sünder zu bringen",
+        "w": [
+          "Nicht mehr von den Erscheinungen zu sprechen",
+          "Den Administrator anzuzeigen",
+          "Nach Ourém zurückzugehen"
         ]
       }
     ],
@@ -428,6 +740,116 @@ KAPITEL.push({
           "Im Heiligtum von Fátima",
           "In Lourdes"
         ]
+      },
+      {
+        "q": "Was geschah laut Augenzeugen mit den durchnässten Kleidern?",
+        "a": "Sie waren plötzlich trocken",
+        "w": [
+          "Sie färbten sich golden",
+          "Sie wurden noch nasser",
+          "Sie rochen nach Rosen"
+        ]
+      },
+      {
+        "q": "Was rief Lúcia der Menge zu, als das Sonnenwunder begann?",
+        "a": "Sie sollten zur Sonne schauen",
+        "w": [
+          "Sie sollten nach Hause gehen",
+          "Sie sollten die Schirme öffnen",
+          "Sie sollten still sein"
+        ]
+      },
+      {
+        "q": "In welcher Gestalt sah Lúcia Maria während des Sonnenwunders zuletzt?",
+        "a": "Als Unsere Liebe Frau vom Berge Karmel",
+        "w": [
+          "Als Unsere Liebe Frau von Lourdes",
+          "Als Königin von Polen",
+          "Als Unsere Liebe Frau von Guadalupe"
+        ]
+      },
+      {
+        "q": "Was tat der heilige Josef mit dem Jesuskind in Lúcias Vision?",
+        "a": "Er segnete die Welt",
+        "w": [
+          "Er sprach zu der Menge",
+          "Er pflanzte eine Steineiche",
+          "Er läutete eine Glocke"
+        ]
+      },
+      {
+        "q": "Wo sind Francisco, Jacinta und Lúcia heute begraben?",
+        "a": "In der Basilika Unserer Lieben Frau vom Rosenkranz in Fátima",
+        "w": [
+          "Im Petersdom",
+          "In der Kathedrale von Lissabon",
+          "Auf dem Friedhof von Aljustrel"
+        ]
+      },
+      {
+        "q": "Welche große Kirche wurde 2007 in Fátima geweiht?",
+        "a": "Die Basilika der Heiligsten Dreifaltigkeit",
+        "w": [
+          "Die Basilika Unserer Lieben Frau vom Rosenkranz",
+          "Die Kathedrale von Leiria",
+          "Die Erscheinungskapelle"
+        ],
+        "e": "Sie bietet fast 9.000 Menschen Platz. Die Rosenkranzbasilika wurde schon 1953 geweiht."
+      },
+      {
+        "q": "Welcher Papst besuchte Fátima als Erster?",
+        "a": "Paul VI.",
+        "w": [
+          "Johannes XXIII.",
+          "Pius XII.",
+          "Johannes Paul II."
+        ],
+        "e": "Am 13. Mai 1967, zum 50. Jahrestag der ersten Erscheinung."
+      },
+      {
+        "q": "Was tat Johannes Paul II. am 25. März 1984 in Einheit mit den Bischöfen der Welt?",
+        "a": "Er weihte die Welt dem Unbefleckten Herzen Mariens",
+        "w": [
+          "Er sprach Lúcia heilig",
+          "Er reiste zum ersten Mal nach Fátima",
+          "Er veröffentlichte das dritte Geheimnis"
+        ]
+      },
+      {
+        "q": "Welche beiden Länder weihte Papst Franziskus am 25. März 2022 dem Unbefleckten Herzen Mariens?",
+        "a": "Russland und die Ukraine",
+        "w": [
+          "Portugal und Spanien",
+          "Polen und Litauen",
+          "Italien und Frankreich"
+        ]
+      },
+      {
+        "q": "An welchem Tag feiert die Kirche Unsere Liebe Frau vom Rosenkranz?",
+        "a": "Am 7. Oktober",
+        "w": [
+          "Am 13. Oktober",
+          "Am 8. Dezember",
+          "Am 15. August"
+        ]
+      },
+      {
+        "q": "Woran erkrankten Francisco und Jacinta Ende 1918?",
+        "a": "An der Spanischen Grippe",
+        "w": [
+          "An der Pest",
+          "An den Pocken",
+          "An Malaria"
+        ]
+      },
+      {
+        "q": "Was ist das Besondere an Francisco und Jacinta als Heilige?",
+        "a": "Sie sind die jüngsten Heiligen, die nicht als Märtyrer starben",
+        "w": [
+          "Sie wurden noch zu Lebzeiten heiliggesprochen",
+          "Sie sind die einzigen heiligen Geschwister",
+          "Sie wurden in Rom geboren"
+        ]
       }
     ]
   },
@@ -441,6 +863,11 @@ KAPITEL.push({
       "t": "Erste Marienerscheinung in der Cova da Iria",
       "d": "13. Mai 1917",
       "k": 19170513
+    },
+    {
+      "t": "Zweite Marienerscheinung am Fest des heiligen Antonius",
+      "d": "13. Juni 1917",
+      "k": 19170613
     },
     {
       "t": "Maria zeigt das dreiteilige Geheimnis",
@@ -458,6 +885,11 @@ KAPITEL.push({
       "k": 19170819
     },
     {
+      "t": "Eine riesige Menge betet mit den Kindern",
+      "d": "13. September 1917",
+      "k": 19170913
+    },
+    {
       "t": "Das Sonnenwunder",
       "d": "13. Oktober 1917",
       "k": 19171013
@@ -473,14 +905,29 @@ KAPITEL.push({
       "k": 19200220
     },
     {
+      "t": "Grundsteinlegung der Rosenkranzbasilika",
+      "d": "13. Mai 1928",
+      "k": 19280513
+    },
+    {
       "t": "Der Bischof von Leiria erkennt die Erscheinungen an",
       "d": "1930",
       "k": 19301013
     },
     {
+      "t": "Paul VI. besucht als erster Papst Fátima",
+      "d": "13. Mai 1967",
+      "k": 19670513
+    },
+    {
       "t": "Attentat auf Papst Johannes Paul II.",
       "d": "13. Mai 1981",
       "k": 19810513
+    },
+    {
+      "t": "Johannes Paul II. weiht die Welt dem Unbefleckten Herzen Mariens",
+      "d": "25. März 1984",
+      "k": 19840325
     },
     {
       "t": "Das dritte Geheimnis wird veröffentlicht",
@@ -491,6 +938,11 @@ KAPITEL.push({
       "t": "Schwester Lúcia stirbt in Coimbra",
       "d": "2005",
       "k": 20050213
+    },
+    {
+      "t": "Die Basilika der Heiligsten Dreifaltigkeit wird geweiht",
+      "d": "2007",
+      "k": 20071012
     },
     {
       "t": "Francisco und Jacinta werden heiliggesprochen",
@@ -505,6 +957,7 @@ KAPITEL.push({
       "leg": "Aufbruch in Lissabon",
       "title": "Der Engel des Friedens",
       "date": "Frühjahr 1916",
+      "jahr": 1916,
       "scenes": [
         {
           "era": "heute",
@@ -514,12 +967,12 @@ KAPITEL.push({
         {
           "era": "heute",
           "k": "Am ersten Wegkreuz",
-          "t": "Am Stadtrand bleibst du an einem steinernen Kreuz stehen und schließt die Augen. Der Verkehrslärm wird leiser, dann ist er ganz fort. Es riecht nach nassem Gras."
+          "t": "Am Stadtrand bleibst du an einem steinernen Kreuz stehen und schließt die Augen. Der Verkehrslärm wird leiser, dann ist er ganz fort. Ein Schaf blökt. Es riecht nach nassem Gras."
         },
         {
           "era": "damals",
           "k": "Bei Aljustrel, 1916",
-          "t": "Drei Hirtenkinder hüten ihre Schafe: Lúcia und ihre Cousins Francisco und Jacinta. Plötzlich kommt ein Licht über die Bäume auf sie zu, eine Gestalt wie ein junger Mann, weiß und durchscheinend."
+          "t": "Ein Hang voller Olivenbäume, das Gras noch nass. Drei Hirtenkinder hüten ihre Schafe: Lúcia und ihre Cousins Francisco und Jacinta. Plötzlich kommt ein Licht über die Bäume auf sie zu, eine Gestalt wie ein junger Mann, weiß und durchscheinend."
         },
         {
           "era": "damals",
@@ -535,7 +988,11 @@ KAPITEL.push({
           "time": 15,
           "title": "Der Engel des Friedens"
         }
-      ]
+      ],
+      "rueckkehr": {
+        "k": "Am Wegkreuz, heute",
+        "t": "Ein Lastwagen hupt, und du stehst wieder am steinernen Kreuz. Deine Knie sind kalt, als hättest du lange gekniet. „Fürchtet euch nicht“, hat der Engel gesagt. Du nimmst den Rucksack und gehst los, den blauen Pfeilen nach."
+      }
     },
     {
       "id": "s2",
@@ -543,16 +1000,17 @@ KAPITEL.push({
       "leg": "Entlang des Tejo",
       "title": "Die Frau über der Steineiche",
       "date": "13. Mai 1917",
+      "jahr": 1917,
       "scenes": [
         {
           "era": "heute",
           "k": "Am Tejo",
-          "t": "Der Weg folgt dem Fluss nach Norden, zwischen Feldern und Lagerhallen. Am Nachmittag sind die ersten Blasen da. Du zählst die Perlen deines Rosenkranzes statt der Kilometer."
+          "t": "Der Weg folgt dem Fluss nach Norden, zwischen Feldern und Lagerhallen. Am Mittag sind die ersten Blasen da. Du zählst die Perlen deines Rosenkranzes statt der Kilometer. Bei der zehnten Perle verstummt das Rauschen des Flusses, und die Perlen fühlen sich plötzlich an wie grob geschnitztes Holz."
         },
         {
           "era": "damals",
           "k": "Cova da Iria, 13. Mai 1917",
-          "t": "Mittag in einer Senke voller Steineichen. Ein Blitz zuckt über den klaren Himmel. Die Kinder fürchten ein Gewitter und treiben die Herde zusammen. Da sehen sie über einer kleinen Steineiche eine Frau, heller als die Sonne."
+          "t": "Mittag in einer Senke voller Steineichen. Die Kinder haben gerade den Rosenkranz gebetet und bauen zum Spiel eine kleine Mauer aus Steinen. Da zuckt ein Blitz über den klaren Himmel. Sie fürchten ein Gewitter und treiben die Herde zusammen. Da sehen sie über einer kleinen Steineiche eine Frau, heller als die Sonne."
         },
         {
           "era": "damals",
@@ -569,7 +1027,11 @@ KAPITEL.push({
           "jitter": 0,
           "title": "Ein Gesätz mit den Hirtenkindern"
         }
-      ]
+      ],
+      "rueckkehr": {
+        "k": "Am Tejo, heute",
+        "t": "Deine Finger liegen noch auf der zehnten Perle. Der Fluss rauscht wieder, irgendwo bellt ein Hund. „Jeden Tag den Rosenkranz“, hat sie gesagt. Du betest das Gesätz zu Ende und stehst auf. Die Blasen spürst du kaum noch."
+      }
     },
     {
       "id": "s3",
@@ -577,16 +1039,17 @@ KAPITEL.push({
       "leg": "Santarém",
       "title": "Das Unbefleckte Herz",
       "date": "13. Juni 1917",
+      "jahr": 1917,
       "scenes": [
         {
           "era": "heute",
           "k": "Santarém, heute",
-          "t": "Die Stadt thront auf einem Hügel über dem Tejo. In der Pilgerherberge teilst du dein Brot mit einer Frau aus Braga, die den Weg zum zwölften Mal geht. Sie fragt dich, warum du gehst."
+          "t": "Die Stadt thront auf einem Hügel über dem Tejo. In der Pilgerherberge teilst du dein Brot mit einer Frau aus Braga, die den Weg zum zwölften Mal geht. Sie fragt dich, warum du gehst. Bevor du antworten kannst, läuten draußen die Glocken. Du zählst die Schläge, und der letzte klingt fern und hell, wie aus einem Dorf an einem Festtag."
         },
         {
           "era": "damals",
           "k": "Cova da Iria, 13. Juni 1917",
-          "t": "Im Dorf feiert man den heiligen Antonius. Trotzdem ist eine kleine Gruppe mit den Kindern gekommen. Sie beten gemeinsam den Rosenkranz und sehen, wie die Kinder gebannt zur Steineiche blicken."
+          "t": "Drüben im Dorf feiert man den heiligen Antonius. Trotzdem ist eine kleine Gruppe mit den Kindern gekommen. Sie beten gemeinsam den Rosenkranz und sehen, wie die Kinder gebannt zur Steineiche blicken."
         },
         {
           "era": "damals",
@@ -602,7 +1065,11 @@ KAPITEL.push({
           "time": 15,
           "title": "Mai und Juni 1917"
         }
-      ]
+      ],
+      "rueckkehr": {
+        "k": "Santarém, heute",
+        "t": "Die Glocken sind verklungen. Die Frau aus Braga sieht dich noch immer fragend an. Du erzählst ihr von einem Herzen, umgeben von Dornen, und dass du noch nicht ganz weißt, warum du gehst, aber dass du weitergehen willst. Sie lächelt und schiebt dir das letzte Stück Brot hin."
+      }
     },
     {
       "id": "s4",
@@ -610,16 +1077,17 @@ KAPITEL.push({
       "leg": "Durch den Ribatejo",
       "title": "Das Geheimnis",
       "date": "13. Juli 1917",
+      "jahr": 1917,
       "scenes": [
         {
           "era": "heute",
           "k": "Ribatejo, heute",
-          "t": "Korkeichen, Staub, kaum Schatten. Das Wasser in deiner Flasche ist warm geworden. Du betest für jeden Menschen, der dir heute begegnet ist, und es sind mehr, als du dachtest."
+          "t": "Korkeichen, Staub, kaum Schatten. Das Wasser in deiner Flasche ist warm geworden. Du betest für jeden Menschen, der dir heute begegnet ist, und es sind mehr, als du dachtest. Im Schatten einer Korkeiche setzt du dich. Die Hitze flimmert über dem Feld, und als du blinzelst, flimmert sie über einer Senke voller Menschen."
         },
         {
           "era": "damals",
           "k": "Cova da Iria, 13. Juli 1917",
-          "t": "Maria zeigt den Kindern ein Geheimnis in drei Teilen. Was sie sehen, erschüttert vor allem Jacinta. Von nun an bringt sie Opfer für die Sünder."
+          "t": "Viele Menschen sind trotz der Sommerhitze gekommen und drängen sich um die Steineiche. Maria zeigt den Kindern ein Geheimnis in drei Teilen. Was sie sehen, erschüttert vor allem Jacinta. Von nun an bringt sie Opfer für die Sünder."
         },
         {
           "era": "damals",
@@ -633,7 +1101,11 @@ KAPITEL.push({
           "count": 5,
           "title": "Die Zeit ordnen"
         }
-      ]
+      ],
+      "rueckkehr": {
+        "k": "Ribatejo, heute",
+        "t": "Die Flasche in deiner Hand ist leer. Ein Traktor zieht eine Staubwolke über das Feld. Du denkst an Jacinta, die so klein war und so viel für andere getragen hat. Für den Rest des Tages klagst du nicht mehr über die Hitze."
+      }
     },
     {
       "id": "s5",
@@ -641,11 +1113,12 @@ KAPITEL.push({
       "leg": "In die Serra de Aire",
       "title": "Standhaft in Ourém",
       "date": "August 1917",
+      "jahr": 1917,
       "scenes": [
         {
           "era": "heute",
           "k": "Serra de Aire, heute",
-          "t": "Der Weg steigt an. Kalkstein, niedrige Mauern, Wind. Ein Hund begleitet dich ein Stück und verschwindet dann zwischen den Oliven."
+          "t": "Der Weg steigt an. Kalkstein, niedrige Mauern, Wind. Ein Hund begleitet dich ein Stück und verschwindet dann zwischen den Oliven. Oben auf dem Hügel steht die alte Burg von Ourém. Als du hinaufschaust, rumpelt hinter dir ein Fuhrwerk über die Steine, doch auf der Straße ist niemand."
         },
         {
           "era": "damals",
@@ -666,7 +1139,11 @@ KAPITEL.push({
           "time": 12,
           "title": "Das Verhör"
         }
-      ]
+      ],
+      "rueckkehr": {
+        "k": "Serra de Aire, heute",
+        "t": "Der Wind ist wieder da, und der Hund sitzt neben dir, als hätte er gewartet. Drei Kinder haben geschwiegen, obwohl man ihnen mit dem Tod drohte. Du gehst weiter, und der Anstieg kommt dir kürzer vor."
+      }
     },
     {
       "id": "s6",
@@ -674,11 +1151,12 @@ KAPITEL.push({
       "leg": "Die letzten Kilometer",
       "title": "Die große Menge",
       "date": "13. September 1917",
+      "jahr": 1917,
       "scenes": [
         {
           "era": "heute",
           "k": "Kurz vor Fátima",
-          "t": "Ein Kilometerstein: noch zehn. Deine Beine sind schwer, die Schritte werden kürzer. Nur der Rosenkranz in deiner Tasche wiegt nichts."
+          "t": "Ein Kilometerstein: noch zehn. Deine Beine sind schwer, die Schritte werden kürzer. Nur der Rosenkranz in deiner Tasche wiegt nichts. Von hinten kommt eine Gruppe Pilger, sie beten laut. Du reihst dich ein. Die Stimmen werden mehr und mehr, bis es Tausende sind."
         },
         {
           "era": "damals",
@@ -700,7 +1178,11 @@ KAPITEL.push({
           "jitter": 170,
           "title": "Ein Gesätz in der Menge"
         }
-      ]
+      ],
+      "rueckkehr": {
+        "k": "Kurz vor Fátima, heute",
+        "t": "Die Gruppe ist weitergezogen, ihr Gebet hörst du noch von fern. Am Wegrand steht ein Kilometerstein: noch fünf. Du nimmst den Rosenkranz aus der Tasche und gehst betend weiter, im Rhythmus deiner Schritte."
+      }
     },
     {
       "id": "s7",
@@ -708,11 +1190,12 @@ KAPITEL.push({
       "leg": "Ankunft in Fátima",
       "title": "Das Sonnenwunder",
       "date": "13. Oktober 1917",
+      "jahr": 1917,
       "scenes": [
         {
           "era": "heute",
           "k": "Fátima, heute",
-          "t": "Die Basilika taucht zwischen den Bäumen auf. Auf dem weiten Platz rutschen Pilger auf Knien zur Erscheinungskapelle. Du stellst deinen Rucksack ab, und die Welt kippt ein letztes Mal."
+          "t": "Die Basilika taucht zwischen den Bäumen auf. Auf dem weiten Platz rutschen Pilger auf Knien zur Erscheinungskapelle. Ein paar Regentropfen fallen. Du stellst deinen Rucksack ab, und die Welt kippt ein letztes Mal."
         },
         {
           "era": "damals",
@@ -738,7 +1221,11 @@ KAPITEL.push({
           "time": 10,
           "title": "Teil 2: Die letzte Prüfung"
         }
-      ]
+      ],
+      "rueckkehr": {
+        "k": "Fátima, heute",
+        "t": "Der Regen hat aufgehört, die Sonne steht ruhig am Himmel. Du kniest vor der Erscheinungskapelle, dort, wo die kleine Steineiche stand. Rund 140 Kilometer liegen hinter dir. Du dankst für jeden Schritt und für die drei Kinder, die dir den Weg gezeigt haben."
+      }
     }
   ]
 });

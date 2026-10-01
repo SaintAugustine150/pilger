@@ -12,8 +12,12 @@
                Wahr/falsch: s (Aussage), v (true = wahr, false = falsch)
    ereignisse  Für die Zeitstrahl-Prüfung: t (Text), d (Datum),
                k (Sortierschlüssel JJJJMMTT)
-   etappen     scenes = Erzählszenen (era heute/damals, k Ort, t Text),
-               ch = Prüfungen der Etappe
+   etappen     jahr = Jahr, in das die Zeitreise führt,
+               scenes = Erzählszenen (era heute/damals, k Ort, t Text). Die
+               letzte Heute-Szene endet an einer Schwelle (ein Gegenstand oder
+               Sinneseindruck), die erste Damals-Szene greift sie wieder auf.
+               ch = Prüfungen der Etappe,
+               rueckkehr = Szene zurück in der Gegenwart nach der Prüfung (k, t)
    weg         Landkarte (Bild bilder/wege/<id>.webp): groesse = Bildgröße,
                pfad = Wegpunkte [x, y] in Bildpixeln entlang des gemalten Weges,
                orte = für jede Etappe die Nummer des Wegpunkts (ab 0), an dem
@@ -177,6 +181,101 @@ KAPITEL.push({
           "An den Vogesen",
           "Am Zentralmassiv"
         ]
+      },
+      {
+        "q": "Wie hießen Bernadettes Eltern?",
+        "a": "François und Louise Soubirous",
+        "w": [
+          "Jean und Marie Soubirous",
+          "Pierre und Anne Soubirous",
+          "Louis und Jeanne Soubirous"
+        ]
+      },
+      {
+        "q": "Woran litt Bernadette seit ihrer Kindheit?",
+        "a": "An Asthma",
+        "w": [
+          "An Taubheit",
+          "An einem lahmen Bein",
+          "An schlechten Augen"
+        ]
+      },
+      {
+        "q": "Welche Seuche hatte Bernadette 1855 überlebt?",
+        "a": "Die Cholera",
+        "w": [
+          "Die Pest",
+          "Die Pocken",
+          "Die Masern"
+        ],
+        "e": "Seitdem litt sie an Asthma."
+      },
+      {
+        "q": "Wie hieß Bernadettes jüngere Schwester?",
+        "a": "Toinette",
+        "w": [
+          "Jeanne",
+          "Louise",
+          "Marie-Rose"
+        ],
+        "e": "Sie war am 11. Februar 1858 mit an der Grotte."
+      },
+      {
+        "q": "Wie wurde Bernadette getauft?",
+        "a": "Marie-Bernarde",
+        "w": [
+          "Marie-Bernadette",
+          "Bernardine",
+          "Anne-Bernard"
+        ],
+        "e": "„Bernadette“ ist die Koseform."
+      },
+      {
+        "q": "Warum kam Bernadettes Vater 1857 für einige Tage ins Gefängnis?",
+        "a": "Man verdächtigte ihn, Mehl gestohlen zu haben",
+        "w": [
+          "Er hatte Schulden beim Pfarrer",
+          "Er hatte sich mit dem Bürgermeister geprügelt",
+          "Er hatte gewildert"
+        ],
+        "e": "Beweise gab es keine, er kam wieder frei."
+      },
+      {
+        "q": "Zu welchem Bistum gehörte Lourdes 1858?",
+        "a": "Zum Bistum Tarbes",
+        "w": [
+          "Zum Bistum Toulouse",
+          "Zum Bistum Bayonne",
+          "Zum Bistum Bordeaux"
+        ]
+      },
+      {
+        "q": "Wie viele Kinder der Familie Soubirous lebten 1858 im Cachot?",
+        "a": "Vier",
+        "w": [
+          "Zwei",
+          "Sechs",
+          "Neun"
+        ],
+        "e": "Bernadette war die Älteste."
+      },
+      {
+        "q": "In welcher Mühle wurde Bernadette geboren?",
+        "a": "In der Mühle von Boly",
+        "w": [
+          "In der Mühle von Bétharram",
+          "In der Mühle von Pau",
+          "In der Mühle von Tarbes"
+        ]
+      },
+      {
+        "q": "Welchem Fluss folgt der Pilgerweg von Pau nach Lourdes?",
+        "a": "Dem Gave de Pau",
+        "w": [
+          "Der Garonne",
+          "Der Loire",
+          "Der Rhône"
+        ]
       }
     ],
     "verhoer": [
@@ -227,6 +326,55 @@ KAPITEL.push({
       {
         "s": "Die Grotte liegt am Ufer des Gave.",
         "v": true
+      },
+      {
+        "s": "Bernadette brachte oft eine brennende Kerze mit zur Grotte.",
+        "v": true
+      },
+      {
+        "s": "Die Dame stand in einer Felsnische über einem wilden Rosenstrauch.",
+        "v": true
+      },
+      {
+        "s": "Schon bei der ersten Erscheinung sprach die Dame viele Sätze.",
+        "v": false,
+        "e": "Zum ersten Mal sprach sie am 18. Februar."
+      },
+      {
+        "s": "Als Bernadette Papier und Feder mitbrachte, schrieb die Dame ihren Wunsch auf.",
+        "v": false,
+        "e": "„Das ist nicht nötig“, antwortete sie."
+      },
+      {
+        "s": "Kommissar Jacomet drohte Bernadette mit dem Gefängnis.",
+        "v": true
+      },
+      {
+        "s": "Bernadettes Eltern verboten ihr zunächst, wieder zur Grotte zu gehen.",
+        "v": true
+      },
+      {
+        "s": "Bernadette nahm Geld von den Besuchern der Grotte an.",
+        "v": false,
+        "e": "Sie lehnte Geld und Geschenke stets ab."
+      },
+      {
+        "s": "Die Dame sprach in Bernadettes Dialekt.",
+        "v": true
+      },
+      {
+        "s": "Die Dame war von Licht umgeben.",
+        "v": true
+      },
+      {
+        "s": "In den vierzehn Tagen erschien die Dame jedes Mal, wenn Bernadette kam.",
+        "v": false,
+        "e": "Am 22. und am 26. Februar sah Bernadette sie nicht."
+      },
+      {
+        "s": "Kaiser Napoleon III. ließ die Absperrung der Grotte später aufheben.",
+        "v": true,
+        "e": "Im Oktober 1858 wurde die Grotte wieder geöffnet."
       }
     ],
     "spaeter": [
@@ -344,6 +492,91 @@ KAPITEL.push({
           "In Tarbes",
           "In Rom"
         ]
+      },
+      {
+        "q": "Wer prüft in Lourdes gemeldete Heilungen zuerst?",
+        "a": "Ein medizinisches Büro mit Ärzten",
+        "w": [
+          "Der Bürgermeister von Lourdes",
+          "Der Papst persönlich",
+          "Die Polizei"
+        ],
+        "e": "Ob eine Heilung als Wunder gilt, entscheidet danach der Bischof des Geheilten."
+      },
+      {
+        "q": "Wie viele Pilger kommen jedes Jahr nach Lourdes?",
+        "a": "Mehrere Millionen",
+        "w": [
+          "Einige Tausend",
+          "Rund 100.000",
+          "Über eine Milliarde"
+        ]
+      },
+      {
+        "q": "Wie heißt die große unterirdische Basilika in Lourdes, die 1958 geweiht wurde?",
+        "a": "Basilika St. Pius X.",
+        "w": [
+          "Basilika St. Bernadette",
+          "Basilika St. Peter",
+          "Basilika St. Michael"
+        ],
+        "e": "Geweiht hat sie Kardinal Roncalli, der spätere Papst Johannes XXIII."
+      },
+      {
+        "q": "Was rief die Dame am 24. Februar dreimal?",
+        "a": "„Buße!“",
+        "w": [
+          "„Betet!“",
+          "„Friede!“",
+          "„Kommt!“"
+        ]
+      },
+      {
+        "q": "Die wievielte Erscheinung war die vom 25. März?",
+        "a": "Die sechzehnte",
+        "w": [
+          "Die siebte",
+          "Die zwölfte",
+          "Die achtzehnte"
+        ]
+      },
+      {
+        "q": "Womit verglich sich Bernadette später selbst?",
+        "a": "Mit einem Besen, den man nach Gebrauch hinter die Tür stellt",
+        "w": [
+          "Mit einer Kerze, die verlöscht",
+          "Mit einem Lamm",
+          "Mit einem Stein in der Grotte"
+        ]
+      },
+      {
+        "q": "Welche Arbeit übernahm Bernadette im Kloster unter anderem?",
+        "a": "Die Pflege der Kranken",
+        "w": [
+          "Die Leitung der Schule",
+          "Die Verwaltung der Finanzen",
+          "Die Mission in Afrika"
+        ]
+      },
+      {
+        "q": "Wie heißt das Schreiben, mit dem Pius IX. 1854 das Dogma der Unbefleckten Empfängnis verkündete?",
+        "a": "Ineffabilis Deus",
+        "w": [
+          "Munificentissimus Deus",
+          "Rerum novarum",
+          "Humanae vitae"
+        ],
+        "e": "Mit „Munificentissimus Deus“ verkündete Pius XII. 1950 die Aufnahme Marias in den Himmel."
+      },
+      {
+        "q": "Welches Mariendogma wurde 1950 verkündet?",
+        "a": "Die Aufnahme Marias mit Leib und Seele in den Himmel",
+        "w": [
+          "Die Unbefleckte Empfängnis",
+          "Die Gottesmutterschaft Marias",
+          "Die immerwährende Jungfräulichkeit"
+        ],
+        "e": "Die Gottesmutterschaft wurde schon 431 auf dem Konzil von Ephesus festgehalten."
       }
     ]
   },
@@ -364,9 +597,19 @@ KAPITEL.push({
       "k": 18580211
     },
     {
+      "t": "Die Dame spricht zum ersten Mal",
+      "d": "18. Februar 1858",
+      "k": 18580218
+    },
+    {
       "t": "Kommissar Jacomet verhört Bernadette",
       "d": "21. Februar 1858",
       "k": 18580221
+    },
+    {
+      "t": "„Buße! Buße! Buße!“",
+      "d": "24. Februar 1858",
+      "k": 18580224
     },
     {
       "t": "Die Quelle entspringt",
@@ -377,6 +620,11 @@ KAPITEL.push({
       "t": "Catherine Latapie wird geheilt",
       "d": "1. März 1858",
       "k": 18580301
+    },
+    {
+      "t": "Die Dame bittet um eine Kapelle und um Prozessionen",
+      "d": "2. März 1858",
+      "k": 18580302
     },
     {
       "t": "„Ich bin die Unbefleckte Empfängnis“",
@@ -399,6 +647,11 @@ KAPITEL.push({
       "k": 18580716
     },
     {
+      "t": "Die Grotte wird wieder geöffnet",
+      "d": "Oktober 1858",
+      "k": 18581004
+    },
+    {
       "t": "Der Bischof von Tarbes erkennt die Erscheinungen an",
       "d": "1862",
       "k": 18620118
@@ -409,6 +662,11 @@ KAPITEL.push({
       "k": 18660707
     },
     {
+      "t": "Die Basilika der Unbefleckten Empfängnis wird geweiht",
+      "d": "1876",
+      "k": 18760702
+    },
+    {
       "t": "Bernadette stirbt",
       "d": "1879",
       "k": 18790416
@@ -417,6 +675,11 @@ KAPITEL.push({
       "t": "Bernadette wird heiliggesprochen",
       "d": "1933",
       "k": 19331208
+    },
+    {
+      "t": "Die unterirdische Basilika St. Pius X. wird geweiht",
+      "d": "25. März 1958",
+      "k": 19580325
     }
   ],
   "etappen": [
@@ -426,6 +689,7 @@ KAPITEL.push({
       "leg": "Aufbruch in Pau",
       "title": "Das Cachot",
       "date": "Winter 1857/58",
+      "jahr": 1858,
       "scenes": [
         {
           "era": "heute",
@@ -440,7 +704,7 @@ KAPITEL.push({
         {
           "era": "damals",
           "k": "Lourdes, Winter 1857/58",
-          "t": "Ein einziger feuchter Raum, früher eine Gefängniszelle. Darum nennen ihn alle nur das Cachot. Hier lebt die Familie Soubirous zu sechst. Der Vater hat die Mühle verloren und findet nur tageweise Arbeit."
+          "t": "Holzrauch hängt in einem einzigen feuchten Raum, früher eine Gefängniszelle. Darum nennen ihn alle nur das Cachot. Hier lebt die Familie Soubirous zu sechst. Der Vater hat die Mühle verloren und findet nur tageweise Arbeit."
         },
         {
           "era": "damals",
@@ -456,7 +720,11 @@ KAPITEL.push({
           "time": 14,
           "title": "Bernadette"
         }
-      ]
+      ],
+      "rueckkehr": {
+        "k": "Am Stadtrand, heute",
+        "t": "Die Kerze vor der Statue flackert. Du sitzt wieder auf der kalten Steinbank. Ein Mädchen, das kaum lesen konnte und nichts besaß, wird bald etwas sehen, das Millionen Menschen an diesen Fluss führen wird. Du stehst auf und folgst dem Gave."
+      }
     },
     {
       "id": "l2",
@@ -464,11 +732,12 @@ KAPITEL.push({
       "leg": "Am Gave entlang",
       "title": "Die Dame in der Grotte",
       "date": "11. Februar 1858",
+      "jahr": 1858,
       "scenes": [
         {
           "era": "heute",
           "k": "Am Gave, heute",
-          "t": "Der Fluss ist milchig grün vom Wasser der Berge. Der Weg führt über Wiesen und durch kleine Dörfer. Eine Frau, die Wäsche aufhängt, ruft dir „Bon chemin!“ nach."
+          "t": "Der Fluss ist milchig grün vom Wasser der Berge. Der Weg führt über Wiesen und durch kleine Dörfer. Eine Frau, die Wäsche aufhängt, ruft dir „Bon chemin!“ nach. An einem seichten Seitenarm ziehst du die Schuhe aus und watest hindurch. Das Wasser ist so kalt, dass dir der Atem stockt. Als du aufblickst, ist das Ufer ein anderes."
         },
         {
           "era": "damals",
@@ -490,7 +759,11 @@ KAPITEL.push({
           "jitter": 0,
           "title": "Der erste Rosenkranz an der Grotte"
         }
-      ]
+      ],
+      "rueckkehr": {
+        "k": "Am Gave, heute",
+        "t": "Du stehst noch im Wasser, die Schuhe in der Hand. Deine Füße sind taub vor Kälte, und doch ist dir warm. Am anderen Ufer weht die Wäsche im Wind. Du trocknest die Füße und gehst weiter flussaufwärts."
+      }
     },
     {
       "id": "l3",
@@ -498,16 +771,17 @@ KAPITEL.push({
       "leg": "Bétharram",
       "title": "Vierzehn Tage",
       "date": "18. bis 21. Februar 1858",
+      "jahr": 1858,
       "scenes": [
         {
           "era": "heute",
           "k": "Bétharram, heute",
-          "t": "Am Ufer steht eine alte Wallfahrtskirche, zu der schon lange vor 1858 Pilger kamen. Über eine steinerne Brücke gehst du hinüber. Das Wasser darunter ist laut und schnell."
+          "t": "Am Ufer steht eine alte Wallfahrtskirche, zu der schon lange vor 1858 Pilger kamen. Drinnen liegt ein Buch, in das Pilger ihre Bitten schreiben. Du nimmst den Stift und hältst inne. Was schreibt man über so einen Weg? Das Licht im Kirchenschiff wird schwächer, und von draußen rauscht der Fluss."
         },
         {
           "era": "damals",
           "k": "Die Grotte, 18. Februar 1858",
-          "t": "Zum ersten Mal spricht die Dame. Sie fragt, ob Bernadette ihr die Gnade erweisen wolle, vierzehn Tage lang hierher zu kommen. Sie sagt „Sie“ zu dem armen Mädchen. Und sie verspricht ihr kein Glück in dieser Welt, wohl aber in der anderen."
+          "t": "Zwei Frauen aus dem Ort haben Bernadette Papier und Feder mitgegeben. Die Dame soll ihren Wunsch aufschreiben. Doch sie lächelt nur: Das sei nicht nötig. Zum ersten Mal spricht sie. Sie fragt, ob Bernadette ihr die Gnade erweisen wolle, vierzehn Tage lang hierher zu kommen. Sie sagt „Sie“ zu dem armen Mädchen. Und sie verspricht ihr kein Glück in dieser Welt, wohl aber in der anderen."
         },
         {
           "era": "damals",
@@ -523,7 +797,11 @@ KAPITEL.push({
           "time": 7,
           "title": "Das Verhör"
         }
-      ]
+      ],
+      "rueckkehr": {
+        "k": "Bétharram, heute",
+        "t": "Der Stift liegt noch in deiner Hand, die Seite ist leer. Du schreibst nur einen Satz: dass ein Mädchen bei der Wahrheit blieb, obwohl man ihr die Worte im Mund verdrehte. Draußen rauscht der Gave unter der alten Brücke."
+      }
     },
     {
       "id": "l4",
@@ -531,16 +809,17 @@ KAPITEL.push({
       "leg": "Saint-Pé-de-Bigorre",
       "title": "Die Quelle",
       "date": "24. und 25. Februar 1858",
+      "jahr": 1858,
       "scenes": [
         {
           "era": "heute",
           "k": "Saint-Pé-de-Bigorre, heute",
-          "t": "Die Berge rücken näher. Deine Füße brennen, der Rucksack drückt. An einem Dorfbrunnen füllst du deine Flasche und trinkst langsam."
+          "t": "Die Berge rücken näher. Deine Füße brennen, der Rucksack drückt. An einem Dorfbrunnen füllst du deine Flasche und trinkst langsam. Das Wasser schmeckt nach Stein und Erde. Du schließt die Augen und hörst viele Menschen murmeln, als stünde eine Menge um dich herum."
         },
         {
           "era": "damals",
           "k": "Die Grotte, 24. Februar 1858",
-          "t": "Die Dame ist ernst geworden. „Buße! Buße! Buße!“, lässt sie Bernadette ausrichten. „Betet zu Gott für die Sünder.“ Bernadette küsst den Boden, und viele in der Menge tun es ihr nach."
+          "t": "Eine Menge drängt sich vor der Grotte. Die Dame ist ernst geworden. „Buße! Buße! Buße!“, lässt sie Bernadette ausrichten. „Betet zu Gott für die Sünder.“ Bernadette küsst den Boden, und viele in der Menge tun es ihr nach."
         },
         {
           "era": "damals",
@@ -554,7 +833,11 @@ KAPITEL.push({
           "count": 5,
           "title": "Die Zeit ordnen"
         }
-      ]
+      ],
+      "rueckkehr": {
+        "k": "Saint-Pé-de-Bigorre, heute",
+        "t": "Der Brunnen plätschert. Du schaust auf die Flasche in deiner Hand, und zum ersten Mal auf diesem Weg ist Wasser für dich mehr als etwas gegen den Durst. „Buße“, hat die Dame gesagt: umkehren und neu anfangen. Du gehst weiter, die Berge vor Augen."
+      }
     },
     {
       "id": "l5",
@@ -562,16 +845,17 @@ KAPITEL.push({
       "leg": "Ankunft in Lourdes",
       "title": "Kapelle und Prozession",
       "date": "1. bis 4. März 1858",
+      "jahr": 1858,
       "scenes": [
         {
           "era": "heute",
           "k": "Lourdes, heute",
-          "t": "Am Abend erreichst du die Stadt. Im Heiligtum formiert sich die Lichterprozession: Tausende Kerzen hinter Papierschirmen, ein langer leuchtender Strom. Bei jedem Kehrvers heben sich die Lichter: Ave, ave, ave Maria."
+          "t": "Am Abend erreichst du die Stadt. Im Heiligtum formiert sich die Lichterprozession: Tausende Kerzen hinter Papierschirmen, ein langer leuchtender Strom. Bei jedem Kehrvers heben sich die Lichter: Ave, ave, ave Maria. Du nimmst eine Kerze und reihst dich ein. Für einen Augenblick sind die Lichter um dich herum nur noch wenige, und die Leute beten in einer Sprache, die du nicht kennst."
         },
         {
           "era": "damals",
           "k": "Die Grotte, 1. März 1858",
-          "t": "Catherine Latapie aus einem Nachbardorf taucht ihren gelähmten Arm in das Wasser der Quelle. Kurz darauf kann sie die Finger wieder bewegen. Später erkennt die Kirche diese Heilung als Wunder an."
+          "t": "Noch vor dem Morgengrauen brennen Kerzen vor der Grotte, viele hundert Menschen beten. Unter ihnen ist Catherine Latapie aus einem Nachbardorf. Sie taucht ihren gelähmten Arm in das Wasser der Quelle. Kurz darauf kann sie die Finger wieder bewegen. Später erkennt die Kirche diese Heilung als Wunder an."
         },
         {
           "era": "damals",
@@ -591,7 +875,11 @@ KAPITEL.push({
           "speed": 680,
           "title": "Die Lichterprozession"
         }
-      ]
+      ],
+      "rueckkehr": {
+        "k": "Lourdes, heute",
+        "t": "Die Prozession ist zu Ende, auf dem Platz verlöschen die letzten Kerzen. Deine brennt noch. Ein armes Mädchen hat einem polternden Pfarrer ausgerichtet, was die Dame wollte, und heute ziehen hier an vielen Abenden Tausende mit Lichtern. Morgen gehst du zur Grotte."
+      }
     },
     {
       "id": "l6",
@@ -599,11 +887,12 @@ KAPITEL.push({
       "leg": "An der Grotte",
       "title": "Die Unbefleckte Empfängnis",
       "date": "25. März 1858",
+      "jahr": 1858,
       "scenes": [
         {
           "era": "heute",
           "k": "An der Grotte, heute",
-          "t": "Der Fels ist glatt geworden von den vielen Händen, die ihn berührt haben. Du legst deine Hand darauf. Er ist kühl und feucht. Über dir in der Nische steht die Statue der Dame in Weiß."
+          "t": "Der Fels ist glatt geworden von den vielen Händen, die ihn berührt haben. Du legst deine Hand darauf. Er ist kühl und feucht. Über dir in der Nische steht die Statue der Dame in Weiß. Du lässt die Hand liegen. Der Stein wird rau und nass, die Kerzenständer sind fort, und es ist noch dunkel, kurz vor Sonnenaufgang."
         },
         {
           "era": "damals",
@@ -625,7 +914,11 @@ KAPITEL.push({
           "jitter": 170,
           "title": "Ein Gesätz mit der Menge"
         }
-      ]
+      ],
+      "rueckkehr": {
+        "k": "An der Grotte, heute",
+        "t": "Unter deiner Hand ist der Fels wieder glatt. Über dir steht die Statue, und unter ihr stehen die Worte, die Bernadette sich auf dem Weg zum Pfarrer immer wieder vorsagte: Ich bin die Unbefleckte Empfängnis. Du sprichst sie leise nach."
+      }
     },
     {
       "id": "l7",
@@ -633,7 +926,13 @@ KAPITEL.push({
       "leg": "Die letzte Nacht",
       "title": "Kerze und Abschied",
       "date": "7. April und 16. Juli 1858",
+      "jahr": 1858,
       "scenes": [
+        {
+          "era": "heute",
+          "k": "Lourdes, heute",
+          "t": "Am letzten Abend sitzt du am Ufer, ungefähr dort, wo Bernadette damals kniete. Drüben flackern die Kerzen an der Grotte im Wind. Du schaust so lange hinüber, bis die Flammen vor deinen Augen verschwimmen."
+        },
         {
           "era": "damals",
           "k": "Die Grotte, 7. April 1858",
@@ -642,12 +941,7 @@ KAPITEL.push({
         {
           "era": "damals",
           "k": "Am anderen Ufer, 16. Juli 1858",
-          "t": "Die Behörden haben die Grotte mit Bretterzäunen abgesperrt. Am Fest Unserer Lieben Frau auf dem Berge Karmel kniet Bernadette auf der Wiese jenseits des Gave. Ein letztes Mal sieht sie die Dame. So schön, sagt sie später, habe sie sie noch nie gesehen."
-        },
-        {
-          "era": "heute",
-          "k": "Lourdes, heute",
-          "t": "Du sitzt am Ufer, ungefähr dort, wo Bernadette damals kniete. Drüben flackern die Kerzen an der Grotte im Wind. Noch einmal kehrst du ins Jahr 1858 zurück, zur letzten Prüfung. Alle drei Kerzen müssen für beide Teile reichen."
+          "t": "Die Behörden haben die Grotte mit Bretterzäunen abgesperrt. Am Fest Unserer Lieben Frau auf dem Berge Karmel kniet Bernadette auf der Wiese jenseits des Gave. Ein letztes Mal sieht sie die Dame. So schön, sagt sie später, habe sie sie noch nie gesehen. Jetzt kommt die letzte Prüfung. Alle drei Kerzen müssen für beide Teile reichen."
         }
       ],
       "ch": [
@@ -663,7 +957,11 @@ KAPITEL.push({
           "time": 10,
           "title": "Teil 2: Die letzte Prüfung"
         }
-      ]
+      ],
+      "rueckkehr": {
+        "k": "Lourdes, heute",
+        "t": "Drüben brennen die Kerzen noch. Gut 40 Kilometer bist du am Gave entlanggegangen, an der Seite eines Mädchens, das nichts besaß außer seinem Vertrauen. Bevor du gehst, füllst du an der Quelle eine kleine Flasche, für jemanden zu Hause, der krank ist."
+      }
     }
   ]
 });
