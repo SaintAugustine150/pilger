@@ -482,6 +482,12 @@ function showTitle(){
     S.snd=S.snd===false;save();this.textContent='Klang: '+(S.snd===false?'aus':'an');
     if(S.snd!==false)bell(392,2.2,.1);
   });
+  /* Versteckter Testmodus: fünfmal schnell auf die Rosette tippen */
+  var taps=[];
+  app.querySelector('.rose').addEventListener('click',function(){
+    var now=Date.now();taps=taps.filter(function(t){return now-t<2500;});taps.push(now);
+    if(taps.length>=5){taps=[];showTestMenu();}
+  });
 }
 function showRules(){
   render(hud('title')+'<div class="wrap rules">'+
@@ -1065,6 +1071,81 @@ function showReturn(st,nextCh){
     (nextCh?'<button class="btn primary" data-chap="'+nextCh.id+'">Weiter nach '+esc(nextCh.name)+'</button><button class="btn ghost" data-act="map">Zum Pilgerweg</button>':
       '<button class="btn primary" data-act="map">Weiterpilgern</button>');
   window.scrollTo(0,0);
+}
+
+/* ---------- Testmodus ----------
+   Vor der ersten Änderung wird der echte Spielstand unter BKEY gesichert und lässt sich zurückholen. */
+var BKEY=KEY+'-echt';
+function hasBackup(){try{return !!localStorage.getItem(BKEY);}catch(e){return false;}}
+function backupOnce(){try{if(!localStorage.getItem(BKEY))localStorage.setItem(BKEY,JSON.stringify(S));}catch(e){}}
+function setStage(st,mode){
+  if(mode==='leer'){delete S.stages[st.id];delete S.cards[st.card];}
+  else{S.stages[st.id]={done:true,gold:mode==='gold'};S.cards[st.card]=mode==='gold'?'gold':'normal';}
+}
+function setChapter(c,mode){
+  stagesOf(c.id).forEach(function(i){setStage(STAGES[i],mode);});
+  if(mode==='leer'){delete S.cards[c.bonusAll];delete S.cards[c.bonusGold];if(S.pos)S.pos[c.id]=0;}
+  else{S.cards[c.bonusAll]=mode==='gold'?'gold':'normal';if(mode==='gold')S.cards[c.bonusGold]='gold';else delete S.cards[c.bonusGold];}
+}
+function showTestMenu(){
+  var ov=document.createElement('div');ov.className='overlay';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-label','Testmodus');
+  document.body.appendChild(ov);armBack();
+  function b(label,act,on){return '<button class="tbtn'+(on?' on':'')+'" data-t="'+act+'">'+label+'</button>';}
+  function stateOf(st){var x=S.stages[st.id];return x&&x.done?(x.gold?'gold':'geschafft'):'leer';}
+  function draw(){
+    var h='<div class="sheet test"><h2>Testmodus</h2><p class="muted">Zum Ausprobieren. '+
+      (hasBackup()?'Dein echter Spielstand ist gesichert und lässt sich ganz unten zurückholen.':'Vor der ersten Änderung wird dein echter Spielstand gesichert.')+'</p>';
+    h+='<h3>Kapitel</h3>';
+    CHAPTERS.forEach(function(c){
+      h+='<div class="t-row"><span class="t-name">Kapitel '+c.n+': '+esc(c.name)+'</span>'+
+        b('Leer','chap:'+c.id+':leer')+b('Geschafft','chap:'+c.id+':done')+b('Gold','chap:'+c.id+':gold')+b('Pilger an den Start','pos:'+c.id)+'</div>';
+    });
+    h+='<h3>Etappen</h3><p class="t-hint">Status antippen zum Wechseln (leer, geschafft, Gold). „Spielen“ startet die Etappe sofort, auch wenn sie gesperrt ist.</p>';
+    CHAPTERS.forEach(function(c){
+      stagesOf(c.id).forEach(function(i,k){
+        var st=STAGES[i],m=stateOf(st);
+        h+='<div class="t-row"><span class="t-name">'+(c.n)+'.'+(k+1)+' '+esc(st.title)+'</span>'+
+          '<button class="tbtn st-'+m+'" data-t="cyc:'+i+'">'+({leer:'Leer',geschafft:'Geschafft',gold:'Gold'})[m]+'</button>'+b('Spielen','play:'+i)+'</div>';
+      });
+    });
+    h+='<h3>Pilgersteine: '+(S.stones||0)+'</h3><div class="t-row">'+b('−10','st:-10')+b('−1','st:-1')+b('+1','st:1')+b('+10','st:10')+b('+50','st:50')+b('Auf 0','st:0')+'</div>';
+    h+='<h3>Sammelkarten: '+cardCount()+' von '+CARD_ORDER.length+'</h3><div class="t-row">'+b('Keine','cards:none')+b('Alle','cards:normal')+b('Alle in Gold','cards:gold')+'</div>';
+    h+='<h3>Kathedrale</h3>';
+    ROOMS.filter(function(r){return !r.future;}).forEach(function(r){
+      var l=lvl(r.id),bt='';
+      for(var n=0;n<=r.steps.length;n++)bt+=b(n===0?'Ruine':String(n),'room:'+r.id+':'+n,l===n);
+      h+='<div class="t-row"><span class="t-name">'+esc(r.name)+'</span>'+bt+'</div>';
+    });
+    h+='<h3>Spielstand</h3><div class="t-col">'+
+      (hasBackup()?'<button class="btn primary" data-t="restore">Echten Spielstand zurückholen</button>':'')+
+      '<button class="btn ghost" data-t="fresh">Testweise neu beginnen</button></div>'+
+      '<button class="link close">Schließen</button></div>';
+    var sc=ov.firstChild?ov.firstChild.scrollTop:0;
+    ov.innerHTML=h;ov.firstChild.scrollTop=sc;
+  }
+  function close(){ov.remove();document.removeEventListener('keydown',onk);showTitle();}
+  function onk(e){if(e.key==='Escape')close();}
+  document.addEventListener('keydown',onk);
+  ov.addEventListener('click',function(e){
+    if(e.target===ov||e.target.closest('.close')){close();return;}
+    var t=e.target.closest('[data-t]');if(!t)return;
+    var a=t.dataset.t.split(':');
+    if(a[0]==='play'){ov.remove();document.removeEventListener('keydown',onk);startStage(+a[1],false);return;}
+    if(a[0]==='restore'){
+      try{var o=JSON.parse(localStorage.getItem(BKEY));if(o&&o.stages&&o.cards){S=o;migrate();save();}localStorage.removeItem(BKEY);}catch(err){}
+      draw();return;
+    }
+    backupOnce();
+    if(a[0]==='chap')setChapter(CH[a[1]],a[2]);
+    else if(a[0]==='pos'){if(!S.pos)S.pos={};S.pos[a[1]]=0;}
+    else if(a[0]==='cyc'){var st=STAGES[+a[1]],m=stateOf(st);setStage(st,m==='leer'?'done':m==='geschafft'?'gold':'leer');}
+    else if(a[0]==='st'){var n=+a[1];S.stones=n===0?0:Math.max(0,(S.stones||0)+n);}
+    else if(a[0]==='cards'){CARD_ORDER.forEach(function(id){if(a[1]==='none')delete S.cards[id];else S.cards[id]=a[1];});}
+    else if(a[0]==='room'){if(!S.cath)S.cath={};S.cath[a[1]]=+a[2];}
+    else if(a[0]==='fresh'){S={stages:{},cards:{},stones:0,cath:{},snd:S.snd};}
+    save();draw();
+  });
+  draw();
 }
 
 /* ---------- Spielstand sichern ---------- */

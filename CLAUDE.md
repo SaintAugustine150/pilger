@@ -46,27 +46,27 @@ Philipp legt neue Bilder in `neue-bilder/`. Wenn er „Binde die neuen Bilder ei
 Ein vorhandenes Bild mit gleichem Namen wird ersetzt; das ist so gewollt (etwa für die neuen `schiff-0` und `schiff-1`).
 
 ## Arbeitsweise
+- Testmodus: auf der Titelseite fünfmal schnell auf die Rosette tippen. Er setzt Kapitel, Etappen, Steine, Karten und Kathedralen-Stufen und startet jede Etappe direkt. Vor der ersten Änderung sichert er den echten Spielstand unter `pilger-durch-die-zeit-v1-echt`; „Echten Spielstand zurückholen“ stellt ihn wieder her. Neue Spielinhalte (etwa Kathedralen-Ausstattung) im Testmodus mit einstellbar machen.
 - Spielstand liegt in `localStorage` unter dem Schlüssel `pilger-durch-die-zeit-v1`. Nie die Struktur brechen, sondern bei Bedarf in `migrate()` umwandeln. `pos` merkt sich je Kapitel, an welcher Etappe der Pilger auf der Landkarte steht; ist die nächste Etappe weiter, läuft er beim Öffnen der Karte dorthin.
 - Nach Änderungen testen: lokalen Server starten, die betroffenen Abläufe durchspielen und Philipp einen Link zur Vorschau geben.
 - Erst hochladen (commit und push), wenn Philipp es freigibt. Er bündelt lieber mehrere Änderungen zu einem Upload; nach einer Aufgabe nicht von sich aus hochladen, sondern sagen, dass die Änderungen bereitliegen.
 
 ## Geplante Verbesserungen
-Erledigt: Navigation (Leiste unten, Zurück-Pfeil, Abbrechen mit Rückfrage, Zurück-Taste des Handys); gemalte Landkarten für Fátima und Lourdes mit laufendem Pilger.
+Erledigt: Navigation (Leiste unten, Zurück-Pfeil, Abbrechen mit Rückfrage, Zurück-Taste des Handys); gemalte Landkarten für Fátima und Lourdes mit laufendem Pilger; größere Fragenpools; Zeitreise zwischen heute und damals (Schwelle, Jahreszahl, Rückkehr); Testmodus.
 Landkarten für neue Kapitel: Hochformat (2:3 oder bei langen Wegen höher), ohne Schrift, Weg klar sichtbar, Orte mit freier Fläche; Dateiname `weg-KAPITEL`.
-1. Größere Fragenpools, damit sich Wiederholungen neu anfühlen (Fakten sorgfältig prüfen)
-2. Kathedralen-Ausstattung als großes Langzeitziel (von Philipp gewünscht). Möglichst wenige neue Bilder: kleine Gegenstände als gezeichnete Symbole, pro Raum höchstens ein zusätzliches Bild „vollständig ausgestattet“, erzeugt durch Bearbeiten des vorhandenen Raumbilds.
-3. Testmodus: verstecktes Menü zum Freischalten von Kapiteln, Setzen von Steinen, Springen zu Etappen
-4. Weitere Ideen:
+1. Kathedralen-Ausstattung als großes Langzeitziel (von Philipp gewünscht). Möglichst wenige neue Bilder: kleine Gegenstände als gezeichnete Symbole, pro Raum höchstens ein zusätzliches Bild „vollständig ausgestattet“, erzeugt durch Bearbeiten des vorhandenen Raumbilds.
+2. Weitere Ideen:
    - mehrere Prüfungen pro Etappe, Kapitel-Finale, Meisterprüfung nach Gold
    - Außenansicht der Kathedrale mit Zwischenstufen
    - ein Bild pro Etappe für die „damals“-Szenen
    - „Mehr erfahren“ mit Katechismus-Verweisen
    - Kirchenjahr im Spiel (13. Mai, 11. Februar)
    - Heiliger des Tages als Sammelkarte am Festtag
-   - Pilgerpass mit Stempeln
+   - Pilgerpass mit Stempeln (passt zur Rückkehr-Szene: Stempel beim Zurückkehren)
+   - ein wiederkehrender Wegbegleiter pro Kapitel
    - Übungsmodus mit Bestwert
    - weitere Kapitel: Guadalupe (1531), Jakobsweg, biblische Orte, Kirchengeschichte, Heilige
 
 ## Offene Punkte
 - Kirchenschiff: Die Bilder `schiff-1` und `schiff-0` passen nicht zu `schiff-2` und `schiff-3` (anderer Chor und Altar). Philipp erzeugt sie neu aus `schiff-2`.
-- Kartenbilder und die Bilder der Lourdes-Grotte (`grotte-0` bis `grotte-3`) stehen noch aus.
+- Noch fehlende Kartenbilder (Lourdes): `quelle`, `prozession`, `unbefleckte`, `juli`, `basilika`, `lourdes`. Fátima ist vollständig.

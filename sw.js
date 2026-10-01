@@ -1,5 +1,5 @@
 /* Offline-Speicher. Bei Änderungen die Versionsnummer erhöhen. */
-var VERSION = 'pilger-6';
+var VERSION = 'pilger-8';
 /* Die Bilder kommen automatisch aus bilder.js, hier stehen nur Code und Symbole */
 self.window = self;
 importScripts('bilder.js');

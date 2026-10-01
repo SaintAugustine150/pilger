@@ -439,3 +439,15 @@ body{transition:background-color .6s;}
 :root.era-damals .dots i.on{background:#9A6A3A;}
 @media (prefers-color-scheme: dark){:root.era-damals:not([data-theme="light"]){--wax:#6E5B40;}
   :root.era-damals:not([data-theme="light"]) .btn.ghost{border-color:#C9A46A;color:#E0B070;}}
+/* Testmodus */
+.sheet.test{max-height:86vh;overflow:auto;}
+.sheet.test h3{margin:18px 0 4px;font-size:17px;}
+.t-hint{font-size:14px !important;color:var(--muted);}
+.t-row{display:flex;flex-wrap:wrap;align-items:center;gap:6px;padding:7px 0;border-bottom:1px dashed var(--line);}
+.t-name{flex:1 1 150px;font-size:15px;line-height:1.3;}
+.tbtn{padding:5px 10px;border-radius:8px;border:1.5px solid var(--azul);background:var(--surface);color:var(--azul);font-size:14px;font-weight:700;cursor:pointer;line-height:1.2;}
+.tbtn.on{background:var(--azul);color:var(--on-azul);}
+.tbtn.st-leer{border-color:var(--muted);color:var(--muted);}
+.tbtn.st-geschafft{background:var(--azul);color:var(--on-azul);}
+.tbtn.st-gold{background:linear-gradient(#F3D98E,#C9952F);border-color:#B0822A;color:#4A300A;}
+.t-col .btn{margin-top:8px;}
