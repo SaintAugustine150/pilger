@@ -7,6 +7,7 @@
 
    karten      Sammelkarten: name, sub (Untertitel), rar (1-3 Seltenheit),
                text (Rückseite), hint (Hinweis im Album)
+   fragenTitel Name jedes Fragenpools, so erscheint er im Spiel
    fragen      Fragenpools. Normale Frage: q (Frage), a (richtige Antwort),
                w (drei falsche Antworten), e (Erklärung, optional).
                Wahr/falsch: s (Aussage), v (true = wahr, false = falsch)
@@ -101,6 +102,12 @@ KAPITEL.push({
       "text": "Unter diesem Titel wird Maria weltweit verehrt. Die Botschaft von Fátima ruft zu Gebet, besonders zum Rosenkranz, zu Umkehr und Sühne. 1930 erkannte die Kirche die Erscheinungen als glaubwürdig an.",
       "hint": "Alle sieben Etappen in Gold abschließen"
     }
+  },
+  "fragenTitel": {
+    "engel": "Der Engel des Friedens",
+    "mai": "Mai und Juni 1917",
+    "august": "Das Verhör von Ourém",
+    "oktober": "Oktober 1917"
   },
   "fragen": {
     "engel": [

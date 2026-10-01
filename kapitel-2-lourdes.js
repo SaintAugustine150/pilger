@@ -7,6 +7,7 @@
 
    karten      Sammelkarten: name, sub (Untertitel), rar (1-3 Seltenheit),
                text (Rückseite), hint (Hinweis im Album)
+   fragenTitel Name jedes Fragenpools, so erscheint er im Spiel
    fragen      Fragenpools. Normale Frage: q (Frage), a (richtige Antwort),
                w (drei falsche Antworten), e (Erklärung, optional).
                Wahr/falsch: s (Aussage), v (true = wahr, false = falsch)
@@ -101,6 +102,11 @@ KAPITEL.push({
       "text": "Unter diesem Titel wird Maria weltweit verehrt, besonders von Kranken. Die Botschaft von Lourdes ruft zu Gebet, Buße und Umkehr. Ihr Gedenktag ist zugleich der Welttag der Kranken.",
       "hint": "Alle sieben Etappen in Gold abschließen"
     }
+  },
+  "fragenTitel": {
+    "bernadette": "Bernadette",
+    "verhoer": "Das Verhör von Lourdes",
+    "spaeter": "Lourdes nach 1858"
   },
   "fragen": {
     "bernadette": [

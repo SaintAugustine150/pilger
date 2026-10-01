@@ -173,7 +173,10 @@ ICONS.lourdes='<path d="M50 12 C62 12 66 22 66 32 L72 88 L28 88 L34 32 C34 22 38
 
 /* ---------- Kapitel ---------- */
 var CHAPTERS=(window.KAPITEL||[]).slice().sort(function(a,b){return a.n-b.n;});
+var POOL_TITLE={},POOL_CHAP={};
 CHAPTERS.forEach(function(c){
+  Object.keys(c.fragen).forEach(function(k){POOL_CHAP[k]=c.id;});
+  Object.keys(c.fragenTitel||{}).forEach(function(k){POOL_TITLE[k]=c.fragenTitel[k];});
   Object.keys(c.karten).forEach(function(k){CARDS[k]=c.karten[k];});
   Object.keys(c.fragen).forEach(function(k){POOLS[k]=c.fragen[k];});
   c.etappen.forEach(function(st){st.chap=c.id;STAGES.push(st);});
@@ -291,6 +294,103 @@ var ROOMS=[
   {id:'sakristei',name:'Sakristei',future:'in einem späteren Kapitel',ruin:'Die Tür hängt schief in den Angeln. In den Schränken liegen verblichene Messgewänder.'}
 ];
 var ROOM={};ROOMS.forEach(function(r){ROOM[r.id]=r;});
+
+/* ---------- Kathedrale: Ausstattung ----------
+   Jeder Gegenstand wird durch ein Erlebnis freigeschaltet (need) und kostet Pilgersteine.
+   need: done/gold = Etappen-IDs, pool = Fragenpool gemeistert, cards = Karten-IDs,
+         cardGold = Karte in Gold, chapter = alle Karten eines Kapitels, n = Karten im Album */
+var ITEMS={
+  schiff:[
+    {id:'ewiges-licht',t:'Ewiges Licht',cost:3,need:{gold:['s1']},
+     d:'Die rote Lampe brennt Tag und Nacht neben dem Tabernakel. Sie zeigt an, dass Christus dort im Allerheiligsten Sakrament gegenwärtig ist.',
+     i:'<path d="M12 2 V6 M8 6 H16 L14.6 13 H9.4 Z M10 13 L11 16 H13 L14 13"/><path d="M12 7.6 C13.4 9.2 13.4 10.4 12 11.3 C10.6 10.4 10.6 9.2 12 7.6 Z"/>'},
+    {id:'kreuzweg',t:'Kreuzweg',cost:4,need:{pool:'august'},
+     d:'Vierzehn Bilder an den Pfeilern erzählen den Leidensweg Jesu, vom Urteil des Pilatus bis zur Grablegung. Man betet ihn Station für Station, besonders in der Fastenzeit.',
+     i:'<path d="M5 3 H19 V21 H5 Z M12 7 V17 M9 10 H15"/>'},
+    {id:'orgel',t:'Orgel',cost:4,need:{gold:['s2','s6']},
+     d:'Man nennt sie die Königin der Instrumente. Sie trägt den Gesang der Gemeinde und hilft, die Herzen zu Gott zu erheben.',
+     i:'<path d="M4 20 V11 M8 20 V7 M12 20 V4 M16 20 V7 M20 20 V11 M3 20 H21 M3 22 H21"/>'},
+    {id:'osterkerze',t:'Osterkerze',cost:3,need:{gold:['l7']},
+     d:'In der Osternacht wird sie am neuen Feuer entzündet. Sie steht für den auferstandenen Christus, das Licht der Welt. An ihr entzündet man bei der Taufe die Taufkerze.',
+     i:'<path d="M9 8 H15 V22 H9 Z M12 2 C14 4 14 5.5 12 6.5 C10 5.5 10 4 12 2 Z M12 11 V18 M10 13.5 H14"/>'}
+  ],
+  kapelle:[
+    {id:'weihwasser',t:'Weihwasserbecken',cost:2,need:{done:['s1']},
+     d:'Am Eingang taucht man die Finger in das geweihte Wasser und bekreuzigt sich. Es erinnert an die eigene Taufe.',
+     i:'<path d="M5 10 H19 C19 14 16 16 12 16 C8 16 5 14 5 10 Z M12 16 V20 M8 21 H16 M12 3 C13.5 5 13.5 6.4 12 7 C10.5 6.4 10.5 5 12 3 Z"/>'},
+    {id:'bildtafel',t:'Bildtafel der Hirtenkinder',cost:3,need:{cards:['lucia','francisco','jacinta']},
+     d:'Lúcia, Francisco und Jacinta, auf Holz gemalt. Francisco und Jacinta sind heilig; Lúcia hat die Kirche 2023 als ehrwürdige Dienerin Gottes anerkannt.',
+     i:'<path d="M3 4 H21 V20 H3 Z M4.9 17.5 C4.9 13.2 10.1 13.2 10.1 17.5 M9.4 17.5 C9.4 13.2 14.6 13.2 14.6 17.5 M13.9 17.5 C13.9 13.2 19.1 13.2 19.1 17.5"/><circle cx="7.5" cy="9.3" r="2"/><circle cx="12" cy="9.3" r="2"/><circle cx="16.5" cy="9.3" r="2"/>'},
+    {id:'herzbanner',t:'Banner des Unbefleckten Herzens',cost:3,need:{pool:'mai'},
+     d:'Ein Herz, von Dornen umgeben, so wie die Kinder es im Juni 1917 sahen. Die Verehrung des Unbefleckten Herzens lädt ein, Gott mit Marias reiner Liebe zu lieben.',
+     i:'<path d="M6 2 V22 M6 3 H18 V16 L12 13.5 L6 16"/><path d="M12 11 C8.8 9 9.2 5.6 11.4 6.3 L12 6.9 L12.6 6.3 C14.8 5.6 15.2 9 12 11 Z"/>'},
+    {id:'rosenkranzfenster',t:'Rosenkranzfenster',cost:4,need:{cardGold:'rosenkranz'},
+     d:'Buntglas mit den Geheimnissen des Rosenkranzes. Scheint die Sonne hindurch, fallen farbige Perlen aus Licht auf den Boden.',
+     i:'<path d="M6 22 V10 A6 6 0 0 1 18 10 V22 Z M6 16 H18 M12 16 V22"/><circle cx="12" cy="10" r="2.8"/>'}
+  ],
+  garten:[
+    {id:'rosenbeet',t:'Rosenbeet',cost:2,need:{cards:['rosen']},
+     d:'Der Rosenkranz trägt seinen Namen vom Bild eines Kranzes aus Rosen, den man Maria mit jedem Gebet flicht.',
+     i:'<circle cx="12" cy="8" r="4.6"/><path d="M12 8 m-1.9 0 a1.9 1.9 0 1 1 1.9 1.9 M12 12.6 V22 M12 17 C9.5 15 7.5 16 7 17.5 C9 18.5 10.5 18.5 12 17 M12 19.2 C14.5 17.2 16.5 18.2 17 19.7 C15 20.7 13.5 20.7 12 19.2"/>'},
+    {id:'steineiche',t:'Steineiche aus Fátima',cost:4,need:{chapter:'fatima'},
+     d:'Ein junger Baum aus Portugal, wie die kleine Steineiche in der Cova da Iria, über der Maria den Kindern erschien.',
+     i:'<path d="M7 13.5 C3.5 13.5 3 8.8 6.4 8.2 C6.4 4.6 11 3.2 13 5.6 C15.6 3.6 19.6 5.6 18.6 8.7 C21.6 9.7 20.6 13.9 17 13.5 Z M12 22 V13.5 M12 17.5 L9.4 15 M12 16.3 L14.6 13.8 M9 22 H15"/>'},
+    {id:'josef',t:'Statue des heiligen Josef',cost:3,need:{pool:'oktober'},
+     d:'Der Bräutigam Marias und Beschützer Jesu, mit der Lilie in der Hand. Beim Sonnenwunder sah Lúcia ihn mit dem Jesuskind die Welt segnen.',
+     i:'<path d="M12 22 V9 M12 9 C10 7 9.5 4 12 2 C14.5 4 14 7 12 9 Z M12 10 C9.5 9 7.5 10 6.5 8 M12 10 C14.5 9 16.5 10 17.5 8 M12 16 C10 14.5 8.5 15 8 16.5"/>'},
+    {id:'angelusglocke',t:'Glocke zum Engel des Herrn',cost:3,need:{n:10},
+     d:'Morgens, mittags und abends läutet sie zum Angelus. Man betet dann, wie der Engel Maria die Botschaft brachte und das Wort Fleisch geworden ist.',
+     i:'<path d="M6 17 C6 9.5 8 5 12 5 C16 5 18 9.5 18 17 Z M4 17 H20 M12 2.5 V5 M10.4 19.5 A1.6 1.6 0 0 0 13.6 19.5"/>'}
+  ],
+  grotte:[
+    {id:'bernadette',t:'Statue der knienden Bernadette',cost:4,need:{pool:'bernadette'},
+     d:'Sie kniet, den Rosenkranz in den Händen, und schaut zur Nische hinauf, so wie die Menschen sie an der Grotte beten sahen.',
+     i:'<circle cx="9.5" cy="6" r="2.3"/><path d="M9.5 8.5 C7.5 11 7.5 14 8.5 16 H14 V21 M8.5 16 L7 21 H14 M10 11.5 L13.5 9.5 M16 3 A3 3 0 0 1 22 3 V9 H16 Z"/>'},
+    {id:'dankestafeln',t:'Dankestafeln',cost:3,need:{cards:['quelle']},
+     d:'Kleine Marmortafeln, oft mit einem einzigen Wort: Danke. Pilger lassen sie anbringen, wenn sie ein Gebet erhört sehen.',
+     i:'<path d="M3 4 H10 V9 H3 Z M14 4 H21 V9 H14 Z M3 13 H10 V18 H3 Z M14 13 H21 V18 H14 Z"/>'},
+    {id:'laternen',t:'Laternen der Prozession',cost:3,need:{gold:['l5']},
+     d:'Kerzen hinter Papierschirmen, wie sie Pilger in Lourdes an vielen Abenden durch das Heiligtum tragen.',
+     i:'<path d="M12 2 V5 M8 5 H16 L17 18 H7 Z M12 18 V22 M12 9 C13.5 11 13.5 12.5 12 13.5 C10.5 12.5 10.5 11 12 9 Z"/>'},
+    {id:'gelberosen',t:'Gelbe Rosen',cost:3,need:{chapter:'lourdes'},
+     d:'Zu Füßen der Statue blühen zwei gelbe Rosen, wie Bernadette sie auf den Füßen der Dame sah.',
+     i:'<circle cx="7.5" cy="9.5" r="3.2"/><circle cx="16.5" cy="9.5" r="3.2"/><path d="M7.5 9.5 m-1.2 0 a1.2 1.2 0 1 1 1.2 1.2 M16.5 9.5 m-1.2 0 a1.2 1.2 0 1 1 1.2 1.2 M7.5 12.7 V20 M16.5 12.7 V20 M7.5 16.5 C6 15.3 4.6 15.8 4.2 16.8 M16.5 16.5 C18 15.3 19.4 15.8 19.8 16.8 M3.5 20.5 H20.5"/>'}
+  ]
+};
+/* Wo die aufgestellten Gegenstände im Grundriss als goldene Zeichen erscheinen */
+var ITEM_POS={schiff:[[180,96],[146,300],[180,382],[206,120]],kapelle:[[87,104],[113,104],[100,126],[100,86]],
+  garten:[[262,232],[318,232],[262,338],[318,338]],grotte:[[26,350],[64,350],[30,330],[60,330]]};
+function stageById(id){for(var i=0;i<STAGES.length;i++)if(STAGES[i].id===id)return STAGES[i];return null;}
+function qKey(q){var t=q.q||q.s,h=0;for(var i=0;i<t.length;i++)h=(h*31+t.charCodeAt(i))|0;return (h>>>0).toString(36);}
+function markKnown(pool,q){
+  if(!pool)return;if(!S.known)S.known={};
+  var a=S.known[pool]||(S.known[pool]=[]),k=qKey(q);
+  if(a.indexOf(k)<0){a.push(k);save();return true;}
+  return false;
+}
+function poolProgress(pool){
+  var all=POOLS[pool]||[],a=(S.known&&S.known[pool])||[];
+  return {n:all.filter(function(q){return a.indexOf(qKey(q))>=0;}).length,of:all.length};
+}
+function quoteList(names){var q=names.map(function(n){return '„'+n+'“';});return q.length>1?q.slice(0,-1).join(', ')+' und '+q[q.length-1]:q[0];}
+function itemReqs(it){
+  var n=it.need,a=[];
+  (n.done||[]).forEach(function(id){var x=S.stages[id];a.push({t:'Etappe „'+stageById(id).title+'“ geschafft',ok:!!(x&&x.done)});});
+  (n.gold||[]).forEach(function(id){var x=S.stages[id];a.push({t:'Etappe „'+stageById(id).title+'“ in Gold',ok:!!(x&&x.gold)});});
+  if(n.pool){var p=poolProgress(n.pool);a.push({t:'Jede Frage „'+(POOL_TITLE[n.pool]||n.pool)+'“ einmal richtig ('+p.n+' von '+p.of+')',ok:p.of>0&&p.n>=p.of});}
+  if(n.cards)a.push({t:(n.cards.length>1?'Karten ':'Karte ')+quoteList(n.cards.map(function(id){return CARDS[id].name;})),ok:n.cards.every(function(id){return !!S.cards[id];})});
+  if(n.cardGold)a.push({t:'Karte „'+CARDS[n.cardGold].name+'“ in Gold',ok:S.cards[n.cardGold]==='gold'});
+  if(n.chapter){var c=CH[n.chapter],ids=cardsOf(c),have=ids.filter(function(id){return S.cards[id];}).length;a.push({t:'Alle Karten aus '+c.name+' ('+have+' von '+ids.length+')',ok:have>=ids.length});}
+  if(n.n)a.push({t:n.n+' Karten im Album (du hast '+cardCount()+')',ok:cardCount()>=n.n});
+  a.push({t:stonesTxt(it.cost)+' (du hast '+(S.stones||0)+')',ok:(S.stones||0)>=it.cost});
+  return a;
+}
+function placed(rid,iid){return !!(S.items&&S.items[rid]&&S.items[rid].indexOf(iid)>=0);}
+function itemsDone(r){return (ITEMS[r.id]||[]).filter(function(it){return placed(r.id,it.id);}).length;}
+function festive(r){var its=ITEMS[r.id];return !!(its&&its.length&&itemsDone(r)===its.length);}
+function canPlace(r,it){return roomState(r)==='vollendet'&&!placed(r.id,it.id)&&itemReqs(it).every(function(x){return x.ok;});}
+function roomImgKey(r){return festive(r)&&IMG[r.id+'-4']?r.id+'-4':r.id+'-'+lvl(r.id);}
+function roomLabel(r){return festive(r)?'Festlich ausgestattet':STATE_LABEL[roomState(r)];}
 var STATE_LABEL={ruin:'Ruine',future:'Ruine',aufbau:'Im Aufbau',vollendet:'Vollendet'};
 
 var SHAPES={
@@ -329,6 +429,8 @@ function canBuild(r){
 }
 function migrate(){
   if(!S.cath)S.cath={};
+  if(!S.items)S.items={};
+  if(!S.known)S.known={};
   if(typeof S.stones!=='number'){
     var n=0;
     STAGES.forEach(function(st){var x=S.stages[st.id];if(x&&x.done)n+=1+(x.gold?3:0);});
@@ -364,6 +466,10 @@ function deco(id,l){
       s+='<circle class="water" cx="290" cy="285" r="8"/>';
     }
   }
+  (ITEM_POS[id]||[]).forEach(function(p,k){
+    var it=(ITEMS[id]||[])[k];
+    if(it&&placed(id,it.id))s+='<path class="item-mark" d="M'+p[0]+' '+(p[1]-4.5)+' L'+(p[0]+4.5)+' '+p[1]+' L'+p[0]+' '+(p[1]+4.5)+' L'+(p[0]-4.5)+' '+p[1]+' Z"/>';
+  });
   return s?'<g class="deco">'+s+'</g>':'';
 }
 function planSVG(){
@@ -394,15 +500,20 @@ function showCathedral(){
   }
   var active=ROOMS.filter(function(r){return !r.future;});
   var rows=active.map(function(r){
-    var st=roomState(r),l=lvl(r.id),ready=canBuild(r),next=r.steps[l],hint;
-    if(st==='vollendet')hint='Gebet';
-    else if(next&&next.chapter)hint='Wartet';
-    else if(ready)hint='Bereit';
-    else hint='Noch nicht';
-    var th=IMG[r.id+'-'+l];
+    var st=roomState(r),l=lvl(r.id),its=ITEMS[r.id]||[],next=r.steps[l],hint,count;
+    var ready=canBuild(r)||its.some(function(it){return canPlace(r,it);});
+    if(st==='vollendet'&&its.length){hint=festive(r)?'Festlich':(ready?'Bereit':'Ausstattung');count=itemsDone(r)+' von '+its.length+' Stücken';}
+    else{
+      if(st==='vollendet')hint='Gebet';
+      else if(next&&next.chapter)hint='Wartet';
+      else if(ready)hint='Bereit';
+      else hint='Noch nicht';
+      count=l+' von '+r.steps.length;
+    }
+    var th=IMG[roomImgKey(r)];
     return '<li class="'+(ready?'ready':'')+'"><button class="node-btn" data-room="'+r.id+'">'+(th?'<img class="thumb" src="'+th+'" alt="">':'')+
-      '<span class="nt" style="padding-left:6px"><span class="ntitle">'+esc(r.name)+'</span><span class="ndate">'+STATE_LABEL[st]+'</span></span>'+
-      '<span class="nstat"><b>'+hint+'</b>'+l+' von '+r.steps.length+'</span></button></li>';
+      '<span class="nt" style="padding-left:6px"><span class="ntitle">'+esc(r.name)+'</span><span class="ndate">'+roomLabel(r)+'</span></span>'+
+      '<span class="nstat"><b>'+hint+'</b>'+count+'</span></button></li>';
   }).join('');
   var fut=ROOMS.length-active.length;
   render(hud('title')+tabbar('cathedral')+'<div class="wrap">'+
@@ -421,10 +532,11 @@ function showRoom(id,msg,prevL){
   var st=roomState(r),l=lvl(id),h;
   h=hud('cathedral')+tabbar('cathedral')+'<div class="wrap">'+
     '<h1 class="chapter"><span>'+esc(r.name)+'</span></h1>'+
-    '<p class="state-line">'+STATE_LABEL[st]+'</p>';
+    '<p class="state-line">'+roomLabel(r)+'</p>';
   if(msg)h+='<div class="notice">'+esc(msg)+'</div>';
-  var im=IMG[id+'-'+l],old=prevL!=null?IMG[id+'-'+prevL]:null;
-  if(im)h+='<figure class="roomimg"><img src="'+im+'" alt="'+esc(r.name)+', '+STATE_LABEL[st]+'">'+(old?'<img class="old" src="'+old+'" alt="">':'')+'</figure>';
+  var im=IMG[roomImgKey(r)],old=prevL!=null?IMG[typeof prevL==='string'?prevL:id+'-'+prevL]:null;
+  if(old===im)old=null;
+  if(im)h+='<figure class="roomimg"><img src="'+im+'" alt="'+esc(r.name)+', '+roomLabel(r)+'">'+(old?'<img class="old" src="'+old+'" alt="">':'')+'</figure>';
   if(r.future){
     h+='<p class="room-txt">'+esc(r.ruin)+'</p><div class="later"><h2>Noch nicht begehbar</h2><p>Wird '+esc(r.future)+' wiederaufgebaut.</p></div></div>';
     render(h);return;
@@ -447,8 +559,35 @@ function showRoom(id,msg,prevL){
     }
     h+='<li class="stp '+cls+'"><div class="stp-top"><h3>'+esc(step.t)+'</h3><span class="sst">'+sst+'</span></div>'+inner+'</li>';
   });
-  h+='</ol></div>';
+  h+='</ol>';
+  var its=ITEMS[id]||[];
+  if(its.length){
+    h+='<h2 class="aus-h">Ausstattung <small>'+itemsDone(r)+' von '+its.length+'</small></h2>';
+    if(st!=='vollendet')h+='<p class="aus-note">Sobald der Raum vollendet ist, kannst du ihn ausstatten.</p>';
+    h+='<ul class="items">'+its.map(function(it){
+      var pl=placed(id,it.id),ok=canPlace(r,it),inner='';
+      if(pl)inner='<p class="it-st">Aufgestellt</p>';
+      else{
+        inner='<ul class="req">'+itemReqs(it).map(function(x){return '<li class="'+(x.ok?'ok':'')+'">'+esc(x.t)+'</li>';}).join('')+'</ul>';
+        if(st==='vollendet')inner+='<button class="btn primary" data-item="'+it.id+'"'+(ok?'':' disabled')+'>Für '+stonesTxt(it.cost)+' aufstellen</button>';
+      }
+      return '<li class="it'+(pl?' placed':ok?' ready':'')+'"><span class="it-ico"><svg viewBox="0 0 24 24" aria-hidden="true">'+it.i+'</svg></span>'+
+        '<div class="it-main"><h3>'+esc(it.t)+'</h3><p class="it-d">'+esc(it.d)+'</p>'+inner+'</div></li>';
+    }).join('')+'</ul>';
+  }
+  h+='</div>';
   render(h);
+  app.querySelectorAll('[data-item]').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      var it=its.filter(function(x){return x.id===btn.dataset.item;})[0];
+      if(!it||!canPlace(r,it))return;
+      var before=roomImgKey(r);
+      S.stones-=it.cost;if(!S.items[id])S.items[id]=[];S.items[id].push(it.id);save();
+      var fest=festive(r),m='Aufgestellt: '+it.t+'.';
+      if(fest)m+=' '+r.art+' '+r.name+' ist jetzt festlich ausgestattet.';
+      showRoom(id,m,before);celebrate(fest);
+    });
+  });
   var b=document.getElementById('build');
   if(b)b.addEventListener('click',function(){
     if(!canBuild(r))return;
@@ -475,6 +614,7 @@ function showTitle(){
     '<button class="btn primary" data-chap="'+currentChapter()+'">'+(any?'Weiterpilgern':'Aufbrechen')+'</button>'+
     '<button class="btn ghost" data-act="cathedral">Die Kathedrale</button>'+
     '<button class="btn ghost" data-act="album">Kartenalbum</button>'+
+    '<button class="btn ghost" data-act="practice">Fragen wiederholen</button>'+
     '<button class="link" data-act="rules">So wird gespielt</button>'+
     '<br><button class="link" id="snd">Klang: '+(S.snd===false?'aus':'an')+'</button>'+
   '</div></div>');
@@ -794,6 +934,7 @@ function runQuiz(cfg,done){
     function answer(k){
       if(answered)return;answered=true;cancelAnimationFrame(raf);
       var ok=k>=0&&opts[k].ok;
+      if(ok)markKnown(cfg.pool,q);
       b.querySelectorAll('.opt').forEach(function(btn,idx){btn.disabled=true;if(opts[idx].ok)btn.classList.add('right');else if(idx===k)btn.classList.add('wrong');});
       var dead=false;if(!ok)dead=loseCandle();
       var head=ok?'Richtig.':(k<0?'Die Zeit ist abgelaufen.':'Leider falsch.');
@@ -1073,6 +1214,64 @@ function showReturn(st,nextCh){
   window.scrollTo(0,0);
 }
 
+/* ---------- Wiederholen: alle Fragen gemischt, ohne Zeit und Kerzen ----------
+   Bringt weder Steine noch Karten, zählt aber für „Fragenpool gemeistert“. */
+var practiceScope='alle';
+function practiceSet(scope){
+  var a=[];
+  Object.keys(POOLS).forEach(function(p){if(scope==='alle'||POOL_CHAP[p]===scope)POOLS[p].forEach(function(q){a.push({p:p,q:q});});});
+  return a;
+}
+function isKnown(x){var k=S.known&&S.known[x.p];return !!(k&&k.indexOf(qKey(x.q))>=0);}
+function showPractice(){
+  var set=practiceSet(practiceScope),kn=set.filter(isKnown).length;
+  var scopes=[['alle','Alle Kapitel']].concat(CHAPTERS.map(function(c){return [c.id,c.name];}));
+  render(hud('title')+'<div class="wrap"><h1 class="chapter"><span>Wiederholen</span></h1>'+
+    '<p class="lead">Alle Fragen bunt gemischt, ohne Zeitdruck und ohne Kerzen. Was du falsch beantwortest, kommt ein paar Fragen später noch einmal.</p>'+
+    '<div class="tabs pr-scope">'+scopes.map(function(x){return '<button class="tab'+(x[0]===practiceScope?' on':'')+'" data-scope="'+x[0]+'">'+esc(x[1])+'</button>';}).join('')+'</div>'+
+    '<p class="pr-stat"><b>'+kn+'</b> von '+set.length+' Fragen hast du schon einmal richtig beantwortet.</p>'+
+    '<div class="pr-bar" aria-hidden="true"><i style="width:'+(set.length?Math.round(kn/set.length*100):0)+'%"></i></div>'+
+    '<button class="btn primary" id="prgo">Los geht’s</button>'+
+    '<p class="pr-note">Richtig beantwortete Fragen zählen auch für die Ausstattung der Kathedrale.</p></div>');
+  app.querySelectorAll('[data-scope]').forEach(function(b){b.addEventListener('click',function(){practiceScope=b.dataset.scope;showPractice();});});
+  document.getElementById('prgo').addEventListener('click',function(){runPractice(set);});
+}
+function runPractice(set){
+  var queue=shuffle(set.slice()),n=0,right=0,learned=0;
+  render(hud('title')+'<div class="wrap" id="pr"></div>');
+  var box=document.getElementById('pr');
+  function ask(){
+    if(!queue.length){summary(true);return;}
+    var item=queue.shift(),q=item.q,isTF=q.v!==undefined,c=CH[POOL_CHAP[item.p]],answered=false;
+    var opts=isTF?[{t:'Wahr',ok:q.v===true},{t:'Falsch',ok:q.v===false}]:shuffle([{t:q.a,ok:true}].concat(q.w.map(function(t){return {t:t,ok:false};})));
+    box.innerHTML='<div class="pr-top"><span>Frage '+(n+1)+' · '+right+' richtig</span><button class="link" id="prend">Beenden</button></div>'+
+      '<div class="challenge-head"><p class="step">'+esc(c.name)+' · '+esc(POOL_TITLE[item.p]||'')+(isTF?' · Wahr oder falsch?':'')+'</p><h2 class="q">'+esc(isTF?q.s:q.q)+'</h2></div>'+
+      '<div>'+opts.map(function(o,k){return '<button class="opt" data-k="'+k+'">'+esc(o.t)+'</button>';}).join('')+'</div><div id="fb" aria-live="polite"></div>';
+    document.getElementById('prend').addEventListener('click',function(){summary(false);});
+    box.querySelectorAll('.opt').forEach(function(btn){btn.addEventListener('click',function(){
+      if(answered)return;answered=true;
+      var k=+btn.dataset.k,ok=opts[k].ok;n++;
+      box.querySelectorAll('.opt').forEach(function(x,idx){x.disabled=true;if(opts[idx].ok)x.classList.add('right');else if(idx===k)x.classList.add('wrong');});
+      if(ok){right++;if(markKnown(item.p,q))learned++;}
+      else queue.splice(Math.min(queue.length,4+Math.floor(Math.random()*3)),0,item);
+      var fb=document.getElementById('fb');
+      fb.innerHTML='<div class="fb '+(ok?'':'bad')+'"><strong>'+(ok?'Richtig.':'Leider falsch.')+'</strong>'+(q.e?esc(q.e):'')+(ok?'':(q.e?' ':'')+'Die Frage kommt gleich noch einmal.')+'</div>'+
+        '<button class="btn primary" id="prnext">'+(queue.length?'Nächste Frage':'Zur Bilanz')+'</button>';
+      var nb=document.getElementById('prnext');nb.addEventListener('click',ask);nb.focus({preventScroll:true});
+      fb.scrollIntoView({block:'nearest',behavior:reduceMotion?'auto':'smooth'});
+    });});
+    window.scrollTo(0,0);
+  }
+  function summary(all){
+    box.innerHTML='<div class="reward"><h2>'+(all?'Alle Fragen geschafft':'Gut geübt')+'</h2>'+
+      '<p>'+(n===1?'1 Frage':n+' Fragen')+' beantwortet, davon '+right+' richtig.'+(learned?' '+(learned===1?'Eine Frage hast':learned+' Fragen hast')+' du zum ersten Mal richtig beantwortet.':'')+'</p>'+
+      '<button class="btn primary" id="pragain">Weiter üben</button><button class="btn ghost" data-act="title">Zum Titel</button></div>';
+    document.getElementById('pragain').addEventListener('click',showPractice);
+    window.scrollTo(0,0);
+  }
+  ask();
+}
+
 /* ---------- Testmodus ----------
    Vor der ersten Änderung wird der echte Spielstand unter BKEY gesichert und lässt sich zurückholen. */
 var BKEY=KEY+'-echt';
@@ -1115,7 +1314,9 @@ function showTestMenu(){
       var l=lvl(r.id),bt='';
       for(var n=0;n<=r.steps.length;n++)bt+=b(n===0?'Ruine':String(n),'room:'+r.id+':'+n,l===n);
       h+='<div class="t-row"><span class="t-name">'+esc(r.name)+'</span>'+bt+'</div>';
+      h+='<div class="t-row"><span class="t-name">Ausstattung: '+itemsDone(r)+' von '+(ITEMS[r.id]||[]).length+'</span>'+b('Keine','items:'+r.id+':none')+b('Alle','items:'+r.id+':all')+'</div>';
     });
+    h+='<h3>Fragen</h3><div class="t-row"><span class="t-name">Alle Fragen als einmal richtig beantwortet zählen</span>'+b('Alle gemeistert','known:all')+b('Zurücksetzen','known:none')+'</div>';
     h+='<h3>Spielstand</h3><div class="t-col">'+
       (hasBackup()?'<button class="btn primary" data-t="restore">Echten Spielstand zurückholen</button>':'')+
       '<button class="btn ghost" data-t="fresh">Testweise neu beginnen</button></div>'+
@@ -1142,6 +1343,8 @@ function showTestMenu(){
     else if(a[0]==='st'){var n=+a[1];S.stones=n===0?0:Math.max(0,(S.stones||0)+n);}
     else if(a[0]==='cards'){CARD_ORDER.forEach(function(id){if(a[1]==='none')delete S.cards[id];else S.cards[id]=a[1];});}
     else if(a[0]==='room'){if(!S.cath)S.cath={};S.cath[a[1]]=+a[2];}
+    else if(a[0]==='items'){if(!S.items)S.items={};S.items[a[1]]=a[2]==='all'?(ITEMS[a[1]]||[]).map(function(x){return x.id;}):[];}
+    else if(a[0]==='known'){S.known={};if(a[1]==='all')Object.keys(POOLS).forEach(function(k){S.known[k]=POOLS[k].map(qKey);});}
     else if(a[0]==='fresh'){S={stages:{},cards:{},stones:0,cath:{},snd:S.snd};}
     save();draw();
   });
@@ -1178,7 +1381,7 @@ function showBackup(){
 /* ---------- Navigation ---------- */
 app.addEventListener('click',function(e){
   var a=e.target.closest('[data-act]');
-  if(a){var act=a.dataset.act;if(act==='map')showMap();else if(act==='title')showTitle();else if(act==='album')showAlbum();else if(act==='rules')showRules();else if(act==='cathedral')showCathedral();return;}
+  if(a){var act=a.dataset.act;if(act==='map')showMap();else if(act==='title')showTitle();else if(act==='album')showAlbum();else if(act==='rules')showRules();else if(act==='cathedral')showCathedral();else if(act==='practice')showPractice();return;}
   var cp=e.target.closest('[data-chap]');
   if(cp){showMap(cp.dataset.chap);return;}
   var s=e.target.closest('[data-stage]');

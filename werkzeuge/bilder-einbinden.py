@@ -7,7 +7,7 @@ Braucht Pillow:         python3 -m pip install --user Pillow
 Der Dateiname bestimmt das Ziel (Groß- und Kleinschreibung egal, _ und Leerzeichen zählen wie -,
 Endung .png, .jpg oder .webp):
   aussen             -> bilder/kathedrale/aussen.webp       1000 x 750
-  <raum>-<0..3>      -> bilder/kathedrale/<raum>-<n>.webp   750 x 1000   (z. B. grotte-2)
+  <raum>-<0..4>      -> bilder/kathedrale/<raum>-<n>.webp   750 x 1000   (z. B. grotte-2; 4 = festlich ausgestattet)
   weg-<kapitel>      -> bilder/wege/<kapitel>.webp          1024 breit, Höhe beliebig (z. B. weg-fatima)
   karte-<id>, <id>-karte, <id> oder der Kartenname
                      -> bilder/karten/<id>.webp             1024 x 1024  (z. B. lucia_karte,
@@ -59,7 +59,7 @@ def ziel(stem, raeume, karten, kapitel):
     s = slug(stem)
     if s == 'aussen':
         return 'kathedrale', s, GROESSE['aussen']
-    m = re.fullmatch(r'([a-z]+)-([0-3])', s)
+    m = re.fullmatch(r'([a-z]+)-([0-4])', s)
     if m and m.group(1) in raeume:
         return 'kathedrale', s, GROESSE['raum']
     if s.startswith('weg-') and s[4:] in kapitel:

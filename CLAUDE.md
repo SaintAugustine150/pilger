@@ -10,8 +10,10 @@ Katholisches Handyspiel von Philipp. Er ist technisch nicht versiert: Erkläre S
 - Kapitel 1: Fátima (1916/17), Kapitel 2: Lourdes (1858). Ein Kapitel öffnet sich, wenn alle Etappen des vorigen geschafft sind.
 - Drei Kerzen pro Etappe, jeder Fehler löscht eine. Gold gibt es nur, wenn keine Kerze erlischt. Das Spiel soll bewusst nicht zu leicht sein.
 - Prüfungstypen: `quiz` (auch Wahr/Falsch mit Feld `s`/`v`), `chrono` (Zeitstrahl), `rosary` (Rosenkranz im Rhythmus), `procession` (Lichter-Merkspiel).
+- Wiederholen (Knopf auf der Titelseite): alle Fragen aller oder eines Kapitels gemischt, ohne Zeit und Kerzen; falsche Antworten kommen ein paar Fragen später wieder. Bringt keine Steine und Karten, zählt aber für „Fragenpool gemeistert“. Neue Fragenpools erscheinen dort automatisch.
 - Sammelkarten: pro Etappe eine, pro Kapitel zwei Bonuskarten (alle Etappen geschafft, alle in Gold).
 - Kathedrale: Eine Ruine wird mit Pilgersteinen (1 pro Etappe, +3 beim ersten Gold) und bestimmten Karten wieder aufgebaut. Jeder vollendete Raum öffnet ein Gebet.
+- Ausstattung: Jeder vollendete Raum hat vier Gegenstände (`ITEMS` in `spiel.js`) mit gezeichnetem Symbol und kurzer Erklärung ihrer Bedeutung. Freigeschaltet durch ein Erlebnis (Etappe geschafft oder in Gold, Kartenset, Karte in Gold, alle Karten eines Kapitels, Anzahl Karten oder ein Fragenpool „gemeistert“ = jede Frage mindestens einmal richtig), aufgestellt für 2 bis 4 Steine. Steine dürfen knapp sein, weil künftige Kapitel weitere bringen. Sind alle vier aufgestellt, zeigt der Raum das Bild `raum-4` („festlich ausgestattet“), falls vorhanden. Neue Kapitel bekommen eigene Räume mit eigener Ausstattung.
 
 ## Theologische Leitlinien
 - Echtes Gebet ist nie eine Währung. Gebete sind Belohnung und Einladung, nicht Mittel zum Farmen.
@@ -24,7 +26,7 @@ Katholisches Handyspiel von Philipp. Er ist technisch nicht versiert: Erkläre S
 - `spiel.js`: Spiellogik
 - `kapitel-1-fatima.js`, `kapitel-2-lourdes.js`: nur Texte und Daten, damit Philipp sie selbst bearbeiten kann. Neue Kapitel als neue Datei `kapitel-N-name.js` anlegen und in `index.html` einbinden.
 - `bilder.js`: Liste der vorhandenen Bilder (nur Namen, ohne Ordner und Endung).
-- `bilder/kathedrale/`: `raum-stufe.webp` (zum Beispiel `kapelle-0` für die Ruine bis `kapelle-3` für vollendet) und die Außenansicht `aussen.webp`
+- `bilder/kathedrale/`: `raum-stufe.webp` (zum Beispiel `kapelle-0` für die Ruine bis `kapelle-3` für vollendet, `kapelle-4` festlich ausgestattet) und die Außenansicht `aussen.webp`
 - `bilder/karten/`: Kartenbilder als `ID.webp` (zum Beispiel `lucia.webp`)
 - `bilder/wege/`: gemalte Landkarten der Kapitel als `KAPITEL-ID.webp` (zum Beispiel `fatima.webp`). Den nachgezeichneten Weg und die Orte der Etappen speichert das Kapitel unter `weg` (Wegpunkte in Bildpixeln, `orte` = Wegpunkt je Etappe). Fehlt Bild oder `weg`, oder passt die Zahl der Orte nicht zu den Etappen, zeigt der Pilgerweg automatisch die Etappenliste.
 - `neue-bilder/`: Eingang für neue Bilder von Philipp (wird nicht hochgeladen, siehe unten)
@@ -47,15 +49,14 @@ Ein vorhandenes Bild mit gleichem Namen wird ersetzt; das ist so gewollt (etwa f
 
 ## Arbeitsweise
 - Testmodus: auf der Titelseite fünfmal schnell auf die Rosette tippen. Er setzt Kapitel, Etappen, Steine, Karten und Kathedralen-Stufen und startet jede Etappe direkt. Vor der ersten Änderung sichert er den echten Spielstand unter `pilger-durch-die-zeit-v1-echt`; „Echten Spielstand zurückholen“ stellt ihn wieder her. Neue Spielinhalte (etwa Kathedralen-Ausstattung) im Testmodus mit einstellbar machen.
-- Spielstand liegt in `localStorage` unter dem Schlüssel `pilger-durch-die-zeit-v1`. Nie die Struktur brechen, sondern bei Bedarf in `migrate()` umwandeln. `pos` merkt sich je Kapitel, an welcher Etappe der Pilger auf der Landkarte steht; ist die nächste Etappe weiter, läuft er beim Öffnen der Karte dorthin.
+- Spielstand liegt in `localStorage` unter dem Schlüssel `pilger-durch-die-zeit-v1`. Nie die Struktur brechen, sondern bei Bedarf in `migrate()` umwandeln. `items` merkt sich die aufgestellten Gegenstände je Raum, `known` je Fragenpool die einmal richtig beantworteten Fragen (als kurzer Schlüssel aus dem Fragetext; wird ein Fragetext geändert, zählt die Frage neu). `pos` merkt sich je Kapitel, an welcher Etappe der Pilger auf der Landkarte steht; ist die nächste Etappe weiter, läuft er beim Öffnen der Karte dorthin.
 - Nach Änderungen testen: lokalen Server starten, die betroffenen Abläufe durchspielen und Philipp einen Link zur Vorschau geben.
 - Erst hochladen (commit und push), wenn Philipp es freigibt. Er bündelt lieber mehrere Änderungen zu einem Upload; nach einer Aufgabe nicht von sich aus hochladen, sondern sagen, dass die Änderungen bereitliegen.
 
 ## Geplante Verbesserungen
-Erledigt: Navigation (Leiste unten, Zurück-Pfeil, Abbrechen mit Rückfrage, Zurück-Taste des Handys); gemalte Landkarten für Fátima und Lourdes mit laufendem Pilger; größere Fragenpools; Zeitreise zwischen heute und damals (Schwelle, Jahreszahl, Rückkehr); Testmodus.
+Erledigt: Wiederholen-Modus; Kathedralen-Ausstattung (Abschlussbilder `raum-4` folgen); Navigation (Leiste unten, Zurück-Pfeil, Abbrechen mit Rückfrage, Zurück-Taste des Handys); gemalte Landkarten für Fátima und Lourdes mit laufendem Pilger; größere Fragenpools; Zeitreise zwischen heute und damals (Schwelle, Jahreszahl, Rückkehr); Testmodus.
 Landkarten für neue Kapitel: Hochformat (2:3 oder bei langen Wegen höher), ohne Schrift, Weg klar sichtbar, Orte mit freier Fläche; Dateiname `weg-KAPITEL`.
-1. Kathedralen-Ausstattung als großes Langzeitziel (von Philipp gewünscht). Möglichst wenige neue Bilder: kleine Gegenstände als gezeichnete Symbole, pro Raum höchstens ein zusätzliches Bild „vollständig ausgestattet“, erzeugt durch Bearbeiten des vorhandenen Raumbilds.
-2. Weitere Ideen:
+1. Weitere Ideen:
    - mehrere Prüfungen pro Etappe, Kapitel-Finale, Meisterprüfung nach Gold
    - Außenansicht der Kathedrale mit Zwischenstufen
    - ein Bild pro Etappe für die „damals“-Szenen
@@ -64,9 +65,10 @@ Landkarten für neue Kapitel: Hochformat (2:3 oder bei langen Wegen höher), ohn
    - Heiliger des Tages als Sammelkarte am Festtag
    - Pilgerpass mit Stempeln (passt zur Rückkehr-Szene: Stempel beim Zurückkehren)
    - ein wiederkehrender Wegbegleiter pro Kapitel
-   - Übungsmodus mit Bestwert
+   - Bestwert oder Serie im Wiederholen-Modus
    - weitere Kapitel: Guadalupe (1531), Jakobsweg, biblische Orte, Kirchengeschichte, Heilige
 
 ## Offene Punkte
+- Abschlussbilder „festlich ausgestattet“: `schiff-4`, `kapelle-4`, `garten-4`, `grotte-4` (Bearbeitung des jeweiligen Bilds `-3`).
 - Kirchenschiff: Die Bilder `schiff-1` und `schiff-0` passen nicht zu `schiff-2` und `schiff-3` (anderer Chor und Altar). Philipp erzeugt sie neu aus `schiff-2`.
-- Noch fehlende Kartenbilder (Lourdes): `quelle`, `prozession`, `unbefleckte`, `juli`, `basilika`, `lourdes`. Fátima ist vollständig.
+- Alle 18 Kartenbilder sind da. Das Bild `quelle` zeigt Maria mit blauem Mantel statt in Weiß mit blauem Gürtel; Philipp erzeugt es eventuell neu.

@@ -451,3 +451,29 @@ body{transition:background-color .6s;}
 .tbtn.st-geschafft{background:var(--azul);color:var(--on-azul);}
 .tbtn.st-gold{background:linear-gradient(#F3D98E,#C9952F);border-color:#B0822A;color:#4A300A;}
 .t-col .btn{margin-top:8px;}
+/* Kathedrale: Ausstattung */
+.aus-h{font-size:22px;margin:30px 0 0;display:flex;align-items:baseline;gap:10px;}
+.aus-h small{font-size:15px;font-weight:400;font-style:italic;color:var(--muted);}
+.aus-note{margin:6px 0 0;color:var(--muted);font-style:italic;font-size:16px;}
+.items{list-style:none;padding:0;margin:12px 0 0;}
+.it{display:flex;gap:14px;padding:14px 14px 14px 12px;margin:10px 0;border-radius:12px;background:var(--surface);border:1px solid var(--line);}
+.it.ready{border:2px solid var(--azul);}
+.it.placed{border-color:var(--ouro);}
+.it-ico{flex:0 0 52px;height:52px;border-radius:12px;display:grid;place-items:center;background:var(--bg);border:1.5px solid var(--line);color:var(--muted);}
+.it.placed .it-ico{background:linear-gradient(150deg,#1A3C7A,#0E2A5C);border-color:#B0822A;color:#F3D98E;box-shadow:0 0 12px rgba(217,174,85,.35);}
+.it-ico svg{width:30px;height:30px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;}
+.it-main{flex:1;min-width:0;}
+.it-main h3{margin:0;font-size:18px;line-height:1.3;}
+.it-d{margin:4px 0 0;font-size:15px;line-height:1.5;color:var(--muted);}
+.it.placed .it-d{color:var(--text);}
+.it-st{margin:8px 0 0;font-size:14px;font-weight:700;color:var(--ouro);}
+.it .btn{margin-top:10px;padding:11px 14px;font-size:16px;}
+.item-mark{fill:#E7C25E;stroke:#6B4A12;stroke-width:1.2;}
+/* Wiederholen */
+.pr-scope{margin-top:18px;}
+.pr-stat{margin:16px 0 6px;font-size:17px;}
+.pr-stat b{font-size:22px;color:var(--azul);}
+.pr-bar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;}
+.pr-bar i{display:block;height:100%;background:linear-gradient(90deg,#D9AE55,#B0822A);border-radius:4px;}
+.pr-note{margin:12px 0 0;font-size:15px;font-style:italic;color:var(--muted);text-align:center;}
+.pr-top{display:flex;justify-content:space-between;align-items:center;font-size:15px;color:var(--muted);}
