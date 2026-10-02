@@ -1,9 +1,9 @@
 /* Offline-Speicher. Bei Änderungen die Versionsnummer erhöhen. */
-var VERSION = 'pilger-13';
+var VERSION = 'pilger-15';
 /* Die Bilder kommen automatisch aus bilder.js, hier stehen nur Code und Symbole */
 self.window = self;
 importScripts('bilder.js');
-var FILES = ['./', 'bilder.js', 'icon-192.png', 'icon-512.png', 'index.html', 'kapitel-1-fatima.js', 'kapitel-2-lourdes.js', 'manifest.webmanifest', 'spiel.js', 'style.css']
+var FILES = ['./', 'bilder.js', 'icon-192.png', 'icon-512.png', 'index.html', 'kapitel-1-fatima.js', 'kapitel-2-lourdes.js', 'kapitel-3-assisi.js', 'manifest.webmanifest', 'spiel.js', 'style.css']
   .concat(self.BILDER.kathedrale.map(function (k) { return 'bilder/kathedrale/' + k + '.webp'; }))
   .concat(self.BILDER.karten.map(function (k) { return 'bilder/karten/' + k + '.webp'; }))
   .concat((self.BILDER.wege || []).map(function (k) { return 'bilder/wege/' + k + '.webp'; }));

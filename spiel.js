@@ -170,6 +170,18 @@ ICONS.prozession=procIcon();
 ICONS.unbefleckte=starsIcon();
 ICONS.juli='<path d="M10 64 C22 58 34 70 46 64 C58 58 70 70 82 64 C86 62 90 62 92 64"/><path d="M10 76 C22 70 34 82 46 76 C58 70 70 82 82 76"/><path d="M28 50 C30 32 40 22 54 22 C68 22 76 34 78 50 Z"/><path fill="currentColor" stroke="none" d="'+starPath(54,36,7,2.9)+'"/>';
 ICONS.basilika='<path d="M30 88 L30 50 L50 34 L70 50 L70 88 Z"/><path d="M50 34 L50 8 M44 16 L56 16"/><path d="M44 88 L44 70 A6 6 0 0 1 56 70 L56 88"/><path d="M16 88 L84 88"/><path d="M40 56 A10 10 0 0 1 60 56"/>';
+/* ---------- Symbole für Kapitel 3 ---------- */
+ICONS.francesco='<path d="M36 60 C24 62 20 78 30 86 C40 94 56 90 60 78 C63 68 56 60 46 58 Z M48 60 L74 20 M68 16 L80 24 M38 78 L50 68 M42 82 L54 72"/><circle cx="44" cy="74" r="4"/>';
+ICONS.aussaetziger='<path d="M14 66 C22 52 34 46 46 52 L50 56 L54 52 C66 46 78 52 86 66 M28 74 C38 68 44 62 50 56 C56 62 62 68 72 74 M36 30 A8 8 0 1 1 36.1 30 M64 30 A8 8 0 1 1 64.1 30"/>';
+ICONS.damiano='<path d="M44 8 H56 V28 H86 V44 H56 V92 H44 V44 H14 V28 H44 Z"/><circle cx="50" cy="34" r="5"/><path d="M36 50 H64 M40 60 H60"/>';
+ICONS.bischof='<path d="M30 84 V44 C30 28 40 18 50 10 C60 18 70 28 70 44 V84 Z M50 10 V84 M30 58 H70 M40 84 L36 96 M60 84 L64 96"/>';
+ICONS.brueder='<path d="M12 30 H36 M24 30 V76 M38 22 H62 M50 22 V82 M64 30 H88 M76 30 V76 M8 88 H92"/>';
+ICONS.klara='<path d="M18 66 C18 56 34 52 50 54 C66 52 82 56 82 66 C72 76 28 76 18 66 Z M82 62 L94 56 M50 54 V48 M50 22 C58 32 58 40 50 46 C42 40 42 32 50 22 Z"/>';
+ICONS.greccio='<path d="M20 62 H80 L72 82 H28 Z M30 82 L24 94 M70 82 L76 94 M26 62 C34 55 44 58 50 55 C56 58 66 55 74 62"/><path fill="currentColor" stroke="none" d="'+starPath(50,26,11,4.6)+'"/>';
+ICONS.sonnengesang=(function(){var r='<circle cx="40" cy="48" r="13"/>';for(var i=0;i<12;i++){var a=i*Math.PI/6;r+='<path d="M'+(40+19*Math.cos(a)).toFixed(1)+' '+(48+19*Math.sin(a)).toFixed(1)+' L'+(40+(i%2?25:29)*Math.cos(a)).toFixed(1)+' '+(48+(i%2?25:29)*Math.sin(a)).toFixed(1)+'"/>';}
+  return r+'<path d="M80 14 A15 15 0 1 0 88 40 A12 12 0 1 1 80 14 Z"/><path fill="currentColor" stroke="none" d="'+starPath(84,62,4,1.7)+' '+starPath(72,80,3,1.3)+'"/>';})();
+ICONS.portiuncula='<path d="M24 86 V52 L50 30 L76 52 V86 Z M50 30 V14 M43 21 H57 M42 86 V68 A8 8 0 0 1 58 68 V86 M12 86 H88"/>';
+ICONS.franziskus='<path d="M28 26 H72 M50 26 V90"/><path d="M60 52 C66 44 76 44 82 50 C76 51 72 55 70 59 C66 57 62 55 60 52 Z M82 50 L90 47 M24 62 C18 56 12 58 10 62 C16 62 20 66 22 70 C24 68 25 64 24 62 Z"/>';
 ICONS.lourdes='<path d="M50 12 C62 12 66 22 66 32 L72 88 L28 88 L34 32 C34 22 38 12 50 12 Z"/><circle cx="50" cy="30" r="8"/><path d="M38 56 L62 56 M58 56 L62 76"/><path d="M45 44 L50 50 L55 44"/>';
 
 /* ---------- Kapitel ---------- */
@@ -292,7 +304,14 @@ var ROOMS=[
    prayer:{t:'O Maria, ohne Sünde empfangen',x:'O Maria, ohne Sünde empfangen,\nbitte für uns,\ndie wir zu dir unsere Zuflucht nehmen.',n:'Ein Stoßgebet zur Unbefleckten Empfängnis. So nannte sich die Dame von Lourdes am 25. März 1858.'}},
   {id:'taufe',name:'Taufkapelle',future:'in einem späteren Kapitel',ruin:'Ein achteckiger Bau nahe dem Eingang. Das Taufbecken ist gesprungen und voller Laub.'},
   {id:'turm',name:'Glockenturm',future:'in einem späteren Kapitel',ruin:'Der Turm steht noch, aber die Treppe ist eingebrochen. Die Glocke liegt zerbrochen im Gras.'},
-  {id:'sakristei',name:'Sakristei',future:'in einem späteren Kapitel',ruin:'Die Tür hängt schief in den Angeln. In den Schränken liegen verblichene Messgewänder.'}
+  {id:'sakristei',name:'Sakristei',art:'Die',
+   ruin:'Die Tür hängt schief in den Angeln. In den Schränken liegen verblichene Messgewänder, und durch einen Riss im Gewölbe wächst Efeu.',
+   steps:[
+    {t:'Tür und Gewölbe ausbessern',d:'Die Tür hängt wieder gerade in den Angeln, Risse und Efeu sind fort. Die Schränke stehen noch leer.',cost:4},
+    {t:'Schränke und Gewänder',d:'Die alten Schränke glänzen wieder. Darin hängen Messgewänder in den Farben des Kirchenjahres: Weiß, Grün, Violett und Rot.',cost:5},
+    {t:'Kelch und Altarwäsche',d:'Auf dem Ankleidetisch liegen frisch gewaschene Altartücher, daneben Kelch und Hostienschale. Die Sakristei ist vollendet. Hier bereitet man sich in Stille auf die heilige Messe vor.',cost:5,card:'damiano'}
+   ],
+   prayer:{t:'Wir beten dich an',x:'Wir beten dich an, Herr Jesus Christus,\nhier und in allen deinen Kirchen,\ndie in der ganzen Welt sind,\nund wir preisen dich;\ndenn durch dein heiliges Kreuz\nhast du die Welt erlöst.',n:'Dieses Gebet lehrte Franziskus seine Brüder. Er hat es in seinem Testament aufgeschrieben.'}}
 ];
 var ROOM={};ROOMS.forEach(function(r){ROOM[r.id]=r;});
 
@@ -343,6 +362,20 @@ var ITEMS={
      d:'Morgens, mittags und abends läutet sie zum Angelus. Man betet dann, wie der Engel Maria die Botschaft brachte und das Wort Fleisch geworden ist.',
      i:'<path d="M6 17 C6 9.5 8 5 12 5 C16 5 18 9.5 18 17 Z M4 17 H20 M12 2.5 V5 M10.4 19.5 A1.6 1.6 0 0 0 13.6 19.5"/>'}
   ],
+  sakristei:[
+    {id:'tau',t:'Tau-Kreuz',cost:3,need:{gold:['a5']},
+     d:'Das Tau, ein Buchstabe in Form eines Kreuzes, war Franziskus heilig. Er unterschrieb damit und malte es an Wände, als Zeichen der Erlösung durch Christus.',
+     i:'<path d="M5 5 H19 M12 5 V21"/>'},
+    {id:'besen',t:'Besen',cost:2,need:{pool:'damiano'},
+     d:'Franziskus nahm manchmal einen Besen mit, um vernachlässigte Kirchen zu fegen. Das Haus Gottes war es ihm wert, auch im Kleinen geehrt zu werden.',
+     i:'<path d="M16 2.5 L11 12.5 M8 11.5 L14 14.5 L11 21 L4.5 18 Z M6.8 15 L10.2 16.6 M5.8 17 L9.2 18.6"/>'},
+    {id:'weihrauch',t:'Weihrauchfass',cost:3,need:{pool:'heimgang'},
+     d:'Wie der Rauch des Weihrauchs steigt das Gebet zu Gott auf. In der Messe ehrt man damit den Altar, das Evangelium und die versammelte Gemeinde.',
+     i:'<path d="M12 2 V7 M8.5 2.5 V10 M15.5 2.5 V10 M7 11 C7 8.5 9 7 12 7 C15 7 17 8.5 17 11 Z M6 11 H18 L16.5 17 H7.5 Z M9.5 17 L10.5 20 H13.5 L14.5 17"/>'},
+    {id:'krippe',t:'Krippenfiguren',cost:3,need:{cardGold:'greccio'},
+     d:'Ochs, Esel und Hirten: Seit Franziskus in Greccio Weihnachten feierte, stellen Christen überall Krippen auf. Hier warten die Figuren auf die Heilige Nacht.',
+     i:'<path d="M4 13 H20 L18 18 H6 Z M6 18 L5 21 M18 18 L19 21 M5 13 C8 11 10 12 12 11 C14 12 16 11 19 13"/><path d="'+starPath(12,5.5,3.4,1.4)+'"/>'}
+  ],
   grotte:[
     {id:'bernadette',t:'Statue der knienden Bernadette',cost:4,need:{pool:'bernadette'},
      d:'Sie kniet, den Rosenkranz in den Händen, und schaut zur Nische hinauf, so wie die Menschen sie an der Grotte beten sahen.',
@@ -360,7 +393,9 @@ var ITEMS={
 };
 /* Wo die aufgestellten Gegenstände im Grundriss als goldene Zeichen erscheinen */
 var ITEM_POS={schiff:[[180,96],[146,300],[180,382],[206,120]],kapelle:[[87,104],[113,104],[100,126],[100,86]],
-  garten:[[262,232],[318,232],[262,338],[318,338]],grotte:[[26,350],[64,350],[30,330],[60,330]]};
+  garten:[[262,232],[318,232],[262,338],[318,338]],grotte:[[26,350],[64,350],[30,330],[60,330]],
+  sakristei:[[247,97],[283,97],[247,123],[283,123]]};
+function nameList(a){return a.length>1?a.slice(0,-1).join(', ')+' und '+a[a.length-1]:(a[0]||'');}
 function stageById(id){for(var i=0;i<STAGES.length;i++)if(STAGES[i].id===id)return STAGES[i];return null;}
 function qKey(q){var t=q.q||q.s,h=0;for(var i=0;i<t.length;i++)h=(h*31+t.charCodeAt(i))|0;return (h>>>0).toString(36);}
 function markKnown(pool,q){
@@ -460,6 +495,10 @@ function deco(id,l){
     if(l>=1)s+='<path class="rib" d="M40 332 C40 322 52 322 52 332 L52 342 L40 342 Z"/>';
     if(l>=2)s+='<ellipse class="water" cx="45" cy="354" rx="14" ry="3.2"/>';
     if(l>=3)s+='<path class="solid" d="'+starPath(46,334,5,2.1)+'"/>';
+  }else if(id==='sakristei'){
+    if(l>=1)s+='<path class="rib" d="M262 130 L268 130"/>';
+    if(l>=2)s+='<path class="rib" d="M244 104 V118 M286 104 V118"/>';
+    if(l>=3)s+='<path class="solid" d="M263.5 92 H266.5 V96 H269.5 V99 H266.5 V105 H263.5 V99 H260.5 V96 H263.5 Z"/>';
   }else if(id==='garten'){
     if(l>=1)s+='<rect class="inner" x="258" y="218" width="64" height="134"/><path class="rib" d="M290 218 L290 352 M258 285 L322 285"/>';
     if(l>=2){
@@ -612,7 +651,7 @@ function showTitle(){
   var any=Object.keys(S.stages).length>0;
   render('<div class="title-screen"><div class="t-card">'+
     roseSVG()+'<h1 class="t-title">Pilger<br>durch die<br>Zeit</h1>'+
-    '<p class="t-sub">Fátima 1917 und Lourdes 1858</p>'+
+    '<p class="t-sub">'+esc(nameList(CHAPTERS.map(function(c){return c.name;})))+'</p>'+
     '<button class="btn primary" data-chap="'+currentChapter()+'">'+(any?'Weiterpilgern':'Aufbrechen')+'</button>'+
     '<button class="btn ghost" data-act="cathedral">Die Kathedrale</button>'+
     '<button class="btn ghost" data-act="album">Kartenalbum</button>'+
@@ -634,7 +673,7 @@ function showTitle(){
 function showRules(){
   render(hud('title')+'<div class="wrap rules">'+
     '<h1 class="chapter"><span>So wird gespielt</span></h1>'+
-    '<p>Du pilgerst zu den großen Marienwallfahrtsorten, zuerst von Lissabon nach Fátima, dann von Pau nach Lourdes. An jeder Etappe wirst du in die Zeit der Erscheinungen zurückversetzt und musst eine Prüfung bestehen: Wissensfragen gegen die Zeit, Aussagen als wahr oder falsch erkennen, Ereignisse ordnen, ein Gesätz des Rosenkranzes im Rhythmus beten oder den Lichtern einer Prozession folgen.</p>'+
+    '<p>Du pilgerst zu großen Pilgerorten: '+esc(nameList(CHAPTERS.map(function(c){return c.name;})))+'. An jeder Etappe wirst du in die Zeit zurückversetzt, in der dort Entscheidendes geschah, und musst eine Prüfung bestehen: Wissensfragen gegen die Zeit, Aussagen als wahr oder falsch erkennen, Ereignisse ordnen, im Rhythmus beten oder den Lichtern einer Prozession folgen.</p>'+
     '<p>Ein neues Kapitel öffnet sich, sobald du alle Etappen des vorigen geschafft hast.</p>'+
     '<p>Du hast drei Kerzen. Jeder Fehler löscht eine. Erlischt die letzte, beginnt die Etappe von vorn, mit neu gemischten Fragen.</p>'+
     '<p>Jede bestandene Etappe bringt eine Karte. Die goldene Fassung gibt es nur, wenn keine Kerze erlischt. Zwei weitere Karten pro Kapitel erhältst du nur für den ganzen Weg, eine davon nur, wenn jede Etappe golden ist.</p>'+
@@ -1002,9 +1041,13 @@ function runRosary(cfg,done){
   size();
   var cs=getComputedStyle(document.documentElement);function col(n){return cs.getPropertyValue(n).trim();}
   var C={line:col('--line'),bead:col('--azul'),ring:col('--ouro'),ok:col('--ok'),bad:col('--rot'),muted:col('--muted')};
-  var seq=[{big:true,l:'Vaterunser'}];
-  for(var n=1;n<=10;n++)seq.push({big:false,l:'Gegrüßet seist du, Maria, '+n+' von 10'});
-  seq.push({big:true,l:'Ehre sei dem Vater'});
+  var seq;
+  if(cfg.perlen)seq=cfg.perlen.map(function(p){return {big:!!p.gross,l:p.t};});
+  else{
+    seq=[{big:true,l:'Vaterunser'}];
+    for(var n=1;n<=10;n++)seq.push({big:false,l:'Gegrüßet seist du, Maria, '+n+' von 10'});
+    seq.push({big:true,l:'Ehre sei dem Vater'});
+  }
   var beads=[],running=false,raf=0,ended=false,fbTimer=0,lastLabel='';
   function flash(txt,good){rfb.textContent=txt;rfb.className='rz-fb '+(good?'good':'bad');clearTimeout(fbTimer);fbTimer=setTimeout(function(){rfb.textContent='';},650);}
   function start(){
@@ -1056,7 +1099,7 @@ function runRosary(cfg,done){
     if(ended&&!ok&&!running)return;
     running=false;ended=true;cancelAnimationFrame(raf);draw(performance.now());
     var fb=document.getElementById('fb');
-    if(ok){lab.textContent='Amen';fb.innerHTML='<div class="fb"><strong>Das Gesätz ist gebetet.</strong></div><button class="btn primary" id="nq">Weiter</button>';}
+    if(ok){lab.textContent='Amen';fb.innerHTML='<div class="fb"><strong>'+esc(cfg.fertig||'Das Gesätz ist gebetet.')+'</strong></div><button class="btn primary" id="nq">Weiter</button>';}
     else{lab.textContent='Die Kerzen sind erloschen';fb.innerHTML='<div class="fb bad"><strong>Die letzte Kerze ist erloschen.</strong>Der Rhythmus ist beim nächsten Versuch ein anderer.</div><button class="btn primary" id="nq">Weiter</button>';}
     document.getElementById('nq').addEventListener('click',function(){done(ok);});
   }
