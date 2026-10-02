@@ -44,6 +44,8 @@ var ICONS={
 };
 var STONE_SVG='<svg class="stone" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 16 C3 11 7 6 12 6 C18 6 21 10 20 15 C19.5 18 16 19.5 11.5 19.5 C7 19.5 4.5 18.5 4 16Z"/></svg>';
 function stonesTxt(n){return n===1?'1 Pilgerstein':n+' Pilgersteine';}
+function mortarTxt(n){return n===1?'1 Eimer Mörtel':n+' Eimer Mörtel';}
+var MORTAR_SVG='<svg class="mortar" viewBox="0 0 24 24" aria-hidden="true"><path class="m-b" d="M5 9 H19 L17.4 20 H6.6 Z"/><path class="m-h" d="M6.5 9 C6.5 4.5 17.5 4.5 17.5 9"/><path class="m-f" d="M5 9 C8 7.4 16 7.4 19 9"/></svg>';
 
 /* ---------- Bilder (werden später eingefügt) ----------
    Schlüssel: 'aussen' für die Außenansicht, sonst '<raum>-<stufe>', z. B. 'kapelle-0' (Ruine) bis 'kapelle-3' (vollendet). */
@@ -61,6 +63,7 @@ function hud(back){
   var n=CARD_ORDER.filter(function(id){return S.cards[id];}).length;
   return '<div class="hud"><div class="hud-in">'+(back?'<button class="back" data-act="'+back+'" aria-label="'+BACK_LABEL[back]+'">'+BACK_SVG+'</button>':'')+'<span class="hud-t">Pilger durch die Zeit</span>'+
     '<span class="chip" aria-label="'+stonesTxt(S.stones||0)+'">'+STONE_SVG+'<span>'+(S.stones||0)+'</span></span>'+
+    '<span class="chip" aria-label="'+mortarTxt(mortar())+'">'+MORTAR_SVG+'<span>'+mortar()+'</span></span>'+
     '<span class="chip" aria-label="'+n+' von '+CARD_ORDER.length+' Karten">'+CARD_ICON+'<span>'+n+'/'+CARD_ORDER.length+'</span></span></div></div>';
 }
 var NAV=[
@@ -273,33 +276,33 @@ var ROOMS=[
   {id:'schiff',name:'Kirchenschiff',art:'Das',
    ruin:'Das Dach ist eingestürzt, zwischen den Bodenplatten wächst Gras. Durch die leeren Fensterbögen pfeift der Wind.',
    steps:[
-    {t:'Mauern sichern',d:'Die Risse im Mauerwerk sind geschlossen, die Pfeiler stehen wieder fest. Am Hochaltar liegt ein schlichtes Tuch.',cost:3},
-    {t:'Gewölbe schließen',d:'Über Schiff und Querhaus spannt sich wieder das Gewölbe. Zum ersten Mal seit Jahren ist es drinnen still und trocken.',cost:5},
-    {t:'Fenster einsetzen',d:'Buntglas füllt die hohen Fenster, farbiges Licht fällt auf die neuen Bänke. Das Kirchenschiff ist vollendet.',cost:6,card:'basilika'}
+    {t:'Mauern sichern',d:'Die Risse im Mauerwerk sind geschlossen, die Pfeiler stehen wieder fest. Am Hochaltar liegt ein schlichtes Tuch.',cost:5,mortar:10},
+    {t:'Gewölbe schließen',d:'Über Schiff und Querhaus spannt sich wieder das Gewölbe. Zum ersten Mal seit Jahren ist es drinnen still und trocken.',cost:8,mortar:15},
+    {t:'Fenster einsetzen',d:'Buntglas füllt die hohen Fenster, farbiges Licht fällt auf die neuen Bänke. Das Kirchenschiff ist vollendet.',cost:9,mortar:20,card:'basilika'}
    ],
    prayer:{t:'Vater unser',x:'Vater unser im Himmel,\ngeheiligt werde dein Name.\nDein Reich komme.\nDein Wille geschehe,\nwie im Himmel so auf Erden.\nUnser tägliches Brot gib uns heute.\nUnd vergib uns unsere Schuld,\nwie auch wir vergeben unsern Schuldigern.\nUnd führe uns nicht in Versuchung,\nsondern erlöse uns von dem Bösen.\nAmen.',n:'Das Gebet, das Jesus selbst seine Jünger gelehrt hat.'}},
   {id:'kapelle',name:'Marienkapelle',art:'Die',
    ruin:'Eine kleine Apsis neben dem Chor, von Efeu überwuchert. Der Altar ist leer, in der Nische darüber fehlt die Statue.',
    steps:[
-    {t:'Kapelle wiederaufbauen',d:'Die Wände sind neu gekalkt, der Altar steht wieder. Die Nische darüber wartet noch.',cost:5},
-    {t:'Statue aufstellen',d:'In der Nische steht eine Statue Unserer Lieben Frau von Fátima, nach dem Vorbild der Erscheinungskapelle.',cost:4,card:'capelinha'},
-    {t:'Krone aufsetzen',d:'Die Statue trägt ihre Krone. Vor ihr brennen Kerzen. Die Kapelle ist vollendet.',cost:3,card:'fatima'}
+    {t:'Kapelle wiederaufbauen',d:'Die Wände sind neu gekalkt, der Altar steht wieder. Die Nische darüber wartet noch.',cost:8,mortar:10},
+    {t:'Statue aufstellen',d:'In der Nische steht eine Statue Unserer Lieben Frau von Fátima, nach dem Vorbild der Erscheinungskapelle.',cost:6,mortar:12,card:'capelinha'},
+    {t:'Krone aufsetzen',d:'Die Statue trägt ihre Krone. Vor ihr brennen Kerzen. Die Kapelle ist vollendet.',cost:5,mortar:14,card:'fatima'}
    ],
    prayer:{t:'Das Gebet von Fátima',x:'O mein Jesus, verzeih uns unsere Sünden,\nbewahre uns vor dem Feuer der Hölle,\nführe alle Seelen in den Himmel,\nbesonders jene, die deiner Barmherzigkeit am meisten bedürfen.',n:'Maria lehrte es die Kinder am 13. Juli 1917. Es wird nach jedem Gesätz des Rosenkranzes gebetet.'}},
   {id:'garten',name:'Klostergarten',art:'Der',
    ruin:'Brombeeren und Schutt bedecken den Innenhof des Kreuzgangs. Unter dem Gestrüpp ahnt man die alten Wege, in der Mitte einen trockenen Brunnen.',
    steps:[
-    {t:'Wege freilegen',d:'Die steinernen Wege sind frei. Sie kreuzen sich in der Mitte des Gartens am alten Brunnen.',cost:3,n:3},
-    {t:'Beete und Brunnen',d:'Die Beete sind neu bepflanzt, und der Brunnen gibt wieder Wasser.',cost:5,n:6},
-    {t:'Kreuzgang vollenden',d:'Rosen ranken an den Bögen des Kreuzgangs. Der Garten ist ein Ort zum Beten geworden.',cost:6,n:8}
+    {t:'Wege freilegen',d:'Die steinernen Wege sind frei. Sie kreuzen sich in der Mitte des Gartens am alten Brunnen.',cost:5,mortar:10,n:3},
+    {t:'Beete und Brunnen',d:'Die Beete sind neu bepflanzt, und der Brunnen gibt wieder Wasser.',cost:8,mortar:15,n:6},
+    {t:'Kreuzgang vollenden',d:'Rosen ranken an den Bögen des Kreuzgangs. Der Garten ist ein Ort zum Beten geworden.',cost:9,mortar:20,n:8}
    ],
    prayer:{t:'Gegrüßet seist du, Maria',x:'Gegrüßet seist du, Maria, voll der Gnade,\nder Herr ist mit dir.\nDu bist gebenedeit unter den Frauen,\nund gebenedeit ist die Frucht deines Leibes, Jesus.\nHeilige Maria, Mutter Gottes,\nbitte für uns Sünder\njetzt und in der Stunde unseres Todes.\nAmen.',n:'Im Kreuzgang betet man den Rosenkranz im Gehen, Perle für Perle, Bogen für Bogen.'}},
   {id:'grotte',name:'Lourdes-Grotte',art:'Die',
    ruin:'Ein Felsen am Rand des Gartens, halb verschüttet. Einst stand hier eine Nachbildung der Grotte von Massabielle.',
    steps:[
-    {t:'Felsen freilegen',d:'Schutt und Gestrüpp sind fort. Der Felsen steht frei, und oben rechts öffnet sich eine kleine Nische, wie in Massabielle.',cost:4},
-    {t:'Quelle fassen',d:'Aus einem Spalt am Fuß des Felsens rinnt Wasser. Ein steinernes Becken fängt es auf.',cost:5,card:'quelle'},
-    {t:'Statue aufstellen',d:'In der Nische steht die Dame in Weiß mit dem blauen Gürtel. Davor brennen Kerzen auf einem eisernen Ständer. Die Grotte ist vollendet.',cost:4,card:'lourdes'}
+    {t:'Felsen freilegen',d:'Schutt und Gestrüpp sind fort. Der Felsen steht frei, und oben rechts öffnet sich eine kleine Nische, wie in Massabielle.',cost:6,mortar:10},
+    {t:'Quelle fassen',d:'Aus einem Spalt am Fuß des Felsens rinnt Wasser. Ein steinernes Becken fängt es auf.',cost:8,mortar:12,card:'quelle'},
+    {t:'Statue aufstellen',d:'In der Nische steht die Dame in Weiß mit dem blauen Gürtel. Davor brennen Kerzen auf einem eisernen Ständer. Die Grotte ist vollendet.',cost:6,mortar:14,card:'lourdes'}
    ],
    prayer:{t:'O Maria, ohne Sünde empfangen',x:'O Maria, ohne Sünde empfangen,\nbitte für uns,\ndie wir zu dir unsere Zuflucht nehmen.',n:'Ein Stoßgebet zur Unbefleckten Empfängnis. So nannte sich die Dame von Lourdes am 25. März 1858.'}},
   {id:'taufe',name:'Taufkapelle',future:'in einem späteren Kapitel',ruin:'Ein achteckiger Bau nahe dem Eingang. Das Taufbecken ist gesprungen und voller Laub.'},
@@ -307,9 +310,9 @@ var ROOMS=[
   {id:'sakristei',name:'Sakristei',art:'Die',
    ruin:'Die Tür hängt schief in den Angeln. In den Schränken liegen verblichene Messgewänder, und durch einen Riss im Gewölbe wächst Efeu.',
    steps:[
-    {t:'Tür und Gewölbe ausbessern',d:'Die Tür hängt wieder gerade in den Angeln, Risse und Efeu sind fort. Die Schränke stehen noch leer.',cost:4},
-    {t:'Schränke und Gewänder',d:'Die alten Schränke glänzen wieder. Darin hängen Messgewänder in den Farben des Kirchenjahres: Weiß, Grün, Violett und Rot.',cost:5},
-    {t:'Kelch und Altarwäsche',d:'Auf dem Ankleidetisch liegen frisch gewaschene Altartücher, daneben Kelch und Hostienschale. Die Sakristei ist vollendet. Hier bereitet man sich in Stille auf die heilige Messe vor.',cost:5,card:'damiano'}
+    {t:'Tür und Gewölbe ausbessern',d:'Die Tür hängt wieder gerade in den Angeln, Risse und Efeu sind fort. Die Schränke stehen noch leer.',cost:6,mortar:12},
+    {t:'Schränke und Gewänder',d:'Die alten Schränke glänzen wieder. Darin hängen Messgewänder in den Farben des Kirchenjahres: Weiß, Grün, Violett und Rot.',cost:8,mortar:18},
+    {t:'Kelch und Altarwäsche',d:'Auf dem Ankleidetisch liegen frisch gewaschene Altartücher, daneben Kelch und Hostienschale. Die Sakristei ist vollendet. Hier bereitet man sich in Stille auf die heilige Messe vor.',cost:8,mortar:20,card:'damiano'}
    ],
    prayer:{t:'Wir beten dich an',x:'Wir beten dich an, Herr Jesus Christus,\nhier und in allen deinen Kirchen,\ndie in der ganzen Welt sind,\nund wir preisen dich;\ndenn durch dein heiliges Kreuz\nhast du die Welt erlöst.',n:'Dieses Gebet lehrte Franziskus seine Brüder. Er hat es in seinem Testament aufgeschrieben.'}}
 ];
@@ -404,6 +407,9 @@ function markKnown(pool,q){
   if(a.indexOf(k)<0){a.push(k);save();return true;}
   return false;
 }
+function knownTotal(){var n=0;Object.keys(POOLS).forEach(function(p){n+=poolProgress(p).n;});return n;}
+/* Mörtel: jede zum ersten Mal richtig beantwortete Frage bringt einen Eimer */
+function mortar(){return Math.max(0,knownTotal()-(S.mortarSpent||0));}
 function poolProgress(pool){
   var all=POOLS[pool]||[],a=(S.known&&S.known[pool])||[];
   return {n:all.filter(function(q){return a.indexOf(qKey(q))>=0;}).length,of:all.length};
@@ -453,6 +459,7 @@ function cardCount(){return CARD_ORDER.filter(function(id){return S.cards[id];})
 function reqs(step){
   var a=[];
   if(step.cost)a.push({t:stonesTxt(step.cost)+' (du hast '+S.stones+')',ok:S.stones>=step.cost});
+  if(step.mortar){var mo=mortar();a.push({t:mortarTxt(step.mortar)+' (du hast '+mo+')',ok:mo>=step.mortar});}
   if(step.card)a.push({t:'Karte „'+CARDS[step.card].name+'“',ok:!!S.cards[step.card]});
   if(step.n)a.push({t:step.n+' Karten im Album (du hast '+cardCount()+')',ok:cardCount()>=step.n});
   return a;
@@ -559,7 +566,8 @@ function showCathedral(){
   var fut=ROOMS.length-active.length;
   render(hud('title')+tabbar('cathedral')+'<div class="wrap">'+
     '<h1 class="chapter"><span>Die Kathedrale</span></h1>'+
-    '<p class="lead">Aus der Ruine wird nach und nach wieder ein Gotteshaus. Jede bestandene Etappe bringt einen Pilgerstein, das erste Gold einer Etappe drei weitere. Tippe einen Raum an.</p>'+
+    '<p class="lead">Aus der Ruine wird nach und nach wieder ein Gotteshaus. Die Steine bringt dein Weg: einen für jede bestandene Etappe, drei weitere für das erste Gold. Den Mörtel bringt dein Wissen: Jede Frage, die du zum ersten Mal richtig beantwortest, ist ein Eimer. Tippe einen Raum an.</p>'+
+    '<p class="bau-stand">'+STONE_SVG+'<span><b>'+(S.stones||0)+'</b> Steine</span>'+MORTAR_SVG+'<span><b>'+mortar()+'</b> Eimer Mörtel</span></p>'+
     (IMG.aussen?'<figure class="roomimg wide"><img src="'+IMG.aussen+'" alt="Die Kathedrale von außen"></figure>':'')+
     notice+
     '<div class="plan">'+planSVG()+'</div>'+
@@ -633,7 +641,7 @@ function showRoom(id,msg,prevL){
   if(b)b.addEventListener('click',function(){
     if(!canBuild(r))return;
     var step=r.steps[l];
-    S.stones-=step.cost||0;S.cath[id]=l+1;save();
+    S.stones-=step.cost||0;S.mortarSpent=(S.mortarSpent||0)+(step.mortar||0);S.cath[id]=l+1;save();
     var m='Geschafft: '+step.t+'.';
     if(l+1>=r.steps.length)m+=' '+r.art+' '+r.name+' ist vollendet. Das Gebet dieses Raumes ist jetzt offen.';
     showRoom(id,m,l);celebrate(l+1>=r.steps.length);
@@ -677,7 +685,7 @@ function showRules(){
     '<p>Ein neues Kapitel öffnet sich, sobald du alle Etappen des vorigen geschafft hast.</p>'+
     '<p>Du hast drei Kerzen. Jeder Fehler löscht eine. Erlischt die letzte, beginnt die Etappe von vorn, mit neu gemischten Fragen.</p>'+
     '<p>Jede bestandene Etappe bringt eine Karte. Die goldene Fassung gibt es nur, wenn keine Kerze erlischt. Zwei weitere Karten pro Kapitel erhältst du nur für den ganzen Weg, eine davon nur, wenn jede Etappe golden ist.</p>'+
-    '<p>Zwischen den Reisen baust du eine verfallene Kathedrale wieder auf. Jede bestandene Etappe bringt einen Pilgerstein, auch beim Wiederholen. Das erste Gold einer Etappe bringt drei weitere. Mit Steinen restaurierst du die Räume, vollenden kannst du manche nur mit bestimmten Karten. In jedem vollendeten Raum wartet ein Gebet.</p>'+
+    '<p>Zwischen den Reisen baust du eine verfallene Kathedrale wieder auf. Jede bestandene Etappe bringt einen Pilgerstein, auch beim Wiederholen. Das erste Gold einer Etappe bringt drei weitere. Jede Frage, die du zum ersten Mal richtig beantwortest, bringt einen Eimer Mörtel, auch beim Wiederholen. Mit Steinen und Mörtel restaurierst du die Räume, vollenden kannst du manche nur mit bestimmten Karten. In jedem vollendeten Raum wartet ein Gebet.</p>'+
     '<p class="muted">Dein Fortschritt wird in diesem Browser gespeichert.</p>'+
     '<button class="btn primary" data-act="map">Zum Pilgerweg</button></div>');
 }
@@ -975,12 +983,12 @@ function runQuiz(cfg,done){
     function answer(k){
       if(answered)return;answered=true;cancelAnimationFrame(raf);
       var ok=k>=0&&opts[k].ok;
-      if(ok)markKnown(cfg.pool,q);
+      var neuM=ok&&markKnown(cfg.pool,q);if(neuM)R.mortar=(R.mortar||0)+1;
       b.querySelectorAll('.opt').forEach(function(btn,idx){btn.disabled=true;if(opts[idx].ok)btn.classList.add('right');else if(idx===k)btn.classList.add('wrong');});
       var dead=false;if(!ok)dead=loseCandle();
       var head=ok?'Richtig.':(k<0?'Die Zeit ist abgelaufen.':'Leider falsch.');
       var fb=document.getElementById('fb');
-      fb.innerHTML='<div class="fb '+(ok?'':'bad')+'"><strong>'+head+'</strong>'+(q.e?esc(q.e):'')+'</div>'+
+      fb.innerHTML='<div class="fb '+(ok?'':'bad')+'"><strong>'+head+'</strong>'+(q.e?esc(q.e):'')+(neuM?'<span class="fb-m">'+MORTAR_SVG+'+1 Eimer Mörtel</span>':'')+'</div>'+
         '<button class="btn primary" id="nq">'+(dead?'Weiter':(i+1<qs.length?'Nächste Frage':'Weiter'))+'</button>';
       var nb=document.getElementById('nq');
       nb.addEventListener('click',function(){if(dead){done(false);return;}i++;ask();});
@@ -1227,6 +1235,7 @@ function finishStage(ok){
   else msg=(R.lost===1?'Eine Kerze ist':R.lost+' Kerzen sind')+' erloschen. Für die goldene Karte muss die Etappe ohne Fehler gelingen.';
   var h='<div class="reward"><h2>'+(main.isNew?'Neue Karte':'Etappe geschafft')+'</h2><p>'+msg+'</p>'+
     '<p class="gain">'+STONE_SVG+'<span>+ '+stonesTxt(gain)+(gain>1?'<small>einer für die Etappe, drei für das erste Gold</small>':'')+'</span></p>'+
+    (R.mortar?'<p class="gain">'+MORTAR_SVG+'<span>+ '+mortarTxt(R.mortar)+'<small>für neu gelernte Fragen</small></span></p>':'')+
     '<div class="flip'+(main.variant==='gold'?' gold':'')+'" id="flip" role="button" tabindex="0" aria-label="Karte aufdecken"><div class="flip-inner">'+cardHTML(st.card,main.variant,'md')+'<div class="flip-back"></div></div></div>'+
     '<p class="seal-hint" id="sealhint">Tippe auf die Karte, um sie aufzudecken</p>';
   if(bonus.length){
@@ -1382,7 +1391,7 @@ function showPractice(){
     '<p class="pr-stat"><b>'+kn+'</b> von '+set.length+' Fragen hast du schon einmal richtig beantwortet.</p>'+
     '<div class="pr-bar" aria-hidden="true"><i style="width:'+(set.length?Math.round(kn/set.length*100):0)+'%"></i></div>'+
     '<button class="btn primary" id="prgo">Los geht’s</button>'+
-    '<p class="pr-note">Richtig beantwortete Fragen zählen auch für die Ausstattung der Kathedrale.</p></div>');
+    '<p class="pr-note">Jede Frage, die du zum ersten Mal richtig beantwortest, bringt einen Eimer Mörtel für die Kathedrale.</p></div>');
   app.querySelectorAll('[data-scope]').forEach(function(b){b.addEventListener('click',function(){practiceScope=b.dataset.scope;showPractice();});});
   document.getElementById('prgo').addEventListener('click',function(){runPractice(set);});
 }
@@ -1402,10 +1411,10 @@ function runPractice(set){
       if(answered)return;answered=true;
       var k=+btn.dataset.k,ok=opts[k].ok;n++;
       box.querySelectorAll('.opt').forEach(function(x,idx){x.disabled=true;if(opts[idx].ok)x.classList.add('right');else if(idx===k)x.classList.add('wrong');});
-      if(ok){right++;if(markKnown(item.p,q))learned++;}
+      var neuM=false;if(ok){right++;neuM=markKnown(item.p,q);if(neuM)learned++;}
       else queue.splice(Math.min(queue.length,4+Math.floor(Math.random()*3)),0,item);
       var fb=document.getElementById('fb');
-      fb.innerHTML='<div class="fb '+(ok?'':'bad')+'"><strong>'+(ok?'Richtig.':'Leider falsch.')+'</strong>'+(q.e?esc(q.e):'')+(ok?'':(q.e?' ':'')+'Die Frage kommt gleich noch einmal.')+'</div>'+
+      fb.innerHTML='<div class="fb '+(ok?'':'bad')+'"><strong>'+(ok?'Richtig.':'Leider falsch.')+'</strong>'+(q.e?esc(q.e):'')+(ok?'':(q.e?' ':'')+'Die Frage kommt gleich noch einmal.')+(neuM?'<span class="fb-m">'+MORTAR_SVG+'+1 Eimer Mörtel</span>':'')+'</div>'+
         '<button class="btn primary" id="prnext">'+(queue.length?'Nächste Frage':'Zur Bilanz')+'</button>';
       var nb=document.getElementById('prnext');nb.addEventListener('click',ask);nb.focus({preventScroll:true});
       fb.scrollIntoView({block:'nearest',behavior:reduceMotion?'auto':'smooth'});
@@ -1414,7 +1423,7 @@ function runPractice(set){
   }
   function summary(all){
     box.innerHTML='<div class="reward"><h2>'+(all?'Alle Fragen geschafft':'Gut geübt')+'</h2>'+
-      '<p>'+(n===1?'1 Frage':n+' Fragen')+' beantwortet, davon '+right+' richtig.'+(learned?' '+(learned===1?'Eine Frage hast':learned+' Fragen hast')+' du zum ersten Mal richtig beantwortet.':'')+'</p>'+
+      '<p>'+(n===1?'1 Frage':n+' Fragen')+' beantwortet, davon '+right+' richtig.'+(learned?' '+(learned===1?'Eine Frage hast':learned+' Fragen hast')+' du zum ersten Mal richtig beantwortet. Das '+(learned===1?'ist':'sind')+' '+mortarTxt(learned)+' für die Kathedrale.':'')+'</p>'+
       '<button class="btn primary" id="pragain">Weiter üben</button><button class="btn ghost" data-act="title">Zum Titel</button></div>';
     document.getElementById('pragain').addEventListener('click',showPractice);
     window.scrollTo(0,0);
@@ -1459,6 +1468,7 @@ function showTestMenu(){
       });
     });
     h+='<h3>Pilgersteine: '+(S.stones||0)+'</h3><div class="t-row">'+b('−10','st:-10')+b('−1','st:-1')+b('+1','st:1')+b('+10','st:10')+b('+50','st:50')+b('Auf 0','st:0')+'</div>';
+    h+='<h3>Mörtel: '+mortar()+' Eimer</h3><div class="t-row">'+b('+20','mo:20')+b('+100','mo:100')+b('Auf 0','mo:0')+'</div>';
     h+='<h3>Sammelkarten: '+cardCount()+' von '+CARD_ORDER.length+'</h3><div class="t-row">'+b('Keine','cards:none')+b('Alle','cards:normal')+b('Alle in Gold','cards:gold')+'</div>';
     h+='<h3>Kathedrale</h3>';
     ROOMS.filter(function(r){return !r.future;}).forEach(function(r){
@@ -1491,6 +1501,7 @@ function showTestMenu(){
     if(a[0]==='chap')setChapter(CH[a[1]],a[2]);
     else if(a[0]==='pos'){if(!S.pos)S.pos={};S.pos[a[1]]=0;}
     else if(a[0]==='cyc'){var st=STAGES[+a[1]],m=stateOf(st);setStage(st,m==='leer'?'done':m==='geschafft'?'gold':'leer');}
+    else if(a[0]==='mo'){var m=+a[1];S.mortarSpent=m===0?knownTotal():(S.mortarSpent||0)-m;}
     else if(a[0]==='st'){var n=+a[1];S.stones=n===0?0:Math.max(0,(S.stones||0)+n);}
     else if(a[0]==='cards'){CARD_ORDER.forEach(function(id){if(a[1]==='none')delete S.cards[id];else S.cards[id]=a[1];});}
     else if(a[0]==='room'){if(!S.cath)S.cath={};S.cath[a[1]]=+a[2];}

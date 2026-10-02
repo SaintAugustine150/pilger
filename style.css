@@ -520,3 +520,17 @@ body{transition:background-color .6s;}
 .bg-n{margin:0;font-weight:700;font-size:18px;color:#3A2817;}
 .bg-n small{display:block;font-weight:400;font-style:italic;font-size:14px;color:#7A6145;}
 .bg-t{margin:6px 0 0;font-size:15px;line-height:1.5;color:#3A2817;}
+/* Mörtel */
+.mortar{width:22px;height:22px;flex:0 0 22px;}
+.mortar .m-b{fill:#C9CBCF;stroke:var(--muted);stroke-width:1.3;stroke-linejoin:round;}
+.mortar .m-h{fill:none;stroke:var(--muted);stroke-width:1.3;stroke-linecap:round;}
+.mortar .m-f{fill:#EDEBE6;stroke:var(--muted);stroke-width:1;}
+.hud .mortar{width:20px;height:20px;flex-basis:20px;}
+.hud .mortar .m-b{fill:#D7D9DD;stroke:#B0822A;}
+.hud .mortar .m-h,.hud .mortar .m-f{stroke:#B0822A;}
+.hud .mortar .m-f{fill:#F2EFE8;}
+.fb-m{display:flex;align-items:center;gap:6px;margin-top:6px;font-size:15px;font-weight:700;color:var(--ouro);}
+.fb-m .mortar{width:18px;height:18px;flex-basis:18px;}
+.bau-stand{display:flex;align-items:center;gap:8px;margin:12px 0 0;font-size:17px;flex-wrap:wrap;}
+.bau-stand span{margin-right:12px;}
+.bau-stand b{font-size:20px;}
