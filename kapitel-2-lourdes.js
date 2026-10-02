@@ -13,7 +13,8 @@
                Wahr/falsch: s (Aussage), v (true = wahr, false = falsch)
    ereignisse  Für die Zeitstrahl-Prüfung: t (Text), d (Datum),
                k (Sortierschlüssel JJJJMMTT)
-   etappen     jahr = Jahr, in das die Zeitreise führt,
+   etappen     ort = kurzer Ortsname für den Stempel im Pilgerpass,
+               jahr = Jahr, in das die Zeitreise führt,
                scenes = Erzählszenen (era heute/damals, k Ort, t Text). Die
                letzte Heute-Szene endet an einer Schwelle (ein Gegenstand oder
                Sinneseindruck), die erste Damals-Szene greift sie wieder auf.
@@ -693,6 +694,7 @@ KAPITEL.push({
       "id": "l1",
       "card": "bernadette",
       "leg": "Aufbruch in Pau",
+      "ort": "Pau",
       "title": "Das Cachot",
       "date": "Winter 1857/58",
       "jahr": 1858,
@@ -736,6 +738,7 @@ KAPITEL.push({
       "id": "l2",
       "card": "massabielle",
       "leg": "Am Gave entlang",
+      "ort": "Am Gave",
       "title": "Die Dame in der Grotte",
       "date": "11. Februar 1858",
       "jahr": 1858,
@@ -775,6 +778,7 @@ KAPITEL.push({
       "id": "l3",
       "card": "rosen",
       "leg": "Bétharram",
+      "ort": "Bétharram",
       "title": "Vierzehn Tage",
       "date": "18. bis 21. Februar 1858",
       "jahr": 1858,
@@ -813,6 +817,7 @@ KAPITEL.push({
       "id": "l4",
       "card": "quelle",
       "leg": "Saint-Pé-de-Bigorre",
+      "ort": "Saint-Pé-de-Bigorre",
       "title": "Die Quelle",
       "date": "24. und 25. Februar 1858",
       "jahr": 1858,
@@ -849,6 +854,7 @@ KAPITEL.push({
       "id": "l5",
       "card": "prozession",
       "leg": "Ankunft in Lourdes",
+      "ort": "Lourdes",
       "title": "Kapelle und Prozession",
       "date": "1. bis 4. März 1858",
       "jahr": 1858,
@@ -891,6 +897,7 @@ KAPITEL.push({
       "id": "l6",
       "card": "unbefleckte",
       "leg": "An der Grotte",
+      "ort": "Massabielle",
       "title": "Die Unbefleckte Empfängnis",
       "date": "25. März 1858",
       "jahr": 1858,
@@ -930,6 +937,7 @@ KAPITEL.push({
       "id": "l7",
       "card": "juli",
       "leg": "Die letzte Nacht",
+      "ort": "Am Ufer des Gave",
       "title": "Kerze und Abschied",
       "date": "7. April und 16. Juli 1858",
       "jahr": 1858,

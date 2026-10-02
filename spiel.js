@@ -65,6 +65,7 @@ function hud(back){
 }
 var NAV=[
   ['map','Pilgerweg','<path d="M12 20 L3.5 10 A9 9 0 0 1 20.5 10 Z"/><path d="M12 20 L7.5 4.6 M12 20 L12 3.2 M12 20 L16.5 4.6"/><path d="M9 21.5 H15"/>'],
+  ['pass','Pilgerpass','<rect x="5" y="2.5" width="14" height="19" rx="1.6"/><circle cx="12" cy="10.5" r="3.8"/><path d="M8.5 17 H15.5"/>'],
   ['cathedral','Kathedrale','<path d="M4 21 V11 L12 5 L20 11 V21 Z"/><path d="M12 5 V1.5 M10.3 3 H13.7"/><path d="M10 21 V17 A2 2 0 0 1 14 17 V21"/>'],
   ['album','Album','<rect x="4" y="6" width="12" height="15" rx="1.5"/><path d="M8 3 H18.5 A1.5 1.5 0 0 1 20 4.5 V18"/>']
 ];
@@ -431,6 +432,7 @@ function migrate(){
   if(!S.cath)S.cath={};
   if(!S.items)S.items={};
   if(!S.known)S.known={};
+  if(!S.pass){S.pass={};STAGES.forEach(function(st){var x=S.stages[st.id];if(x&&x.done)S.pass[st.id]='';});}
   if(typeof S.stones!=='number'){
     var n=0;
     STAGES.forEach(function(st){var x=S.stages[st.id];if(x&&x.done)n+=1+(x.gold?3:0);});
@@ -1164,6 +1166,9 @@ function finishStage(ok){
   var chap=CH[st.chap],wasDone=chapterDone(chap.id);
   var prev=S.stages[st.id]||{};
   var gain=1+(gold&&!prev.gold?3:0);
+  if(!S.pass)S.pass={};
+  R.newStamp=!(st.id in S.pass);
+  if(R.newStamp)S.pass[st.id]=todayISO();
   S.stones=(S.stones||0)+gain;
   S.stages[st.id]={done:true,gold:!!(prev.gold||gold)};
   var main=award(st.card,gold);
@@ -1208,10 +1213,100 @@ function finishStage(ok){
   window.scrollTo(0,0);
 }
 function showReturn(st,nextCh){
+  var fresh=R&&R.newStamp;
   body().innerHTML='<div class="panel heute'+(reduceMotion?'':' enter')+'"><p class="kicker">'+esc(st.rueckkehr.k)+'</p><p class="txt">'+esc(st.rueckkehr.t)+'</p></div>'+
+    (fresh?'<div class="pass-mini">'+INK_DEFS+'<p class="kicker">Dein Pilgerpass</p><div class="pass-slot">'+stageStamp(st,'slam')+'</div><p class="pass-mini-t">Neuer Stempel: '+esc(st.ort||st.leg)+'</p></div>':'')+
     (nextCh?'<button class="btn primary" data-chap="'+nextCh.id+'">Weiter nach '+esc(nextCh.name)+'</button><button class="btn ghost" data-act="map">Zum Pilgerweg</button>':
       '<button class="btn primary" data-act="map">Weiterpilgern</button>');
   window.scrollTo(0,0);
+  if(fresh){R.newStamp=false;setTimeout(function(){thud();try{if(navigator.vibrate)navigator.vibrate(40);}catch(e){}},reduceMotion?0:900);}
+}
+
+/* ---------- Pilgerpass ----------
+   Für jede zum ersten Mal geschaffte Etappe ein Stempel mit Datum (S.pass[etappe] = 'JJJJ-MM-TT', leer = ohne Datum). */
+var INK=['#2A4C9C','#A3302A','#5B3A8C','#2E6B4F','#8A5A1C'];
+var INK_DEFS='<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="ink" x="-5%" y="-5%" width="110%" height="110%">'+
+  '<feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="7" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="1.8" result="d"/>'+
+  '<feTurbulence type="fractalNoise" baseFrequency="2.2" numOctaves="1" seed="3" result="s"/><feColorMatrix in="s" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.4 2.1" result="m"/>'+
+  '<feComposite in="d" in2="m" operator="in"/></filter></svg>';
+var MONATE=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+function pad2(n){return (n<10?'0':'')+n;}
+function todayISO(){var d=new Date();return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());}
+function dateShort(iso){var p=iso.split('-');return p[2]+'.'+p[1]+'.'+p[0];}
+function dateLong(iso){var p=iso.split('-');return (+p[2])+'. '+MONATE[+p[1]-1]+' '+p[0];}
+function inkOf(c){return c.stempelfarbe||INK[(c.n-1)%INK.length];}
+function tilt(id){var h=0;for(var i=0;i<id.length;i++)h=(h*31+id.charCodeAt(i))|0;return ((h>>>0)%19)-9;}
+var stampSeq=0;
+function stampSVG(o){
+  var u='st'+(++stampSeq),fs=Math.min(10,88/(o.top.length*.68)),fs2=Math.min(8,82/(o.bottom.length*.66));
+  var star=function(x,y){return '<path d="'+starPath(x,y,3.4,1.4)+'" fill="'+(o.gold?'#C9952F':'currentColor')+'" stroke="none"/>';};
+  return '<svg class="stamp'+(o.cls?' '+o.cls:'')+'" viewBox="0 0 100 100" style="color:'+o.ink+';--rot:'+o.rot+'deg" role="img" aria-label="'+esc(o.label)+'">'+
+    '<defs><path id="'+u+'a" d="M14 50 A36 36 0 0 1 86 50"/><path id="'+u+'b" d="M12.5 50 A37.5 37.5 0 0 0 87.5 50"/></defs>'+
+    '<g filter="url(#ink)" fill="none" stroke="currentColor">'+
+      '<circle cx="50" cy="50" r="46.5" stroke-width="2.6"/><circle cx="50" cy="50" r="43.2" stroke-width=".8"/><circle cx="50" cy="50" r="27.5" stroke-width="1.2"/>'+
+      '<text class="st-t" font-size="'+fs.toFixed(1)+'" fill="currentColor" stroke="none" letter-spacing=".8"><textPath href="#'+u+'a" startOffset="50%" text-anchor="middle">'+esc(o.top)+'</textPath></text>'+
+      '<text class="st-t" font-size="'+fs2.toFixed(1)+'" fill="currentColor" stroke="none" letter-spacing=".6"><textPath href="#'+u+'b" startOffset="50%" text-anchor="middle" dominant-baseline="hanging">'+esc(o.bottom)+'</textPath></text>'+
+      star(10.5,50)+star(89.5,50)+
+      '<g transform="translate(32.5 '+(o.date?'26':'32.5')+') scale(.35)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round">'+o.icon+'</g>'+
+      (o.date?'<text x="50" y="70.5" font-size="6.6" text-anchor="middle" fill="currentColor" stroke="none" class="st-d">'+dateShort(o.date)+'</text>':'')+
+    '</g></svg>';
+}
+function stageStamp(st,cls){
+  var c=CH[st.chap],x=S.stages[st.id],d=S.pass&&S.pass[st.id];
+  return stampSVG({top:(st.ort||st.leg).toUpperCase(),bottom:(c.name+' · '+(st.jahr||'')).toUpperCase(),icon:ICONS[st.card]||'',
+    date:d||'',gold:!!(x&&x.gold),ink:inkOf(c),rot:tilt(st.id),cls:cls,label:'Stempel '+(st.ort||st.leg)+(d?', '+dateLong(d):'')});
+}
+function chapterSeal(c){
+  var ids=stagesOf(c.id),last='';
+  ids.forEach(function(i){var d=S.pass&&S.pass[STAGES[i].id];if(d&&d>last)last=d;});
+  return stampSVG({top:'PILGERWEG VOLLENDET',bottom:c.name.toUpperCase(),icon:ICONS[c.bonusAll]||ICONS[STAGES[ids[ids.length-1]].card]||'',
+    date:last,gold:chapterGold(c.id),ink:inkOf(c),rot:tilt(c.id)/2,cls:'seal',label:'Siegel: Pilgerweg '+c.name+' vollendet'});
+}
+function thud(){
+  var a=audio();if(!a)return;
+  try{
+    var t=a.currentTime,o=a.createOscillator(),g=a.createGain();
+    o.type='sine';o.frequency.setValueAtTime(140,t);o.frequency.exponentialRampToValueAtTime(55,t+.18);
+    g.gain.setValueAtTime(.32,t);g.gain.exponentialRampToValueAtTime(.0001,t+.25);o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+.3);
+    var len=.12,buf=a.createBuffer(1,Math.floor(a.sampleRate*len),a.sampleRate),d=buf.getChannelData(0);
+    for(var i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length);
+    var n=a.createBufferSource(),f=a.createBiquadFilter(),g2=a.createGain();
+    n.buffer=buf;f.type='lowpass';f.frequency.value=900;g2.gain.value=.18;n.connect(f);f.connect(g2);g2.connect(a.destination);n.start(t);
+  }catch(e){}
+}
+function showPass(){
+  var total=0,have=0;
+  var pages=CHAPTERS.map(function(c){
+    var list=stagesOf(c.id),n=0;
+    var fields=list.map(function(i,k){
+      var st=STAGES[i];total++;
+      if(S.pass&&st.id in S.pass){n++;have++;return '<button class="pass-field" data-stamp="'+i+'" aria-label="'+esc(st.title)+' ansehen">'+stageStamp(st)+'</button>';}
+      return '<div class="pass-field empty"><span class="pf-n">'+(k+1)+'</span><span class="pf-o">'+esc(st.ort||st.leg)+'</span></div>';
+    }).join('');
+    var done=n===list.length;
+    return '<section class="pass-page" style="--ink:'+inkOf(c)+'"><h2>Kapitel '+c.n+' · '+esc(c.name)+'<small>'+n+' von '+list.length+'</small></h2>'+
+      '<div class="pass-grid">'+fields+'</div>'+
+      (done?'<div class="pass-seal">'+chapterSeal(c)+'</div>':'')+'</section>';
+  }).join('');
+  render(hud('title')+tabbar('pass')+'<div class="wrap">'+INK_DEFS+
+    '<h1 class="chapter"><span>Pilgerpass</span></h1>'+
+    '<p class="lead">Wie echte Pilger sammelst du an jeder Station einen Stempel, mit dem Tag, an dem du dort warst. Tippe einen Stempel an, um dich zu erinnern.</p>'+
+    '<p class="pass-count"><b>'+have+'</b> von '+total+' Stempeln</p>'+pages+'</div>');
+  app.querySelectorAll('[data-stamp]').forEach(function(b){b.addEventListener('click',function(){openStamp(STAGES[+b.dataset.stamp]);});});
+}
+function openStamp(st){
+  var d=S.pass&&S.pass[st.id],c=CH[st.chap],k=stagesOf(c.id).indexOf(STAGES.indexOf(st));
+  var ov=document.createElement('div');ov.className='overlay';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-label',st.title);
+  ov.innerHTML='<div class="sheet stamp-sheet">'+INK_DEFS+'<div class="stamp-big">'+stageStamp(st)+'</div>'+
+    '<p class="mc-leg">'+esc(c.name)+' · Etappe '+(k+1)+' · '+esc(st.ort||st.leg)+'</p><h2>'+esc(st.title)+'</h2>'+
+    '<p class="stamp-date">'+(d?'Gestempelt am '+dateLong(d):'Gestempelt vor Einführung des Pilgerpasses')+'</p>'+
+    (st.rueckkehr?'<div class="panel heute"><p class="kicker">'+esc(st.rueckkehr.k)+'</p><p class="txt">'+esc(st.rueckkehr.t)+'</p></div>':'')+
+    '<button class="link close">Schließen</button></div>';
+  document.body.appendChild(ov);armBack();
+  function close(){ov.remove();document.removeEventListener('keydown',onk);}
+  function onk(e){if(e.key==='Escape')close();}
+  ov.addEventListener('click',function(e){if(e.target===ov||e.target.closest('.close'))close();});
+  document.addEventListener('keydown',onk);
 }
 
 /* ---------- Wiederholen: alle Fragen gemischt, ohne Zeit und Kerzen ----------
@@ -1278,8 +1373,9 @@ var BKEY=KEY+'-echt';
 function hasBackup(){try{return !!localStorage.getItem(BKEY);}catch(e){return false;}}
 function backupOnce(){try{if(!localStorage.getItem(BKEY))localStorage.setItem(BKEY,JSON.stringify(S));}catch(e){}}
 function setStage(st,mode){
-  if(mode==='leer'){delete S.stages[st.id];delete S.cards[st.card];}
-  else{S.stages[st.id]={done:true,gold:mode==='gold'};S.cards[st.card]=mode==='gold'?'gold':'normal';}
+  if(!S.pass)S.pass={};
+  if(mode==='leer'){delete S.stages[st.id];delete S.cards[st.card];delete S.pass[st.id];}
+  else{S.stages[st.id]={done:true,gold:mode==='gold'};S.cards[st.card]=mode==='gold'?'gold':'normal';if(!(st.id in S.pass))S.pass[st.id]=todayISO();}
 }
 function setChapter(c,mode){
   stagesOf(c.id).forEach(function(i){setStage(STAGES[i],mode);});
@@ -1381,7 +1477,7 @@ function showBackup(){
 /* ---------- Navigation ---------- */
 app.addEventListener('click',function(e){
   var a=e.target.closest('[data-act]');
-  if(a){var act=a.dataset.act;if(act==='map')showMap();else if(act==='title')showTitle();else if(act==='album')showAlbum();else if(act==='rules')showRules();else if(act==='cathedral')showCathedral();else if(act==='practice')showPractice();return;}
+  if(a){var act=a.dataset.act;if(act==='map')showMap();else if(act==='title')showTitle();else if(act==='album')showAlbum();else if(act==='rules')showRules();else if(act==='cathedral')showCathedral();else if(act==='practice')showPractice();else if(act==='pass')showPass();return;}
   var cp=e.target.closest('[data-chap]');
   if(cp){showMap(cp.dataset.chap);return;}
   var s=e.target.closest('[data-stage]');

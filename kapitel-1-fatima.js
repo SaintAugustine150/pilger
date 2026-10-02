@@ -13,7 +13,8 @@
                Wahr/falsch: s (Aussage), v (true = wahr, false = falsch)
    ereignisse  Für die Zeitstrahl-Prüfung: t (Text), d (Datum),
                k (Sortierschlüssel JJJJMMTT)
-   etappen     jahr = Jahr, in das die Zeitreise führt,
+   etappen     ort = kurzer Ortsname für den Stempel im Pilgerpass,
+               jahr = Jahr, in das die Zeitreise führt,
                scenes = Erzählszenen (era heute/damals, k Ort, t Text). Die
                letzte Heute-Szene endet an einer Schwelle (ein Gegenstand oder
                Sinneseindruck), die erste Damals-Szene greift sie wieder auf.
@@ -962,6 +963,7 @@ KAPITEL.push({
       "id": "s1",
       "card": "engel",
       "leg": "Aufbruch in Lissabon",
+      "ort": "Lissabon",
       "title": "Der Engel des Friedens",
       "date": "Frühjahr 1916",
       "jahr": 1916,
@@ -1005,6 +1007,7 @@ KAPITEL.push({
       "id": "s2",
       "card": "lucia",
       "leg": "Entlang des Tejo",
+      "ort": "Am Tejo",
       "title": "Die Frau über der Steineiche",
       "date": "13. Mai 1917",
       "jahr": 1917,
@@ -1044,6 +1047,7 @@ KAPITEL.push({
       "id": "s3",
       "card": "francisco",
       "leg": "Santarém",
+      "ort": "Santarém",
       "title": "Das Unbefleckte Herz",
       "date": "13. Juni 1917",
       "jahr": 1917,
@@ -1082,6 +1086,7 @@ KAPITEL.push({
       "id": "s4",
       "card": "jacinta",
       "leg": "Durch den Ribatejo",
+      "ort": "Ribatejo",
       "title": "Das Geheimnis",
       "date": "13. Juli 1917",
       "jahr": 1917,
@@ -1118,6 +1123,7 @@ KAPITEL.push({
       "id": "s5",
       "card": "valinhos",
       "leg": "In die Serra de Aire",
+      "ort": "Serra de Aire",
       "title": "Standhaft in Ourém",
       "date": "August 1917",
       "jahr": 1917,
@@ -1156,6 +1162,7 @@ KAPITEL.push({
       "id": "s6",
       "card": "rosenkranz",
       "leg": "Die letzten Kilometer",
+      "ort": "Kurz vor Fátima",
       "title": "Die große Menge",
       "date": "13. September 1917",
       "jahr": 1917,
@@ -1195,6 +1202,7 @@ KAPITEL.push({
       "id": "s7",
       "card": "sonnenwunder",
       "leg": "Ankunft in Fátima",
+      "ort": "Fátima",
       "title": "Das Sonnenwunder",
       "date": "13. Oktober 1917",
       "jahr": 1917,
