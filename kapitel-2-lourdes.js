@@ -20,6 +20,9 @@
                Sinneseindruck), die erste Damals-Szene greift sie wieder auf.
                ch = Prüfungen der Etappe,
                rueckkehr = Szene zurück in der Gegenwart nach der Prüfung (k, t)
+   begleiter   Wegbegleiter des Kapitels: name, kurz (wer er ist), ab (Etappe,
+               in der man ihn trifft), abschied (Text im Pilgerpass am Ende).
+               Szenen mit "who": "begleiter" zeigen seinen Namen als Kopfzeile.
    weg         Landkarte (Bild bilder/wege/<id>.webp): groesse = Bildgröße,
                pfad = Wegpunkte [x, y] in Bildpixeln entlang des gemalten Weges,
                orte = für jede Etappe die Nummer des Wegpunkts (ab 0), an dem
@@ -38,6 +41,12 @@ KAPITEL.push({
     "groesse": [1024, 1536],
     "pfad": [[360, 1150], [400, 1132], [440, 1116], [500, 1097], [520, 1076], [500, 1052], [470, 1035], [445, 1012], [470, 985], [500, 950], [530, 915], [560, 885], [590, 848], [625, 812], [595, 785], [575, 765], [620, 735], [680, 702], [725, 670], [760, 630], [765, 595], [745, 560], [700, 540], [645, 518], [600, 500], [570, 475], [552, 445], [548, 420], [560, 395], [555, 370], [530, 350], [490, 340], [455, 322], [420, 305], [460, 330], [500, 342], [545, 345], [600, 335], [660, 325], [720, 332], [775, 330], [810, 322], [840, 350], [860, 385]],
     "orte": [0, 6, 13, 18, 33, 41, 43]
+  },
+  "begleiter": {
+    "name": "Luc",
+    "kurz": "Student aus Toulouse, 20 Jahre",
+    "ab": "l1",
+    "abschied": "Beim Abschied schreibt Luc dir seine Nummer auf einen Zettel. „Falls du nächstes Jahr mithelfen willst. Hier gehen die Kranken vorne.“"
   },
   "karten": {
     "bernadette": {
@@ -706,6 +715,12 @@ KAPITEL.push({
         },
         {
           "era": "heute",
+          "who": "begleiter",
+          "k": "Am Boulevard des Pyrénées",
+          "t": "Neben dir lehnt ein junger Mann mit viel zu großem Rucksack am Geländer. „Auch nach Lourdes?“ Er heißt Luc, studiert in Toulouse und will dort eine Woche als freiwilliger Helfer Kranke begleiten. „Meine Großmutter hat das vierzig Jahre lang gemacht. Sie hat mich gebeten, es einmal zu versuchen.“ Er zuckt mit den Schultern. „Ob ich glaube, weiß ich noch nicht so genau.“"
+        },
+        {
+          "era": "heute",
           "k": "Am Stadtrand",
           "t": "In einer kleinen Kirche am Weg brennt eine einzelne Kerze vor einer Statue in Weiß und Blau. Du setzt dich kurz. Die Kälte der Steinbank zieht durch die Jacke, und plötzlich riecht es nach Holzrauch."
         },
@@ -743,6 +758,12 @@ KAPITEL.push({
       "date": "11. Februar 1858",
       "jahr": 1858,
       "scenes": [
+        {
+          "era": "heute",
+          "who": "begleiter",
+          "k": "Unterwegs",
+          "t": "Luc geht ein Stück mit dir. Er erzählt von seiner Großmutter, die jeden Abend für ihn betet, ob er will oder nicht. „Sie sagt, Lourdes ist der einzige Ort, an dem die Kranken vorne gehen und die Gesunden hinten.“ Er lacht. Dann wird er still und schaut auf den Fluss."
+        },
         {
           "era": "heute",
           "k": "Am Gave, heute",
@@ -786,7 +807,8 @@ KAPITEL.push({
         {
           "era": "heute",
           "k": "Bétharram, heute",
-          "t": "Am Ufer steht eine alte Wallfahrtskirche, zu der schon lange vor 1858 Pilger kamen. Drinnen liegt ein Buch, in das Pilger ihre Bitten schreiben. Du nimmst den Stift und hältst inne. Was schreibt man über so einen Weg? Das Licht im Kirchenschiff wird schwächer, und von draußen rauscht der Fluss."
+          "t": "Am Ufer steht eine alte Wallfahrtskirche, zu der schon lange vor 1858 Pilger kamen. Luc zündet eine Kerze an, ein wenig verlegen. „Für meine Großmutter. Ich weiß nicht, ob das etwas bringt.“ Er bleibt trotzdem lange davor stehen. Daneben liegt ein Buch, in das Pilger ihre Bitten schreiben. Du nimmst den Stift und hältst inne. Was schreibt man über so einen Weg? Das Licht im Kirchenschiff wird schwächer, und von draußen rauscht der Fluss.",
+          "who": "begleiter"
         },
         {
           "era": "damals",
@@ -861,8 +883,14 @@ KAPITEL.push({
       "scenes": [
         {
           "era": "heute",
+          "who": "begleiter",
+          "k": "Der Gurt",
+          "t": "Am Nachmittag erreicht ihr Lourdes. Am Eingang des Heiligtums trennen sich eure Wege für eine Weile: Luc bekommt einen Ledergurt über die Schultern, das Zeichen der Helfer, und eine Liste mit den Namen der Kranken, die er in dieser Woche begleiten wird."
+        },
+        {
+          "era": "heute",
           "k": "Lourdes, heute",
-          "t": "Am Abend erreichst du die Stadt. Im Heiligtum formiert sich die Lichterprozession: Tausende Kerzen hinter Papierschirmen, ein langer leuchtender Strom. Bei jedem Kehrvers heben sich die Lichter: Ave, ave, ave Maria. Du nimmst eine Kerze und reihst dich ein. Für einen Augenblick sind die Lichter um dich herum nur noch wenige, und die Leute beten in einer Sprache, die du nicht kennst."
+          "t": "Am Abend formiert sich im Heiligtum die Lichterprozession: Tausende Kerzen hinter Papierschirmen, ein langer leuchtender Strom. Ganz vorne schiebt Luc einen Rollstuhl, und die alte Frau darin hält ihre Kerze so, dass auch auf seinen Weg Licht fällt. Bei jedem Kehrvers heben sich die Lichter: Ave, ave, ave Maria. Du nimmst eine Kerze und reihst dich ein. Für einen Augenblick sind die Lichter um dich herum nur noch wenige, und die Leute beten in einer Sprache, die du nicht kennst."
         },
         {
           "era": "damals",
@@ -902,6 +930,12 @@ KAPITEL.push({
       "date": "25. März 1858",
       "jahr": 1858,
       "scenes": [
+        {
+          "era": "heute",
+          "who": "begleiter",
+          "k": "Früh am Morgen",
+          "t": "An der Grotte triffst du Luc. Er sieht müde aus und ruhig. „Gestern hat sich eine Frau im Rollstuhl bei mir bedankt. Nicht fürs Schieben. Dafür, dass ich da war.“ Er schweigt eine Weile. Dann geht er zu seinem Dienst, und du bleibst."
+        },
         {
           "era": "heute",
           "k": "An der Grotte, heute",
@@ -974,7 +1008,7 @@ KAPITEL.push({
       ],
       "rueckkehr": {
         "k": "Lourdes, heute",
-        "t": "Drüben brennen die Kerzen noch. Gut 40 Kilometer bist du am Gave entlanggegangen, an der Seite eines Mädchens, das nichts besaß außer seinem Vertrauen. Bevor du gehst, füllst du an der Quelle eine kleine Flasche, für jemanden zu Hause, der krank ist."
+        "t": "Drüben brennen die Kerzen noch. Luc setzt sich neben dich, den Gurt noch über den Schultern. „Ich glaube, ich komme nächstes Jahr wieder“, sagt er, und es klingt wie ein Anfang. Gut 40 Kilometer bist du am Gave entlanggegangen, an der Seite eines Mädchens, das nichts besaß außer seinem Vertrauen. Bevor du gehst, füllst du an der Quelle eine kleine Flasche, für jemanden zu Hause, der krank ist."
       }
     }
   ]

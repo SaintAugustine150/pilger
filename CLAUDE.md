@@ -6,6 +6,7 @@ Katholisches Handyspiel von Philipp. Er ist technisch nicht versiert: Erkläre S
 - Der Spieler pilgert zu Pilgerorten und reist an jeder Etappe in die Zeit zurück, in der dort Entscheidendes geschah. Jede Etappe erzählt Szenen („heute“ und „damals“) und endet mit einer Prüfung.
 - **Nicht nur Marienerscheinungen:** Fátima und Lourdes sind nur der Anfang. Langfristig kommen Kapitel zu biblischen Geschichten an Pilgerorten (etwa im Heiligen Land), zur Kirchengeschichte und zu Heiligen der katholischen Kirche hinzu. Texte, Code und Gestaltung nicht auf Maria oder Erscheinungen festlegen (zum Beispiel feste Begriffe wie „Erscheinung“ in allgemeinen Spieltexten vermeiden).
 - **Jede Etappe ist ein Kreislauf:** heute auf dem Weg → Schwelle → Zeitreise ins Jahr `jahr` → Szenen damals → Prüfung (damals) → Belohnung → Rückreise → Rückkehr-Szene heute (`rueckkehr`) → weiter auf der Landkarte. Die letzte Heute-Szene endet an einem Gegenstand oder Sinneseindruck (Fluss, Glocken, Kerze, Fels), den die erste Damals-Szene wieder aufgreift. Neue Etappen immer so schreiben: erst alle Heute-, dann alle Damals-Szenen. Optisch ist damals altes Papier in Sepia (Klasse `era-damals` am `html`-Element), heute klar und blau; dazwischen läuft die Jahreszahl als Übergang.
+- **Wegbegleiter:** Jedes Kapitel hat einen Menschen von heute, der mitpilgert und eine eigene kleine Geschichte hat (`begleiter` im Kapitel; Szenen mit `"who": "begleiter"` bekommen eine Kopfzeile mit Name). Fátima: Graça, 74, aus Braga, geht den Weg zum zwölften Mal, zum ersten Mal ohne ihren verstorbenen Mann Manuel. Lourdes: Luc, 20, Student aus Toulouse, hilft eine Woche lang Kranken, weil seine Großmutter ihn gebeten hat, und weiß noch nicht, ob er glaubt. Begleiter-Szenen stehen vor der Schwellen-Szene; im Pilgerpass erscheint der Begleiter ab seiner ersten Etappe (`ab`), am Kapitelende mit `abschied`. Neue Kapitel bekommen einen neuen Begleiter, der zum Ort passt; Zweifel und Fragen dürfen vorkommen, die Geschichte führt aber behutsam zum Glauben hin, ohne zu predigen.
 - **Kapitel sind unterschiedlich lang.** Nicht jede Pilgerreise hat sieben Etappen; Code und Layout (etwa die Landkarte) müssen mit beliebig vielen Etappen funktionieren.
 - Kapitel 1: Fátima (1916/17), Kapitel 2: Lourdes (1858). Ein Kapitel öffnet sich, wenn alle Etappen des vorigen geschafft sind.
 - Drei Kerzen pro Etappe, jeder Fehler löscht eine. Gold gibt es nur, wenn keine Kerze erlischt. Das Spiel soll bewusst nicht zu leicht sein.
@@ -55,7 +56,7 @@ Ein vorhandenes Bild mit gleichem Namen wird ersetzt; das ist so gewollt (etwa f
 - Erst hochladen (commit und push), wenn Philipp es freigibt. Er bündelt lieber mehrere Änderungen zu einem Upload; nach einer Aufgabe nicht von sich aus hochladen, sondern sagen, dass die Änderungen bereitliegen.
 
 ## Geplante Verbesserungen
-Erledigt: Abschlussbilder `raum-4` für alle vier Räume; Pilgerpass mit Stempeln; Wiederholen-Modus; Kathedralen-Ausstattung; Navigation (Leiste unten mit Pilgerweg, Pilgerpass, Kathedrale, Album, Zurück-Pfeil, Abbrechen mit Rückfrage, Zurück-Taste des Handys); gemalte Landkarten für Fátima und Lourdes mit laufendem Pilger; größere Fragenpools; Zeitreise zwischen heute und damals (Schwelle, Jahreszahl, Rückkehr); Testmodus.
+Erledigt: Wegbegleiter (Graça, Luc); Abschlussbilder `raum-4` für alle vier Räume; Pilgerpass mit Stempeln; Wiederholen-Modus; Kathedralen-Ausstattung; Navigation (Leiste unten mit Pilgerweg, Pilgerpass, Kathedrale, Album, Zurück-Pfeil, Abbrechen mit Rückfrage, Zurück-Taste des Handys); gemalte Landkarten für Fátima und Lourdes mit laufendem Pilger; größere Fragenpools; Zeitreise zwischen heute und damals (Schwelle, Jahreszahl, Rückkehr); Testmodus.
 Landkarten für neue Kapitel: Hochformat (2:3 oder bei langen Wegen höher), ohne Schrift, Weg klar sichtbar, Orte mit freier Fläche; Dateiname `weg-KAPITEL`.
 1. Weitere Ideen:
    - mehrere Prüfungen pro Etappe, Kapitel-Finale, Meisterprüfung nach Gold
@@ -64,7 +65,6 @@ Landkarten für neue Kapitel: Hochformat (2:3 oder bei langen Wegen höher), ohn
    - „Mehr erfahren“ mit Katechismus-Verweisen
    - Kirchenjahr im Spiel (13. Mai, 11. Februar)
    - Heiliger des Tages als Sammelkarte am Festtag
-   - ein wiederkehrender Wegbegleiter pro Kapitel
    - Bestwert oder Serie im Wiederholen-Modus
    - weitere Kapitel: Guadalupe (1531), Jakobsweg, biblische Orte, Kirchengeschichte, Heilige
 

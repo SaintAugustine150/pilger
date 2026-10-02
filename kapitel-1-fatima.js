@@ -20,6 +20,9 @@
                Sinneseindruck), die erste Damals-Szene greift sie wieder auf.
                ch = Prüfungen der Etappe,
                rueckkehr = Szene zurück in der Gegenwart nach der Prüfung (k, t)
+   begleiter   Wegbegleiter des Kapitels: name, kurz (wer er ist), ab (Etappe,
+               in der man ihn trifft), abschied (Text im Pilgerpass am Ende).
+               Szenen mit "who": "begleiter" zeigen seinen Namen als Kopfzeile.
    weg         Landkarte (Bild bilder/wege/<id>.webp): groesse = Bildgröße,
                pfad = Wegpunkte [x, y] in Bildpixeln entlang des gemalten Weges,
                orte = für jede Etappe die Nummer des Wegpunkts (ab 0), an dem
@@ -38,6 +41,12 @@ KAPITEL.push({
     "groesse": [1024, 1536],
     "pfad": [[400, 1180], [470, 1140], [545, 1110], [500, 1075], [450, 1045], [410, 1020], [385, 995], [410, 955], [450, 925], [500, 912], [555, 905], [600, 890], [640, 870], [640, 840], [600, 815], [560, 795], [545, 760], [545, 735], [590, 690], [630, 665], [655, 640], [650, 615], [610, 600], [540, 592], [470, 582], [420, 570], [385, 555], [400, 535], [440, 520], [490, 505], [540, 488], [575, 462], [560, 440], [510, 425], [470, 410], [475, 385], [505, 350], [490, 325], [470, 305], [490, 285], [530, 270], [580, 255], [620, 240], [645, 215], [660, 190], [690, 160]],
     "orte": [0, 5, 17, 25, 36, 41, 45]
+  },
+  "begleiter": {
+    "name": "Graça",
+    "kurz": "Pilgerin aus Braga, 74 Jahre",
+    "ab": "s2",
+    "abschied": "Zum Abschied umarmt Graça dich wie eine Großmutter. „Wenn du betest, denk an Manuel und an mich. Ich denke an dich.“ Dann verschwindet ihr blaues Kopftuch in der Menge."
   },
   "karten": {
     "engel": {
@@ -1014,6 +1023,12 @@ KAPITEL.push({
       "scenes": [
         {
           "era": "heute",
+          "who": "begleiter",
+          "k": "Unterwegs",
+          "t": "Eine ältere Frau mit Wanderstock und blauem Kopftuch überholt dich, erstaunlich schnell. Im Vorbeigehen klopft sie dir auf den Rucksack. „Bom caminho! Langsam gehen, dann kommt man an.“ Sie lacht, und bald ist sie hinter der nächsten Biegung verschwunden."
+        },
+        {
+          "era": "heute",
           "k": "Am Tejo",
           "t": "Der Weg folgt dem Fluss nach Norden, zwischen Feldern und Lagerhallen. Am Mittag sind die ersten Blasen da. Du zählst die Perlen deines Rosenkranzes statt der Kilometer. Bei der zehnten Perle verstummt das Rauschen des Flusses, und die Perlen fühlen sich plötzlich an wie grob geschnitztes Holz."
         },
@@ -1054,8 +1069,9 @@ KAPITEL.push({
       "scenes": [
         {
           "era": "heute",
+          "who": "begleiter",
           "k": "Santarém, heute",
-          "t": "Die Stadt thront auf einem Hügel über dem Tejo. In der Pilgerherberge teilst du dein Brot mit einer Frau aus Braga, die den Weg zum zwölften Mal geht. Sie fragt dich, warum du gehst. Bevor du antworten kannst, läuten draußen die Glocken. Du zählst die Schläge, und der letzte klingt fern und hell, wie aus einem Dorf an einem Festtag."
+          "t": "Die Stadt thront auf einem Hügel über dem Tejo. In der Pilgerherberge sitzt die Frau mit dem blauen Kopftuch wieder vor dir. Sie heißt Graça, kommt aus Braga und geht den Weg zum zwölften Mal. Sie teilt ihr Brot mit dir und fragt, warum du gehst. Bevor du antworten kannst, läuten draußen die Glocken. Du zählst die Schläge, und der letzte klingt fern und hell, wie aus einem Dorf an einem Festtag."
         },
         {
           "era": "damals",
@@ -1079,7 +1095,7 @@ KAPITEL.push({
       ],
       "rueckkehr": {
         "k": "Santarém, heute",
-        "t": "Die Glocken sind verklungen. Die Frau aus Braga sieht dich noch immer fragend an. Du erzählst ihr von einem Herzen, umgeben von Dornen, und dass du noch nicht ganz weißt, warum du gehst, aber dass du weitergehen willst. Sie lächelt und schiebt dir das letzte Stück Brot hin."
+        "t": "Die Glocken sind verklungen. Graça sieht dich noch immer fragend an. Du erzählst ihr von einem Herzen, umgeben von Dornen, und dass du noch nicht ganz weißt, warum du gehst, aber dass du weitergehen willst. Sie lächelt und schiebt dir das letzte Stück Brot hin."
       }
     },
     {
@@ -1091,6 +1107,12 @@ KAPITEL.push({
       "date": "13. Juli 1917",
       "jahr": 1917,
       "scenes": [
+        {
+          "era": "heute",
+          "who": "begleiter",
+          "k": "Ein Stück gemeinsam",
+          "t": "Am Vormittag holst du Graça ein. Sie geht langsamer als gestern und reicht dir ihre Wasserflasche. „Elfmal bin ich diesen Weg mit Manuel gegangen, meinem Mann. Im Winter ist er gestorben.“ Sie schaut über die Felder. „Diesmal gehe ich für uns beide.“"
+        },
         {
           "era": "heute",
           "k": "Ribatejo, heute",
@@ -1130,6 +1152,12 @@ KAPITEL.push({
       "scenes": [
         {
           "era": "heute",
+          "who": "begleiter",
+          "k": "Am Wegkreuz",
+          "t": "Am Morgen bleibt Graça an einem Wegkreuz stehen und atmet schwer. Du nimmst ihr den Rucksack ab, und sie protestiert nur ein bisschen. Aus der Jackentasche zieht sie einen abgegriffenen Rosenkranz aus Holz. „Seiner. An jedem Anstieg hat er ein Gesätz gebetet. Für die Steigung, hat er gesagt. Heute bete ich sie.“"
+        },
+        {
+          "era": "heute",
           "k": "Serra de Aire, heute",
           "t": "Der Weg steigt an. Kalkstein, niedrige Mauern, Wind. Ein Hund begleitet dich ein Stück und verschwindet dann zwischen den Oliven. Oben auf dem Hügel steht die alte Burg von Ourém. Als du hinaufschaust, rumpelt hinter dir ein Fuhrwerk über die Steine, doch auf der Straße ist niemand."
         },
@@ -1155,7 +1183,7 @@ KAPITEL.push({
       ],
       "rueckkehr": {
         "k": "Serra de Aire, heute",
-        "t": "Der Wind ist wieder da, und der Hund sitzt neben dir, als hätte er gewartet. Drei Kinder haben geschwiegen, obwohl man ihnen mit dem Tod drohte. Du gehst weiter, und der Anstieg kommt dir kürzer vor."
+        "t": "Der Wind ist wieder da, und der Hund sitzt neben dir, als hätte er gewartet. Graça nimmt ihren Rucksack zurück und hält Manuels Rosenkranz fest in der Hand. Drei Kinder haben geschwiegen, obwohl man ihnen mit dem Tod drohte. Ihr geht weiter, und der Anstieg kommt dir kürzer vor."
       }
     },
     {
@@ -1169,8 +1197,9 @@ KAPITEL.push({
       "scenes": [
         {
           "era": "heute",
+          "who": "begleiter",
           "k": "Kurz vor Fátima",
-          "t": "Ein Kilometerstein: noch zehn. Deine Beine sind schwer, die Schritte werden kürzer. Nur der Rosenkranz in deiner Tasche wiegt nichts. Von hinten kommt eine Gruppe Pilger, sie beten laut. Du reihst dich ein. Die Stimmen werden mehr und mehr, bis es Tausende sind."
+          "t": "Ein Kilometerstein: noch zehn. Deine Beine sind schwer, die Schritte werden kürzer. Nur der Rosenkranz in deiner Tasche wiegt nichts. Von hinten kommt eine Gruppe Pilger, sie beten laut. Graça winkt dich zu sich: „Komm, zusammen trägt es sich leichter.“ Du reihst dich ein. Die Stimmen werden mehr und mehr, bis es Tausende sind."
         },
         {
           "era": "damals",
@@ -1209,8 +1238,9 @@ KAPITEL.push({
       "scenes": [
         {
           "era": "heute",
+          "who": "begleiter",
           "k": "Fátima, heute",
-          "t": "Die Basilika taucht zwischen den Bäumen auf. Auf dem weiten Platz rutschen Pilger auf Knien zur Erscheinungskapelle. Ein paar Regentropfen fallen. Du stellst deinen Rucksack ab, und die Welt kippt ein letztes Mal."
+          "t": "Die Basilika taucht zwischen den Bäumen auf. Auf dem weiten Platz rutschen Pilger auf Knien zur Erscheinungskapelle, unter ihnen Graça, Manuels Rosenkranz in der Hand. Ein paar Regentropfen fallen. Du stellst deinen Rucksack ab, und die Welt kippt ein letztes Mal."
         },
         {
           "era": "damals",
@@ -1239,7 +1269,7 @@ KAPITEL.push({
       ],
       "rueckkehr": {
         "k": "Fátima, heute",
-        "t": "Der Regen hat aufgehört, die Sonne steht ruhig am Himmel. Du kniest vor der Erscheinungskapelle, dort, wo die kleine Steineiche stand. Rund 140 Kilometer liegen hinter dir. Du dankst für jeden Schritt und für die drei Kinder, die dir den Weg gezeigt haben."
+        "t": "Der Regen hat aufgehört, die Sonne steht ruhig am Himmel. Du kniest vor der Erscheinungskapelle, dort, wo die kleine Steineiche stand. Neben dir zündet Graça zwei Kerzen an, eine für Manuel und eine für dich. Rund 140 Kilometer liegen hinter dir. Du dankst für jeden Schritt, für die drei Kinder, die dir den Weg gezeigt haben, und für die Frau, die ihn mit dir gegangen ist."
       }
     }
   ]

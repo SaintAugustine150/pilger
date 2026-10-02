@@ -884,7 +884,7 @@ function showScene(p){
   if(sc.era!==curEra){travel(sc.era,stageYear(st),function(){showScene(p);});return;}
   var canSkip=!!(S.stages[st.id]&&S.stages[st.id].done);
   var dots='';for(var i=0;i<st.scenes.length;i++)dots+='<i class="'+(i<=p?'on':'')+'"></i>';
-  body().innerHTML='<div class="panel '+sc.era+(reduceMotion?'':' enter')+'">'+
+  body().innerHTML='<div class="panel '+sc.era+(reduceMotion?'':' enter')+'">'+companionHead(sc,CH[st.chap])+
     '<p class="kicker">'+esc(sc.k)+'</p><p class="txt">'+esc(sc.t)+'</p></div>'+
     '<button class="btn primary" id="nx">'+(last?'Prüfung beginnen':'Weiter')+'</button>'+
     '<div class="scene-foot"><div class="dots" aria-hidden="true">'+dots+'</div>'+(canSkip&&!last?'<button class="link" id="skip">Geschichte überspringen</button>':'')+'</div>';
@@ -1274,6 +1274,18 @@ function thud(){
     n.buffer=buf;f.type='lowpass';f.frequency.value=900;g2.gain.value=.18;n.connect(f);f.connect(g2);g2.connect(a.destination);n.start(t);
   }catch(e){}
 }
+/* Wegbegleiter: Kopfzeile in seinen Szenen, Karte im Pilgerpass */
+function companionAvatar(c){var b=c.begleiter;return '<span class="bg-av" style="background:'+inkOf(c)+'" aria-hidden="true">'+esc(b.name.charAt(0))+'</span>';}
+function companionHead(sc,c){
+  if(sc.who!=='begleiter'||!c||!c.begleiter)return '';
+  return '<div class="bg-head">'+companionAvatar(c)+'<span><b>'+esc(c.begleiter.name)+'</b><small>'+esc(c.begleiter.kurz)+'</small></span></div>';
+}
+function companionCard(c){
+  var b=c.begleiter;if(!b||!(S.pass&&b.ab in S.pass))return '';
+  var done=chapterDone(c.id);
+  return '<div class="bg-card">'+companionAvatar(c)+'<div><p class="bg-l">Dein Wegbegleiter</p><p class="bg-n">'+esc(b.name)+'<small>'+esc(b.kurz)+'</small></p>'+
+    '<p class="bg-t">'+(done?esc(b.abschied):'Ihr seid noch gemeinsam unterwegs.')+'</p></div></div>';
+}
 function showPass(){
   var total=0,have=0;
   var pages=CHAPTERS.map(function(c){
@@ -1286,7 +1298,7 @@ function showPass(){
     var done=n===list.length;
     return '<section class="pass-page" style="--ink:'+inkOf(c)+'"><h2>Kapitel '+c.n+' · '+esc(c.name)+'<small>'+n+' von '+list.length+'</small></h2>'+
       '<div class="pass-grid">'+fields+'</div>'+
-      (done?'<div class="pass-seal">'+chapterSeal(c)+'</div>':'')+'</section>';
+      (done?'<div class="pass-seal">'+chapterSeal(c)+'</div>':'')+companionCard(c)+'</section>';
   }).join('');
   render(hud('title')+tabbar('pass')+'<div class="wrap">'+INK_DEFS+
     '<h1 class="chapter"><span>Pilgerpass</span></h1>'+

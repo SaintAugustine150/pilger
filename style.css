@@ -509,3 +509,14 @@ body{transition:background-color .6s;}
 .stamp-date{margin:4px 0 0;font-style:italic;color:var(--ouro);font-size:15px;}
 .stamp-sheet .panel{text-align:left;}
 @media (prefers-reduced-motion: reduce){.stamp.slam{animation:none;}}
+/* Wegbegleiter */
+.bg-head{display:flex;align-items:center;gap:10px;margin:-4px 0 12px;padding-bottom:10px;border-bottom:1px dashed var(--line);}
+.bg-av{flex:0 0 36px;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;color:#FFF8E6;font-family:'Alegreya SC','Alegreya',Georgia,serif;font-weight:700;font-size:19px;box-shadow:0 0 0 2px #F3D98E,0 2px 6px rgba(0,0,0,.2);}
+.bg-head b{display:block;font-size:17px;line-height:1.2;}
+.bg-head small{display:block;font-size:14px;font-style:italic;color:var(--muted);line-height:1.2;}
+.bg-card{display:flex;gap:12px;align-items:flex-start;margin-top:16px;padding:12px 12px 10px;border-top:1px dashed rgba(122,88,45,.4);}
+.bg-card .bg-av{margin-top:4px;}
+.bg-l{margin:0;font-family:'Alegreya SC','Alegreya',Georgia,serif;font-size:14px;color:#8A5A1C;}
+.bg-n{margin:0;font-weight:700;font-size:18px;color:#3A2817;}
+.bg-n small{display:block;font-weight:400;font-style:italic;font-size:14px;color:#7A6145;}
+.bg-t{margin:6px 0 0;font-size:15px;line-height:1.5;color:#3A2817;}
