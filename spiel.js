@@ -474,6 +474,7 @@ function migrate(){
   if(!S.cath)S.cath={};
   if(!S.items)S.items={};
   if(!S.known)S.known={};
+  if(!S.feasts)S.feasts={};
   if(!S.pass){S.pass={};STAGES.forEach(function(st){var x=S.stages[st.id];if(x&&x.done)S.pass[st.id]='';});}
   if(typeof S.stones!=='number'){
     var n=0;
@@ -660,6 +661,7 @@ function showTitle(){
   render('<div class="title-screen"><div class="t-card">'+
     roseSVG()+'<h1 class="t-title">Pilger<br>durch die<br>Zeit</h1>'+
     '<p class="t-sub">'+esc(nameList(CHAPTERS.map(function(c){return c.name;})))+'</p>'+
+    titleFeastHTML()+
     '<button class="btn primary" data-chap="'+currentChapter()+'">'+(any?'Weiterpilgern':'Aufbrechen')+'</button>'+
     '<button class="btn ghost" data-act="cathedral">Die Kathedrale</button>'+
     '<button class="btn ghost" data-act="album">Kartenalbum</button>'+
@@ -671,6 +673,7 @@ function showTitle(){
     S.snd=S.snd===false;save();this.textContent='Klang: '+(S.snd===false?'aus':'an');
     if(S.snd!==false)bell(392,2.2,.1);
   });
+  app.querySelectorAll('[data-feast]').forEach(function(b){b.addEventListener('click',function(){collectFeast(b.dataset.feast);});});
   /* Versteckter Testmodus: fünfmal schnell auf die Rosette tippen */
   var taps=[];
   app.querySelector('.rose').addEventListener('click',function(){
@@ -686,6 +689,7 @@ function showRules(){
     '<p>Du hast drei Kerzen. Jeder Fehler löscht eine. Erlischt die letzte, beginnt die Etappe von vorn, mit neu gemischten Fragen.</p>'+
     '<p>Jede bestandene Etappe bringt eine Karte. Die goldene Fassung gibt es nur, wenn keine Kerze erlischt. Zwei weitere Karten pro Kapitel erhältst du nur für den ganzen Weg, eine davon nur, wenn jede Etappe golden ist.</p>'+
     '<p>Zwischen den Reisen baust du eine verfallene Kathedrale wieder auf. Jede bestandene Etappe bringt einen Pilgerstein, auch beim Wiederholen. Das erste Gold einer Etappe bringt drei weitere. Jede Frage, die du zum ersten Mal richtig beantwortest, bringt einen Eimer Mörtel, auch beim Wiederholen. Mit Steinen und Mörtel restaurierst du die Räume, vollenden kannst du manche nur mit bestimmten Karten. In jedem vollendeten Raum wartet ein Gebet.</p>'+
+    '<p>An großen Festen des Kirchenjahres wartet auf der Titelseite ein Festtagsstempel für deinen Pilgerpass, einmal in jedem Jahr.</p>'+
     '<p class="muted">Dein Fortschritt wird in diesem Browser gespeichert.</p>'+
     '<button class="btn primary" data-act="map">Zum Pilgerweg</button></div>');
 }
@@ -1283,7 +1287,10 @@ var INK_DEFS='<svg width="0" height="0" style="position:absolute" aria-hidden="t
   '<feComposite in="d" in2="m" operator="in"/></filter></svg>';
 var MONATE=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 function pad2(n){return (n<10?'0':'')+n;}
-function todayISO(){var d=new Date();return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());}
+var dateOverride=null; /* nur im Testmodus gesetzt, um Festtage vorab anzusehen */
+function today(){var d=dateOverride?new Date(dateOverride+'T12:00:00'):new Date();return new Date(d.getFullYear(),d.getMonth(),d.getDate());}
+function todayISO(){return isoOf(today());}
+function isoOf(d){return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());}
 function dateShort(iso){var p=iso.split('-');return p[2]+'.'+p[1]+'.'+p[0];}
 function dateLong(iso){var p=iso.split('-');return (+p[2])+'. '+MONATE[+p[1]-1]+' '+p[0];}
 function inkOf(c){return c.stempelfarbe||INK[(c.n-1)%INK.length];}
@@ -1326,6 +1333,158 @@ function thud(){
     n.buffer=buf;f.type='lowpass';f.frequency.value=900;g2.gain.value=.18;n.connect(f);f.connect(g2);g2.connect(a.destination);n.start(t);
   }catch(e){}
 }
+/* ---------- Kirchenjahr ----------
+   Feste mit festem Datum (d: 'MM-TT') oder beweglich relativ zu Ostern (bew: Tage). rang 'g' = Gedenktag,
+   entfällt in der Karwoche und Osteroktav. Pro Fest und Jahr ein Festtagsstempel (S.feasts[id] = Liste von Daten). */
+var FEST_INK='#8C1D3C';
+var FICON={
+  stern:'<path fill="currentColor" stroke="none" d="'+starPath(50,40,26,10)+'"/><path d="M50 72 V92 M38 84 H62"/>',
+  kerze:'<path d="M40 40 H60 V90 H40 Z M50 14 C58 24 58 30 50 34 C42 30 42 24 50 14 Z M30 90 H70"/>',
+  lilie:'<path d="M50 92 V40 M50 40 C42 32 40 20 50 10 C60 20 58 32 50 40 Z M50 44 C40 40 30 42 24 32 C36 30 44 34 50 44 M50 44 C60 40 70 42 76 32 C64 30 56 34 50 44 M50 66 C42 60 36 62 32 68"/>',
+  wolke:'<path d="M24 66 C14 66 12 52 22 50 C22 38 36 34 42 42 C46 30 64 30 66 44 C78 42 84 56 74 62 Z"/><path fill="currentColor" stroke="none" d="'+starPath(50,20,8,3.2)+' '+starPath(28,26,5,2)+' '+starPath(72,26,5,2)+'"/><path d="M50 72 V92"/>',
+  heilige:'<circle cx="30" cy="52" r="8"/><circle cx="50" cy="44" r="8"/><circle cx="70" cy="52" r="8"/><path d="M18 40 A13 4 0 0 1 42 40 M38 32 A13 4 0 0 1 62 32 M58 40 A13 4 0 0 1 82 40 M18 88 C18 68 42 68 42 88 M38 88 C38 62 62 62 62 88 M58 88 C58 68 82 68 82 88"/>',
+  asche:'<path d="M50 18 V82 M28 40 H72"/><circle cx="34" cy="70" r="2" fill="currentColor"/><circle cx="66" cy="64" r="2" fill="currentColor"/><circle cx="62" cy="82" r="2" fill="currentColor"/>',
+  palme:'<path d="M28 92 C40 70 52 46 74 14 M44 66 C34 62 28 54 26 44 M50 56 C42 50 38 42 38 32 M58 44 C52 38 50 30 52 20 M48 64 C58 62 66 56 70 48 M56 52 C66 50 72 44 76 36"/>',
+  ostern:'<path d="M50 16 V88 M36 32 H64"/><path d="M14 88 H86 M22 88 A28 28 0 0 1 78 88"/><path d="M50 52 L50 52 M18 66 L10 62 M82 66 L90 62 M28 50 L22 42 M72 50 L78 42"/>',
+  taube:'<path d="M18 54 C30 46 44 46 52 52 C60 40 72 34 86 36 C78 42 72 50 70 58 C62 72 42 74 30 66 L16 72 L22 60 Z"/><path d="M40 20 C44 26 44 30 40 33 C36 30 36 26 40 20 Z M60 16 C64 22 64 26 60 29 C56 26 56 22 60 16 Z"/>',
+  monstranz:'<circle cx="50" cy="38" r="12"/><path d="M50 10 V18 M50 58 V82 M28 38 H20 M80 38 H72 M34 22 L28 16 M66 22 L72 16 M34 54 L28 60 M66 54 L72 60 M36 88 H64 L58 82 H42 Z"/>'
+};
+var FESTE=[
+  {id:'epiphanie',d:'01-06',name:'Erscheinung des Herrn',kurz:'Erscheinung des Herrn',fi:'stern',
+   t:'Die Sterndeuter aus dem Osten folgen dem Stern und beten das Kind in Betlehem an. Die Kirche feiert, dass Christus sich allen Völkern zeigt. Vielerorts ziehen heute die Sternsinger von Haus zu Haus.'},
+  {id:'lichtmess',d:'02-02',name:'Darstellung des Herrn',kurz:'Lichtmess',fi:'kerze',
+   t:'Vierzig Tage nach Weihnachten bringen Maria und Josef das Kind in den Tempel. Der greise Simeon nennt es ein Licht, das die Heiden erleuchtet. Darum werden heute Kerzen gesegnet.'},
+  {id:'lourdes',d:'02-11',rang:'g',name:'Unsere Liebe Frau in Lourdes',kurz:'Lourdes',ic:'lourdes',
+   t:'Am 11. Februar 1858 sah Bernadette die Dame zum ersten Mal in der Grotte von Massabielle. Seit 1993 ist dieser Tag zugleich der Welttag der Kranken. Man betet besonders für alle, die krank sind, und für die, die sie pflegen.'},
+  {id:'fatimakinder',d:'02-20',rang:'g',name:'Hl. Francisco und hl. Jacinta Marto',kurz:'Francisco und Jacinta',ic:'jacinta',
+   t:'Am 20. Februar 1920 starb Jacinta in Lissabon. An diesem Tag gedenkt die Kirche der beiden jüngsten Seher von Fátima, die 2017 heiliggesprochen wurden.'},
+  {id:'verkuendigung',d:'03-25',name:'Verkündigung des Herrn',kurz:'Verkündigung',fi:'lilie',
+   t:'Der Engel Gabriel bringt Maria die Botschaft, dass sie den Sohn Gottes empfangen wird, und Maria sagt Ja. An diesem Fest im Jahr 1858 nannte die Dame in Lourdes ihren Namen: Ich bin die Unbefleckte Empfängnis.'},
+  {id:'bernadette',d:'04-16',rang:'g',name:'Hl. Bernadette Soubirous',kurz:'Hl. Bernadette',ic:'bernadette',
+   t:'Am 16. April 1879 starb Bernadette im Kloster von Nevers. An ihrem Todestag gedenkt man der heiligen Seherin von Lourdes.'},
+  {id:'fatima',d:'05-13',rang:'g',name:'Unsere Liebe Frau von Fátima',kurz:'Fátima',ic:'fatima',
+   t:'Am 13. Mai 1917 sahen die drei Hirtenkinder Maria zum ersten Mal in der Cova da Iria. Jedes Jahr kommen an diesem Tag Zehntausende Pilger nach Fátima.'},
+  {id:'klara',d:'08-11',rang:'g',name:'Hl. Klara von Assisi',kurz:'Hl. Klara',ic:'klara',
+   t:'Am 11. August 1253 starb Klara in San Damiano. Über vierzig Jahre lebte sie dort mit ihren Schwestern in Armut und Gebet.'},
+  {id:'aufnahme',d:'08-15',name:'Mariä Aufnahme in den Himmel',kurz:'Mariä Himmelfahrt',fi:'wolke',
+   t:'Maria wurde mit Leib und Seele in die himmlische Herrlichkeit aufgenommen. Papst Pius XII. verkündete diese Glaubenswahrheit 1950. Vielerorts werden heute Kräuterbüschel gesegnet.'},
+  {id:'franziskus',d:'10-04',rang:'g',name:'Hl. Franziskus von Assisi',kurz:'Hl. Franziskus',ic:'franziskus',
+   t:'Am Abend des 3. Oktober 1226 starb Franziskus bei der Portiuncula. Heute feiert ihn die ganze Kirche. Vielerorts werden an diesem Tag Tiere gesegnet.'},
+  {id:'rosenkranz',d:'10-07',rang:'g',name:'Unsere Liebe Frau vom Rosenkranz',kurz:'Rosenkranzfest',ic:'rosenkranz',
+   t:'In Fátima nannte sich Maria am 13. Oktober 1917 „Unsere Liebe Frau vom Rosenkranz“. Der ganze Oktober ist besonders dem Rosenkranzgebet gewidmet.'},
+  {id:'allerheiligen',d:'11-01',name:'Allerheiligen',kurz:'Allerheiligen',fi:'heilige',
+   t:'Die Kirche feiert alle Heiligen, die bekannten und die unbekannten, die schon bei Gott sind. Am folgenden Tag, an Allerseelen, gedenkt sie aller Verstorbenen.'},
+  {id:'unbefleckte',d:'12-08',name:'Mariä Empfängnis',kurz:'Mariä Empfängnis',ic:'unbefleckte',
+   t:'Maria war vom ersten Augenblick ihres Daseins an frei von der Erbsünde. Papst Pius IX. verkündete dieses Dogma am 8. Dezember 1854, vier Jahre bevor die Dame in Lourdes sagte: Ich bin die Unbefleckte Empfängnis.'},
+  {id:'weihnachten',d:'12-25',name:'Weihnachten',kurz:'Weihnachten',ic:'greccio',
+   t:'Gott wird Mensch: In Betlehem kommt Jesus Christus zur Welt, arm in einer Krippe. Franziskus feierte dieses Geheimnis 1223 in Greccio mit der ersten lebendigen Krippe.'},
+  {id:'aschermittwoch',bew:-46,name:'Aschermittwoch',kurz:'Aschermittwoch',fi:'asche',
+   t:'Mit dem Aschenkreuz beginnt die vierzigtägige Fastenzeit: „Bekehrt euch und glaubt an das Evangelium.“ Eine Zeit für Umkehr, Gebet und Werke der Nächstenliebe.'},
+  {id:'palmsonntag',bew:-7,name:'Palmsonntag',kurz:'Palmsonntag',fi:'palme',
+   t:'Jesus zieht in Jerusalem ein, und die Menschen jubeln ihm mit Zweigen zu. Mit diesem Tag beginnt die Heilige Woche. In der Nacht nach dem Palmsonntag 1212 verließ Klara ihr Elternhaus.'},
+  {id:'ostern',bew:0,name:'Ostersonntag',kurz:'Ostern',fi:'ostern',
+   t:'Christus ist auferstanden! Das höchste Fest des Kirchenjahres: Der Tod hat nicht das letzte Wort.'},
+  {id:'himmelfahrt',bew:39,name:'Christi Himmelfahrt',kurz:'Christi Himmelfahrt',fi:'wolke',
+   t:'Vierzig Tage nach Ostern kehrt der auferstandene Herr zum Vater zurück. Seinen Jüngern verheißt er den Heiligen Geist.'},
+  {id:'pfingsten',bew:49,name:'Pfingsten',kurz:'Pfingsten',fi:'taube',
+   t:'Der Heilige Geist kommt in Feuerzungen auf die Apostel herab. Pfingsten gilt als Geburtstag der Kirche.'},
+  {id:'fronleichnam',bew:60,name:'Fronleichnam',kurz:'Fronleichnam',fi:'monstranz',
+   t:'Das Fest des Leibes und Blutes Christi. In feierlichen Prozessionen wird das Allerheiligste Sakrament durch die Straßen getragen.'}
+];
+function easter(y){
+  var a=y%19,b=Math.floor(y/100),c=y%100,d=Math.floor(b/4),e=b%4,f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),
+      h=(19*a+b-d-g+15)%30,i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451),
+      n=h+l-7*m+114;
+  return new Date(y,Math.floor(n/31)-1,(n%31)+1);
+}
+function addDays(d,n){return new Date(d.getFullYear(),d.getMonth(),d.getDate()+n);}
+function feastDate(f,y){
+  var e=easter(y);
+  if(f.bew!=null)return addDays(e,f.bew);
+  var p=f.d.split('-'),d=new Date(y,+p[0]-1,+p[1]);
+  /* Verlegungen: Verkündigung nicht in Karwoche und Osteroktav, Hochfeste nicht auf Sonntage im Advent und in der Fastenzeit */
+  if(f.id==='verkuendigung'){if(d>=addDays(e,-7)&&d<=addDays(e,7))return addDays(e,8);if(d.getDay()===0)return addDays(d,1);}
+  if(f.id==='unbefleckte'&&d.getDay()===0)return addDays(d,1);
+  return d;
+}
+function feastIcon(f){return f.ic?ICONS[f.ic]:FICON[f.fi];}
+function feastsOn(d){
+  var e=easter(d.getFullYear()),still=d>=addDays(e,-7)&&d<=addDays(e,7),iso=isoOf(d);
+  return FESTE.filter(function(f){return isoOf(feastDate(f,d.getFullYear()))===iso&&!(f.rang==='g'&&still);});
+}
+function nextFeast(d){
+  for(var i=1;i<=400;i++){var x=addDays(d,i),fs=feastsOn(x);if(fs.length)return {f:fs[0],days:i};}
+  return null;
+}
+function season(d){
+  var y=d.getFullYear(),e=easter(y),xmas=new Date(y,11,25),adv1=addDays(xmas,-(xmas.getDay()||7)-21),
+      jan6=new Date(y,0,6),bapt=addDays(jan6,(7-jan6.getDay())||7);
+  if(d<=bapt||d>=xmas)return {n:'Weihnachtszeit',c:'#F2EBD3',f:'Weiß'};
+  if(d>=adv1)return {n:'Advent',c:'#6B3FA0',f:'Violett'};
+  if(d>=addDays(e,-46)&&d<e)return {n:'Fastenzeit',c:'#6B3FA0',f:'Violett'};
+  if(d>=e&&d<=addDays(e,49))return {n:'Osterzeit',c:'#F2EBD3',f:'Weiß'};
+  return {n:'Zeit im Jahreskreis',c:'#3F7A4A',f:'Grün'};
+}
+function feastHave(f,y){return ((S.feasts&&S.feasts[f.id])||[]).some(function(d){return d.slice(0,4)===String(y);});}
+function feastStamp(f,iso,cls){
+  return stampSVG({top:f.kurz.toUpperCase(),bottom:('Festtag · '+iso.slice(0,4)).toUpperCase(),icon:feastIcon(f)||'',date:iso,gold:false,
+    ink:FEST_INK,rot:tilt(f.id),cls:cls,label:'Festtagsstempel '+f.name+', '+dateLong(iso)});
+}
+function dateDayMonth(d){return d.getDate()+'. '+MONATE[d.getMonth()];}
+function titleFeastHTML(){
+  var d=today(),fs=feastsOn(d);
+  if(fs.length){
+    return fs.map(function(f){
+      var have=feastHave(f,d.getFullYear());
+      return '<div class="fest-banner"><svg class="fest-ico" viewBox="0 0 100 100" aria-hidden="true">'+(feastIcon(f)||'')+'</svg>'+
+        '<p class="fest-k">Heute im Kirchenjahr</p><h2>'+esc(f.name)+'</h2><p class="fest-t">'+esc(f.t)+'</p>'+
+        (have?'<p class="fest-done">Dein Festtagsstempel ist im Pilgerpass.</p>':'<button class="btn primary" data-feast="'+f.id+'">Festtagsstempel abholen</button>')+'</div>';
+    }).join('');
+  }
+  var se=season(d),nx=nextFeast(d);
+  return '<p class="kj-line"><i class="kj-dot" style="background:'+se.c+'" title="Liturgische Farbe: '+se.f+'"></i>'+esc(se.n)+
+    (nx?'<span>Nächstes Fest: '+esc(nx.f.kurz)+(nx.days===1?' morgen':' in '+nx.days+' Tagen')+'</span>':'')+'</p>';
+}
+function collectFeast(id){
+  var f=FESTE.filter(function(x){return x.id===id;})[0],d=today();if(!f||feastHave(f,d.getFullYear()))return;
+  if(!S.feasts)S.feasts={};(S.feasts[id]=S.feasts[id]||[]).push(isoOf(d));save();
+  var ov=document.createElement('div');ov.className='overlay';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-label','Festtagsstempel');
+  ov.innerHTML='<div class="sheet stamp-sheet">'+INK_DEFS+'<div class="stamp-big">'+feastStamp(f,isoOf(d),'slam')+'</div>'+
+    '<p class="mc-leg">Festtagsstempel</p><h2>'+esc(f.name)+'</h2><p class="stamp-date">Gestempelt am '+dateLong(isoOf(d))+'</p>'+
+    '<button class="btn primary close">Weiter</button></div>';
+  document.body.appendChild(ov);armBack();
+  setTimeout(function(){thud();try{if(navigator.vibrate)navigator.vibrate(40);}catch(e){}},reduceMotion?0:900);
+  function close(){ov.remove();document.removeEventListener('keydown',onk);showTitle();}
+  function onk(e){if(e.key==='Escape')close();}
+  ov.addEventListener('click',function(e){if(e.target===ov||e.target.closest('.close'))close();});
+  document.addEventListener('keydown',onk);
+}
+function feastPage(){
+  var y=today().getFullYear(),n=0;
+  var list=FESTE.slice().sort(function(a,b){return feastDate(a,y)-feastDate(b,y);});
+  var fields=list.map(function(f){
+    var got=(S.feasts&&S.feasts[f.id])||[];
+    if(got.length){n++;var last=got[got.length-1];
+      return '<button class="pass-field" data-fest="'+f.id+'" aria-label="'+esc(f.name)+' ansehen">'+feastStamp(f,last)+(got.length>1?'<span class="pf-x">×'+got.length+'</span>':'')+'</button>';}
+    return '<div class="pass-field empty"><span class="pf-o fest-o">'+esc(f.kurz)+'</span><span class="pf-d">'+dateDayMonth(feastDate(f,y))+'</span></div>';
+  }).join('');
+  return '<section class="pass-page fest-page"><h2>Festtage im Kirchenjahr<small>'+n+' von '+FESTE.length+'</small></h2>'+
+    '<p class="fest-intro">An jedem dieser Tage wartet auf der Titelseite ein Festtagsstempel, einmal in jedem Jahr. Die Daten gelten für '+y+'.</p>'+
+    '<div class="pass-grid">'+fields+'</div></section>';
+}
+function openFeast(f){
+  var got=(S.feasts&&S.feasts[f.id])||[];
+  var ov=document.createElement('div');ov.className='overlay';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-label',f.name);
+  ov.innerHTML='<div class="sheet stamp-sheet">'+INK_DEFS+'<div class="stamp-big">'+feastStamp(f,got[got.length-1])+'</div>'+
+    '<p class="mc-leg">Festtag</p><h2>'+esc(f.name)+'</h2><p class="stamp-date">Gestempelt am '+got.map(dateLong).join(', ')+'</p>'+
+    '<div class="panel heute"><p class="txt">'+esc(f.t)+'</p></div><button class="link close">Schließen</button></div>';
+  document.body.appendChild(ov);armBack();
+  function close(){ov.remove();document.removeEventListener('keydown',onk);}
+  function onk(e){if(e.key==='Escape')close();}
+  ov.addEventListener('click',function(e){if(e.target===ov||e.target.closest('.close'))close();});
+  document.addEventListener('keydown',onk);
+}
+
 /* Wegbegleiter: Kopfzeile in seinen Szenen, Karte im Pilgerpass */
 function companionAvatar(c){var b=c.begleiter;return '<span class="bg-av" style="background:'+inkOf(c)+'" aria-hidden="true">'+esc(b.name.charAt(0))+'</span>';}
 function companionHead(sc,c){
@@ -1355,7 +1514,8 @@ function showPass(){
   render(hud('title')+tabbar('pass')+'<div class="wrap">'+INK_DEFS+
     '<h1 class="chapter"><span>Pilgerpass</span></h1>'+
     '<p class="lead">Wie echte Pilger sammelst du an jeder Station einen Stempel, mit dem Tag, an dem du dort warst. Tippe einen Stempel an, um dich zu erinnern.</p>'+
-    '<p class="pass-count"><b>'+have+'</b> von '+total+' Stempeln</p>'+pages+'</div>');
+    '<p class="pass-count"><b>'+have+'</b> von '+total+' Stempeln</p>'+pages+feastPage()+'</div>');
+  app.querySelectorAll('[data-fest]').forEach(function(b){b.addEventListener('click',function(){openFeast(FESTE.filter(function(x){return x.id===b.dataset.fest;})[0]);});});
   app.querySelectorAll('[data-stamp]').forEach(function(b){b.addEventListener('click',function(){openStamp(STAGES[+b.dataset.stamp]);});});
 }
 function openStamp(st){
@@ -1477,6 +1637,10 @@ function showTestMenu(){
       h+='<div class="t-row"><span class="t-name">'+esc(r.name)+'</span>'+bt+'</div>';
       h+='<div class="t-row"><span class="t-name">Ausstattung: '+itemsDone(r)+' von '+(ITEMS[r.id]||[]).length+'</span>'+b('Keine','items:'+r.id+':none')+b('Alle','items:'+r.id+':all')+'</div>';
     });
+    var fy=new Date().getFullYear();
+    h+='<h3>Kirchenjahr</h3><div class="t-row"><span class="t-name">Festtag ansehen (Datum nur für diese Sitzung)</span><select id="t-fest" class="t-sel"><option value="">Echtes Datum</option>'+
+      FESTE.slice().sort(function(a,b){return feastDate(a,fy)-feastDate(b,fy);}).map(function(f){var iso=isoOf(feastDate(f,fy));return '<option value="'+iso+'"'+(dateOverride===iso?' selected':'')+'>'+esc(f.kurz)+' ('+dateDayMonth(feastDate(f,fy))+')</option>';}).join('')+'</select></div>'+
+      '<div class="t-row"><span class="t-name">Festtagsstempel</span>'+b('Keine','feasts:none')+b('Alle','feasts:all')+'</div>';
     h+='<h3>Fragen</h3><div class="t-row"><span class="t-name">Alle Fragen als einmal richtig beantwortet zählen</span>'+b('Alle gemeistert','known:all')+b('Zurücksetzen','known:none')+'</div>';
     h+='<h3>Spielstand</h3><div class="t-col">'+
       (hasBackup()?'<button class="btn primary" data-t="restore">Echten Spielstand zurückholen</button>':'')+
@@ -1484,6 +1648,7 @@ function showTestMenu(){
       '<button class="link close">Schließen</button></div>';
     var sc=ov.firstChild?ov.firstChild.scrollTop:0;
     ov.innerHTML=h;ov.firstChild.scrollTop=sc;
+    ov.querySelector('#t-fest').addEventListener('change',function(){dateOverride=this.value||null;});
   }
   function close(){ov.remove();document.removeEventListener('keydown',onk);showTitle();}
   function onk(e){if(e.key==='Escape')close();}
@@ -1501,6 +1666,7 @@ function showTestMenu(){
     if(a[0]==='chap')setChapter(CH[a[1]],a[2]);
     else if(a[0]==='pos'){if(!S.pos)S.pos={};S.pos[a[1]]=0;}
     else if(a[0]==='cyc'){var st=STAGES[+a[1]],m=stateOf(st);setStage(st,m==='leer'?'done':m==='geschafft'?'gold':'leer');}
+    else if(a[0]==='feasts'){S.feasts={};if(a[1]==='all'){var td=todayISO();FESTE.forEach(function(f){S.feasts[f.id]=[td];});}}
     else if(a[0]==='mo'){var m=+a[1];S.mortarSpent=m===0?knownTotal():(S.mortarSpent||0)-m;}
     else if(a[0]==='st'){var n=+a[1];S.stones=n===0?0:Math.max(0,(S.stones||0)+n);}
     else if(a[0]==='cards'){CARD_ORDER.forEach(function(id){if(a[1]==='none')delete S.cards[id];else S.cards[id]=a[1];});}

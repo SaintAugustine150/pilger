@@ -12,6 +12,7 @@ Katholisches Handyspiel von Philipp. Er ist technisch nicht versiert: Erkläre S
 - Drei Kerzen pro Etappe, jeder Fehler löscht eine. Gold gibt es nur, wenn keine Kerze erlischt. Das Spiel soll bewusst nicht zu leicht sein.
 - Prüfungstypen: `quiz` (auch Wahr/Falsch mit Feld `s`/`v`), `chrono` (Zeitstrahl), `rosary` (Gebet im Rhythmus; ohne `perlen` ein Rosenkranz-Gesätz, mit `perlen` eigene Zeilen wie der Sonnengesang), `procession` (Lichter-Merkspiel).
 - Pilgerpass (Bereich in der Leiste unten): Für jede zum ersten Mal geschaffte Etappe ein Tintenstempel mit Ort (`ort` der Etappe), Kapitel, Jahr, Motiv der Etappenkarte und dem echten Datum; er wird in der Rückkehr-Szene mit Animation eingedrückt. Eine Seite pro Kapitel, Tintenfarbe je Kapitel (optional `stempelfarbe` im Kapitel), Gold-Etappen mit goldenen Sternen, vollständiges Kapitel mit Siegel „Pilgerweg vollendet“. Antippen zeigt die Rückkehr-Szene als Erinnerung. Neue Etappen brauchen ein kurzes `ort`.
+- Kirchenjahr: `FESTE` in `spiel.js` (20 Feste, fest oder relativ zu Ostern; Ostern wird berechnet; Verlegungen von Verkündigung und Mariä Empfängnis sowie Gedenktage in Karwoche und Osteroktav sind berücksichtigt). An Festtagen zeigt die Titelseite einen Kasten mit kurzem Text und „Festtagsstempel abholen“ (weinrot, einmal pro Fest und Jahr, `feasts` im Spielstand), sonst Zeit im Kirchenjahr mit liturgischer Farbe und das nächste Fest. Im Pilgerpass gibt es die Seite „Festtage im Kirchenjahr“. Neue Kapitel können passende Feste ergänzen (etwa Jakobus am 25. Juli).
 - Wiederholen (Knopf auf der Titelseite): alle Fragen aller oder eines Kapitels gemischt, ohne Zeit und Kerzen; falsche Antworten kommen ein paar Fragen später wieder. Bringt keine Steine und Karten, zählt aber für „Fragenpool gemeistert“. Neue Fragenpools erscheinen dort automatisch.
 - Sammelkarten: pro Etappe eine, pro Kapitel zwei Bonuskarten (alle Etappen geschafft, alle in Gold).
 - Kathedrale: Eine Ruine wird mit Pilgersteinen (1 pro Etappe, +3 beim ersten Gold), Mörtel und bestimmten Karten wieder aufgebaut. Jeder vollendete Raum öffnet ein Gebet.
@@ -52,25 +53,23 @@ Philipp legt neue Bilder in `neue-bilder/`. Wenn er „Binde die neuen Bilder ei
 Ein vorhandenes Bild mit gleichem Namen wird ersetzt; das ist so gewollt (etwa für die neuen `schiff-0` und `schiff-1`).
 
 ## Arbeitsweise
-- Testmodus: auf der Titelseite fünfmal schnell auf die Rosette tippen. Er setzt Kapitel, Etappen, Steine, Karten und Kathedralen-Stufen und startet jede Etappe direkt. Vor der ersten Änderung sichert er den echten Spielstand unter `pilger-durch-die-zeit-v1-echt`; „Echten Spielstand zurückholen“ stellt ihn wieder her. Neue Spielinhalte (etwa Kathedralen-Ausstattung) im Testmodus mit einstellbar machen.
+- Testmodus: auf der Titelseite fünfmal schnell auf die Rosette tippen. Er setzt Kapitel, Festtagsstempel, ein simuliertes Festdatum (nur für die Sitzung), Etappen, Steine, Karten und Kathedralen-Stufen und startet jede Etappe direkt. Vor der ersten Änderung sichert er den echten Spielstand unter `pilger-durch-die-zeit-v1-echt`; „Echten Spielstand zurückholen“ stellt ihn wieder her. Neue Spielinhalte (etwa Kathedralen-Ausstattung) im Testmodus mit einstellbar machen.
 - Spielstand liegt in `localStorage` unter dem Schlüssel `pilger-durch-die-zeit-v1`. Nie die Struktur brechen, sondern bei Bedarf in `migrate()` umwandeln. `items` merkt sich die aufgestellten Gegenstände je Raum, `known` je Fragenpool die einmal richtig beantworteten Fragen (als kurzer Schlüssel aus dem Fragetext; wird ein Fragetext geändert, zählt die Frage neu). `pass` merkt sich je Etappe das Stempeldatum (`JJJJ-MM-TT`, leer bei Etappen, die vor dem Pilgerpass geschafft wurden). `pos` merkt sich je Kapitel, an welcher Etappe der Pilger auf der Landkarte steht; ist die nächste Etappe weiter, läuft er beim Öffnen der Karte dorthin.
 - Nach Änderungen testen: lokalen Server starten, die betroffenen Abläufe durchspielen und Philipp einen Link zur Vorschau geben.
 - Erst hochladen (commit und push), wenn Philipp es freigibt. Er bündelt lieber mehrere Änderungen zu einem Upload; nach einer Aufgabe nicht von sich aus hochladen, sondern sagen, dass die Änderungen bereitliegen.
 
 ## Geplante Verbesserungen
-Erledigt: Mörtel aus Wissen und höhere Steinpreise; Sakristei-Bilder; Kapitel 3 Assisi mit Sakristei und Sonnengesang; Wegbegleiter (Graça, Luc); Abschlussbilder `raum-4` für alle vier Räume; Pilgerpass mit Stempeln; Wiederholen-Modus; Kathedralen-Ausstattung; Navigation (Leiste unten mit Pilgerweg, Pilgerpass, Kathedrale, Album, Zurück-Pfeil, Abbrechen mit Rückfrage, Zurück-Taste des Handys); gemalte Landkarten für Fátima und Lourdes mit laufendem Pilger; größere Fragenpools; Zeitreise zwischen heute und damals (Schwelle, Jahreszahl, Rückkehr); Testmodus.
+Erledigt: Kirchenjahr mit Festtagsstempeln; alle 28 Kartenbilder; Mörtel aus Wissen und höhere Steinpreise; Sakristei-Bilder; Kapitel 3 Assisi mit Sakristei und Sonnengesang; Wegbegleiter (Graça, Luc); Abschlussbilder `raum-4` für alle vier Räume; Pilgerpass mit Stempeln; Wiederholen-Modus; Kathedralen-Ausstattung; Navigation (Leiste unten mit Pilgerweg, Pilgerpass, Kathedrale, Album, Zurück-Pfeil, Abbrechen mit Rückfrage, Zurück-Taste des Handys); gemalte Landkarten für Fátima und Lourdes mit laufendem Pilger; größere Fragenpools; Zeitreise zwischen heute und damals (Schwelle, Jahreszahl, Rückkehr); Testmodus.
 Landkarten für neue Kapitel: Hochformat (2:3 oder bei langen Wegen höher), ohne Schrift, Weg klar sichtbar, Orte mit freier Fläche; Dateiname `weg-KAPITEL`.
 1. Weitere Ideen:
    - mehrere Prüfungen pro Etappe, Kapitel-Finale, Meisterprüfung nach Gold
    - Außenansicht der Kathedrale mit Zwischenstufen
    - ein Bild pro Etappe für die „damals“-Szenen
    - „Mehr erfahren“ mit Katechismus-Verweisen
-   - Kirchenjahr im Spiel (13. Mai, 11. Februar)
    - Heiliger des Tages als Sammelkarte am Festtag
    - Bestwert oder Serie im Wiederholen-Modus
    - weitere Kapitel: Guadalupe (1531), Jakobsweg, Rom (Petrus und Paulus), biblische Orte, Kirchengeschichte, weitere Heilige
 
 ## Offene Punkte
-- Bilder für Assisi stehen aus (Prompts hat Philipp): zehn Kartenbilder `francesco`, `aussaetziger`, `damiano`, `bischof`, `brueder`, `klara`, `greccio`, `sonnengesang`, `portiuncula`, `franziskus` Bis dahin zeigen die Karten gezeichnete Symbole.
 - Kirchenschiff: Die Bilder `schiff-1` und `schiff-0` passen nicht zu `schiff-2` und `schiff-3` (anderer Chor und Altar). Philipp erzeugt sie neu aus `schiff-2`.
-- Alle 18 Kartenbilder sind da. Das Bild `quelle` zeigt Maria mit blauem Mantel statt in Weiß mit blauem Gürtel; Philipp erzeugt es eventuell neu.
+- Alle 28 Kartenbilder sind da. Das Bild `quelle` zeigt Maria mit blauem Mantel statt in Weiß mit blauem Gürtel; Philipp erzeugt es eventuell neu.
