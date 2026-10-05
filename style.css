@@ -552,3 +552,44 @@ body{transition:background-color .6s;}
 .fest-o{font-style:normal;font-weight:700;}
 .pf-x{position:absolute;right:6px;bottom:4px;font-family:'Alegreya SC','Alegreya',Georgia,serif;font-size:13px;color:#8C1D3C;}
 .t-sel{font:inherit;font-size:15px;padding:5px 8px;border-radius:8px;border:1.5px solid var(--azul);background:var(--surface);color:var(--text);max-width:100%;}
+/* Kalender des Kirchenjahres */
+.title-screen{position:relative;}
+.cal-btn{position:relative;display:grid;place-items:center;padding:0;cursor:pointer;background:none;border:0;}
+.cal-btn svg{fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;}
+.cal-title{position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);right:14px;width:46px;height:46px;border-radius:50%;color:#F3D98E;background:rgba(11,33,80,.75);border:1.5px solid rgba(217,174,85,.7);box-shadow:0 2px 10px rgba(0,0,0,.3);z-index:2;}
+.cal-title svg{width:24px;height:24px;}
+.cal-hud{flex:0 0 auto;width:36px;height:36px;margin:-4px -6px -4px 0;border-radius:10px;color:#ECE5D2;}
+.cal-hud svg{width:23px;height:23px;}
+.cal-hud:active,.cal-title:active{background:rgba(255,255,255,.12);}
+.cal-dot{position:absolute;top:4px;right:4px;width:11px;height:11px;border-radius:50%;background:#E0362C;box-shadow:0 0 0 2px #0B2150;animation:caldot 1.6s ease-in-out infinite;}
+.cal-title .cal-dot{top:3px;right:3px;}
+@keyframes caldot{50%{transform:scale(1.25)}}
+.cal-sheet{max-height:88vh;overflow:auto;}
+.cal-top{display:flex;align-items:center;gap:8px;}
+.cal-top h2{flex:1;text-align:center;font-size:21px;}
+.cal-season{margin:6px 0 10px;text-align:center;font-size:14px;color:var(--muted);}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.cal-h{text-align:center;font-size:12px;font-weight:700;color:var(--muted);padding:2px 0;}
+.cal-c{position:relative;aspect-ratio:1;border-radius:8px;border:1px solid transparent;background:var(--bg);color:var(--text);font:inherit;font-size:15px;padding:0;cursor:pointer;display:grid;place-items:center;}
+.cal-c.empty{background:none;cursor:default;}
+.cal-n{line-height:1;margin-top:-4px;}
+.cal-s{position:absolute;left:22%;right:22%;bottom:4px;height:3px;border-radius:2px;opacity:.85;}
+.cal-c .cal-f,.cal-legend .cal-f{position:absolute;top:4px;right:4px;width:7px;height:7px;border-radius:50%;background:#8C1D3C;}
+.cal-c.fest{font-weight:700;color:#8C1D3C;}
+.cal-c.got .cal-f{background:none;border:1.5px solid #8C1D3C;}
+.cal-c.heute{border-color:var(--azul);box-shadow:inset 0 0 0 1px var(--azul);}
+.cal-c.sel{background:#F7EFDC;border-color:#C9A46A;color:#3A2817;}
+.cal-c.sel.fest{color:#8C1D3C;}
+.cal-legend{display:flex;flex-wrap:wrap;gap:4px 14px;justify-content:center;margin:10px 0 0;font-size:12.5px;color:var(--muted);}
+.cal-legend span{position:relative;padding-left:14px;}
+.cal-legend .cal-f{top:4px;left:0;right:auto;}
+.cal-lg-heute,.cal-lg-s{position:absolute;left:0;top:3px;width:10px;height:10px;border-radius:3px;border:1.5px solid var(--azul);}
+.cal-lg-s{border:0;height:3px;top:8px;background:#3F7A4A;}
+.cal-info{margin-top:14px;padding:14px 14px 12px;border-radius:12px;text-align:center;border:1.5px solid #C9A46A;color:#3A2817;background:var(--grain),#F7EFDC;}
+.cal-info h3{margin:2px 0 0;font-size:19px;color:#3A2817;}
+.cal-info .fest-t{text-align:left;}
+.cal-info .btn{margin-top:12px;}
+.cal-done{margin:10px 0 0;font-style:italic;color:#8C1D3C;font-size:15px;}
+.cal-hint{margin:8px 0 0;font-size:15px;color:#5A3D16;}
+@media (prefers-reduced-motion: reduce){.cal-dot{animation:none;}}
+@media (max-width:430px){.hud-t{font-size:0;}}

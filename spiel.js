@@ -64,7 +64,7 @@ function hud(back){
   return '<div class="hud"><div class="hud-in">'+(back?'<button class="back" data-act="'+back+'" aria-label="'+BACK_LABEL[back]+'">'+BACK_SVG+'</button>':'')+'<span class="hud-t">Pilger durch die Zeit</span>'+
     '<span class="chip" aria-label="'+stonesTxt(S.stones||0)+'">'+STONE_SVG+'<span>'+(S.stones||0)+'</span></span>'+
     '<span class="chip" aria-label="'+mortarTxt(mortar())+'">'+MORTAR_SVG+'<span>'+mortar()+'</span></span>'+
-    '<span class="chip" aria-label="'+n+' von '+CARD_ORDER.length+' Karten">'+CARD_ICON+'<span>'+n+'/'+CARD_ORDER.length+'</span></span></div></div>';
+    '<span class="chip" aria-label="'+n+' von '+CARD_ORDER.length+' Karten">'+CARD_ICON+'<span>'+n+'/'+CARD_ORDER.length+'</span></span>'+calButton('cal-hud')+'</div></div>';
 }
 var NAV=[
   ['map','Pilgerweg','<path d="M12 20 L3.5 10 A9 9 0 0 1 20.5 10 Z"/><path d="M12 20 L7.5 4.6 M12 20 L12 3.2 M12 20 L16.5 4.6"/><path d="M9 21.5 H15"/>'],
@@ -658,10 +658,9 @@ function showRoom(id,msg,prevL){
 /* ---------- Titel ---------- */
 function showTitle(){
   var any=Object.keys(S.stages).length>0;
-  render('<div class="title-screen"><div class="t-card">'+
+  render('<div class="title-screen">'+calButton('cal-title')+'<div class="t-card">'+
     roseSVG()+'<h1 class="t-title">Pilger<br>durch die<br>Zeit</h1>'+
     '<p class="t-sub">'+esc(nameList(CHAPTERS.map(function(c){return c.name;})))+'</p>'+
-    titleFeastHTML()+
     '<button class="btn primary" data-chap="'+currentChapter()+'">'+(any?'Weiterpilgern':'Aufbrechen')+'</button>'+
     '<button class="btn ghost" data-act="cathedral">Die Kathedrale</button>'+
     '<button class="btn ghost" data-act="album">Kartenalbum</button>'+
@@ -673,7 +672,6 @@ function showTitle(){
     S.snd=S.snd===false;save();this.textContent='Klang: '+(S.snd===false?'aus':'an');
     if(S.snd!==false)bell(392,2.2,.1);
   });
-  app.querySelectorAll('[data-feast]').forEach(function(b){b.addEventListener('click',function(){collectFeast(b.dataset.feast);});});
   /* Versteckter Testmodus: fünfmal schnell auf die Rosette tippen */
   var taps=[];
   app.querySelector('.rose').addEventListener('click',function(){
@@ -689,7 +687,7 @@ function showRules(){
     '<p>Du hast drei Kerzen. Jeder Fehler löscht eine. Erlischt die letzte, beginnt die Etappe von vorn, mit neu gemischten Fragen.</p>'+
     '<p>Jede bestandene Etappe bringt eine Karte. Die goldene Fassung gibt es nur, wenn keine Kerze erlischt. Zwei weitere Karten pro Kapitel erhältst du nur für den ganzen Weg, eine davon nur, wenn jede Etappe golden ist.</p>'+
     '<p>Zwischen den Reisen baust du eine verfallene Kathedrale wieder auf. Jede bestandene Etappe bringt einen Pilgerstein, auch beim Wiederholen. Das erste Gold einer Etappe bringt drei weitere. Jede Frage, die du zum ersten Mal richtig beantwortest, bringt einen Eimer Mörtel, auch beim Wiederholen. Mit Steinen und Mörtel restaurierst du die Räume, vollenden kannst du manche nur mit bestimmten Karten. In jedem vollendeten Raum wartet ein Gebet.</p>'+
-    '<p>An großen Festen des Kirchenjahres wartet auf der Titelseite ein Festtagsstempel für deinen Pilgerpass, einmal in jedem Jahr.</p>'+
+    '<p>Oben rechts findest du den Kalender des Kirchenjahres. Ist heute ein Fest, leuchtet daran ein roter Punkt: Dort holst du dir einen Festtagsstempel für deinen Pilgerpass, einmal in jedem Jahr.</p>'+
     '<p class="muted">Dein Fortschritt wird in diesem Browser gespeichert.</p>'+
     '<button class="btn primary" data-act="map">Zum Pilgerweg</button></div>');
 }
@@ -1431,21 +1429,7 @@ function feastStamp(f,iso,cls){
     ink:FEST_INK,rot:tilt(f.id),cls:cls,label:'Festtagsstempel '+f.name+', '+dateLong(iso)});
 }
 function dateDayMonth(d){return d.getDate()+'. '+MONATE[d.getMonth()];}
-function titleFeastHTML(){
-  var d=today(),fs=feastsOn(d);
-  if(fs.length){
-    return fs.map(function(f){
-      var have=feastHave(f,d.getFullYear());
-      return '<div class="fest-banner"><svg class="fest-ico" viewBox="0 0 100 100" aria-hidden="true">'+(feastIcon(f)||'')+'</svg>'+
-        '<p class="fest-k">Heute im Kirchenjahr</p><h2>'+esc(f.name)+'</h2><p class="fest-t">'+esc(f.t)+'</p>'+
-        (have?'<p class="fest-done">Dein Festtagsstempel ist im Pilgerpass.</p>':'<button class="btn primary" data-feast="'+f.id+'">Festtagsstempel abholen</button>')+'</div>';
-    }).join('');
-  }
-  var se=season(d),nx=nextFeast(d);
-  return '<p class="kj-line"><i class="kj-dot" style="background:'+se.c+'" title="Liturgische Farbe: '+se.f+'"></i>'+esc(se.n)+
-    (nx?'<span>Nächstes Fest: '+esc(nx.f.kurz)+(nx.days===1?' morgen':' in '+nx.days+' Tagen')+'</span>':'')+'</p>';
-}
-function collectFeast(id){
+function collectFeast(id,after){
   var f=FESTE.filter(function(x){return x.id===id;})[0],d=today();if(!f||feastHave(f,d.getFullYear()))return;
   if(!S.feasts)S.feasts={};(S.feasts[id]=S.feasts[id]||[]).push(isoOf(d));save();
   var ov=document.createElement('div');ov.className='overlay';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-label','Festtagsstempel');
@@ -1454,10 +1438,66 @@ function collectFeast(id){
     '<button class="btn primary close">Weiter</button></div>';
   document.body.appendChild(ov);armBack();
   setTimeout(function(){thud();try{if(navigator.vibrate)navigator.vibrate(40);}catch(e){}},reduceMotion?0:900);
-  function close(){ov.remove();document.removeEventListener('keydown',onk);showTitle();}
+  function close(){ov.remove();document.removeEventListener('keydown',onk);refreshCalDots();if(after)after();}
   function onk(e){if(e.key==='Escape')close();}
   ov.addEventListener('click',function(e){if(e.target===ov||e.target.closest('.close'))close();});
   document.addEventListener('keydown',onk);
+}
+/* Kalendersymbol oben rechts; roter Punkt, wenn heute ein Festtagsstempel wartet */
+var CAL_SVG='<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="2"/><path d="M3.5 10 H20.5 M8 2.8 V7 M16 2.8 V7"/><circle cx="12" cy="15.2" r="1.7" fill="currentColor" stroke="none"/></svg>';
+function feastWaiting(){var d=today();return feastsOn(d).some(function(f){return !feastHave(f,d.getFullYear());});}
+function calButton(cls){
+  var w=feastWaiting();
+  return '<button class="cal-btn '+cls+'" data-cal aria-label="Kalender des Kirchenjahres'+(w?', heute wartet ein Festtagsstempel':'')+'">'+CAL_SVG+(w?'<i class="cal-dot"></i>':'')+'</button>';
+}
+function refreshCalDots(){if(!feastWaiting())document.querySelectorAll('.cal-dot').forEach(function(x){x.remove();});}
+var WOCHENTAGE=['Sonntag','Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag'];
+function openCalendar(){
+  var td=today(),sel=td;
+  if(!feastsOn(td).length){var nx=nextFeast(td);if(nx)sel=addDays(td,nx.days);}
+  var ym={y:sel.getFullYear(),m:sel.getMonth()};
+  var ov=document.createElement('div');ov.className='overlay';ov.setAttribute('role','dialog');ov.setAttribute('aria-modal','true');ov.setAttribute('aria-label','Kalender des Kirchenjahres');
+  document.body.appendChild(ov);armBack();
+  function same(a,b){return isoOf(a)===isoOf(b);}
+  function draw(){
+    var first=new Date(ym.y,ym.m,1),off=(first.getDay()+6)%7,days=new Date(ym.y,ym.m+1,0).getDate(),cells='';
+    for(var i=0;i<off;i++)cells+='<span class="cal-c empty"></span>';
+    for(var dd=1;dd<=days;dd++){
+      var d=new Date(ym.y,ym.m,dd),fs=feastsOn(d),se=season(d),got=fs.some(function(f){return feastHave(f,ym.y);});
+      cells+='<button class="cal-c'+(fs.length?' fest':'')+(got?' got':'')+(same(d,td)?' heute':'')+(same(d,sel)?' sel':'')+'" data-day="'+isoOf(d)+'"'+
+        ' aria-label="'+dd+'. '+MONATE[ym.m]+(fs.length?', '+esc(fs.map(function(f){return f.name;}).join(', ')):'')+'">'+
+        '<span class="cal-n">'+dd+'</span>'+(fs.length?'<i class="cal-f"></i>':'')+'<i class="cal-s" style="background:'+se.c+'"></i></button>';
+    }
+    var se=season(sel),fs=feastsOn(sel),info='';
+    var when=WOCHENTAGE[sel.getDay()]+', '+dateDayMonth(sel)+' '+sel.getFullYear();
+    if(fs.length)info=fs.map(function(f){
+      var have=feastHave(f,sel.getFullYear()),isToday=same(sel,td),act;
+      var got=((S.feasts&&S.feasts[f.id])||[]).filter(function(x){return x.slice(0,4)===String(sel.getFullYear());})[0];
+      if(have)act='<p class="cal-done">Gestempelt am '+dateLong(got)+'</p>';
+      else if(isToday)act='<button class="btn primary" data-get="'+f.id+'">Festtagsstempel abholen</button>';
+      else act='<p class="cal-hint">'+(sel<td?'Dieser Festtag ist schon vorbei. Im nächsten Jahr wartet er wieder.':'An diesem Tag wartet hier ein Festtagsstempel auf dich.')+'</p>';
+      return '<div class="cal-info"><svg class="fest-ico" viewBox="0 0 100 100" aria-hidden="true">'+(feastIcon(f)||'')+'</svg>'+
+        '<p class="fest-k">'+esc(when)+'</p><h3>'+esc(f.name)+'</h3><p class="fest-t">'+esc(f.t)+'</p>'+act+'</div>';
+    }).join('');
+    else info='<div class="cal-info"><p class="fest-k">'+esc(when)+'</p><p class="cal-hint">Kein Festtag. '+esc(se.n)+', liturgische Farbe '+se.f+'.</p></div>';
+    ov.innerHTML='<div class="sheet cal-sheet">'+INK_DEFS+
+      '<div class="cal-top"><button class="mc-nav" data-mon="-1" aria-label="Voriger Monat">‹</button><h2>'+MONATE[ym.m]+' '+ym.y+'</h2><button class="mc-nav" data-mon="1" aria-label="Nächster Monat">›</button></div>'+
+      '<p class="cal-season"><i class="kj-dot" style="background:'+season(td).c+'"></i>Heute: '+esc(season(td).n)+'</p>'+
+      '<div class="cal-grid"><span class="cal-h">Mo</span><span class="cal-h">Di</span><span class="cal-h">Mi</span><span class="cal-h">Do</span><span class="cal-h">Fr</span><span class="cal-h">Sa</span><span class="cal-h">So</span>'+cells+'</div>'+
+      '<p class="cal-legend"><span><i class="cal-f"></i>Festtag</span><span><i class="cal-lg-heute"></i>Heute</span><span><i class="cal-lg-s"></i>Liturgische Farbe</span></p>'+
+      info+'<button class="link close">Schließen</button></div>';
+  }
+  function close(){ov.remove();document.removeEventListener('keydown',onk);}
+  function onk(e){if(e.key==='Escape')close();}
+  ov.addEventListener('click',function(e){
+    if(e.target===ov||e.target.closest('.close')){close();return;}
+    var m=e.target.closest('[data-mon]'),dy=e.target.closest('[data-day]'),g=e.target.closest('[data-get]');
+    if(m){ym.m+=+m.dataset.mon;if(ym.m<0){ym.m=11;ym.y--;}if(ym.m>11){ym.m=0;ym.y++;}draw();}
+    else if(dy){var p=dy.dataset.day.split('-');sel=new Date(+p[0],+p[1]-1,+p[2]);draw();}
+    else if(g){ov.style.display='none';collectFeast(g.dataset.get,function(){ov.style.display='';draw();});}
+  });
+  document.addEventListener('keydown',onk);
+  draw();
 }
 function feastPage(){
   var y=today().getFullYear(),n=0;
@@ -1469,7 +1509,7 @@ function feastPage(){
     return '<div class="pass-field empty"><span class="pf-o fest-o">'+esc(f.kurz)+'</span><span class="pf-d">'+dateDayMonth(feastDate(f,y))+'</span></div>';
   }).join('');
   return '<section class="pass-page fest-page"><h2>Festtage im Kirchenjahr<small>'+n+' von '+FESTE.length+'</small></h2>'+
-    '<p class="fest-intro">An jedem dieser Tage wartet auf der Titelseite ein Festtagsstempel, einmal in jedem Jahr. Die Daten gelten für '+y+'.</p>'+
+    '<p class="fest-intro">An jedem dieser Tage wartet im Kalender oben rechts ein Festtagsstempel, einmal in jedem Jahr. Die Daten gelten für '+y+'.</p>'+
     '<div class="pass-grid">'+fields+'</div></section>';
 }
 function openFeast(f){
@@ -1708,6 +1748,7 @@ function showBackup(){
 
 /* ---------- Navigation ---------- */
 app.addEventListener('click',function(e){
+  if(e.target.closest('[data-cal]')){openCalendar();return;}
   var a=e.target.closest('[data-act]');
   if(a){var act=a.dataset.act;if(act==='map')showMap();else if(act==='title')showTitle();else if(act==='album')showAlbum();else if(act==='rules')showRules();else if(act==='cathedral')showCathedral();else if(act==='practice')showPractice();else if(act==='pass')showPass();return;}
   var cp=e.target.closest('[data-chap]');
