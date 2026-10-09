@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1B1F33">
+<title>Die Hochzeit zu Kana</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Alegreya:ital,wght@0,400;0,600;0,800;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#1B1F33; --night2:#262B45; --night3:#33385A;
+  --stone:#E9E2D0; --stone-dim:#A9A291;
+  --ink:#2B2335; --ink-dim:#6B6152;
+  --wine:#8E2448; --water:#6FA3A0; --lamp:#D9A441;
+}
+*{box-sizing:border-box}
+html{background:var(--night)}
+body{margin:0;min-height:100vh;color:var(--stone);
+  background:radial-gradient(ellipse 120% 60% at 50% -10%, #3A3456 0%, var(--night) 65%) no-repeat, var(--night);
+  font-family:Alegreya,Georgia,serif;font-size:18px;line-height:1.6}
+main{max-width:34rem;margin:0 auto;padding:1rem 1.1rem 4rem}
+h1{font-weight:800;font-size:2.5rem;line-height:1.02;margin:.9rem 0 .3rem;letter-spacing:-.01em}
+h2{font-weight:800;font-size:1.75rem;line-height:1.12;margin:0}
+.ref{color:var(--stone-dim);font-style:italic;margin:0 0 1rem}
+p{margin:.65rem 0}
+.story p:first-child::first-letter{font-weight:800;font-size:3.1em;float:left;line-height:.85;margin:.06em .1em 0 0;color:var(--lamp)}
+
+/* Szene auf dem Startbildschirm */
+.scene{display:block;width:100%;height:auto;border-radius:6px;margin-top:.4rem}
+.scene .glow{animation:flicker 4.5s ease-in-out infinite}
+.scene .glow:nth-of-type(2n){animation-delay:-1.7s}
+@keyframes flicker{0%,100%{opacity:1}45%{opacity:.78}60%{opacity:.95}}
+
+/* Krüge als Fortschritt */
+.jars{display:flex;gap:.4rem;margin:.3rem 0 .6rem}
+.jar{width:2.1rem;height:2.9rem;overflow:visible}
+.jar .body{fill:none;stroke:var(--stone-dim);stroke-width:2}
+.jar .liquid{fill:var(--water);transform-box:fill-box;transform-origin:50% 100%;transform:scaleY(0);transition:transform 1.5s cubic-bezier(.3,.7,.3,1), fill 2.2s ease}
+.jar.full .liquid{transform:scaleY(1)}
+.jars.wine .liquid{fill:var(--wine)}
+.jars.wine .jar{filter:drop-shadow(0 0 6px rgba(217,164,65,.55));transition:filter 2s ease}
+
+/* Kapitelkopf */
+.head{display:flex;gap:.8rem;align-items:center;margin:.6rem 0 .2rem}
+.icon{flex:none;width:3.1rem;height:3.1rem;stroke:var(--lamp);stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.chapno{color:var(--stone-dim);font-size:.95rem;margin:0}
+
+/* Tafel mit den Rollenhinweisen – heller Kalkstein, dunkle Tinte */
+.tablet{background:linear-gradient(170deg,#EFE9DA 0%,#E2D9C3 100%);color:var(--ink);border-radius:4px;
+  padding:1rem 1.1rem 1.1rem;margin:1.3rem 0;border-top:5px solid var(--lamp);box-shadow:0 8px 24px rgba(0,0,0,.35)}
+.tablet.b{border-top-color:var(--water)}
+.tablet .who{font-weight:600;font-style:italic;color:#8A6A1F;margin:0 0 .4rem}
+.tablet.b .who{color:#3F7A76}
+.tablet blockquote{border-left-color:var(--wine)}
+.tablet .codes{color:var(--wine)}
+.tablet .compass{color:var(--ink-dim)}
+.tablet .grid span{background:#D2C7AE;color:var(--ink)}
+blockquote{margin:.8rem 0;padding:.2rem 0 .2rem 1rem;border-left:3px solid var(--lamp);font-style:italic}
+blockquote.segen{font-style:normal;line-height:1.9}
+ul.plain{padding-left:1.1rem;margin:.5rem 0}
+ul.plain li{margin:.4rem 0}
+ol.vessels{padding-left:1.7rem;margin:.5rem 0}
+ol.vessels li{margin:.3rem 0}
+.codes{font-size:1.35rem;font-weight:600;letter-spacing:.04em}
+.compass{text-align:center;font-style:italic;font-size:.95rem}
+.compass::after{content:" ↑"}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;max-width:16rem;margin:.3rem auto .6rem}
+.grid span{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.3rem;border-radius:2px}
+
+/* Eingabe */
+.entry{display:flex;gap:.5rem;margin:1.2rem 0 .4rem}
+input,textarea{font:inherit;color:var(--stone);background:var(--night);border:2px solid var(--night3);border-radius:4px}
+input{flex:1;min-width:0;font-size:1.25rem;padding:.55rem .7rem;letter-spacing:.03em}
+input:focus,textarea:focus{outline:none;border-color:var(--lamp)}
+button{font:inherit;font-weight:600;border:0;border-radius:4px;padding:.6rem 1.1rem;cursor:pointer;background:var(--lamp);color:var(--night)}
+button.quiet{background:none;color:var(--stone-dim);padding:.4rem 0;text-decoration:underline;font-weight:400}
+button.quiet.armed{color:var(--lamp)}
+button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--water);outline-offset:2px}
+.msg{min-height:1.6rem;color:var(--lamp)}
+.shake{animation:shake .35s}
+@keyframes shake{20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+.hint{background:var(--night2);border-left:3px solid var(--stone-dim);padding:.55rem .85rem;margin:.6rem 0;border-radius:2px}
+details{margin-top:1.4rem;color:var(--stone-dim)}
+details summary{cursor:pointer}
+textarea{width:100%;min-height:5.5rem;padding:.6rem .7rem;margin-top:.5rem;resize:vertical;font-size:1rem;line-height:1.5}
+
+/* Start und Rollen */
+.rules{padding-left:1.2rem}
+.rules li{margin:.35rem 0}
+.roles{display:grid;gap:.7rem;margin:1.3rem 0}
+.roles button{text-align:left;padding:.95rem 1.1rem;font-size:1.1rem;line-height:1.35}
+.roles button.b{background:var(--water)}
+.roles small{display:block;font-weight:400;font-size:.92rem}
+.big{width:100%;padding:.85rem;font-size:1.1rem;margin-top:1.2rem}
+
+/* Zwischenszene */
+.interlude{border-top:1px solid var(--night3);margin-top:.8rem;padding-top:.4rem}
+.wait{color:var(--stone-dim);font-style:italic;font-size:.95rem}
+
+/* Ende */
+.final{font-size:1.22rem;line-height:1.7}
+.reveal{opacity:0;transition:opacity 1.6s ease 1.8s}
+.ready .reveal{opacity:1}
+.personal{margin-top:1.4rem;padding:1rem 1.1rem;border:2px solid var(--wine);border-radius:4px;white-space:pre-line;font-size:1.1rem}
+.talk{background:var(--night2);border-radius:4px;padding:1rem 1.1rem;margin-top:1.4rem}
+.talk h3{margin:0 0 .4rem;font-size:1.2rem}
+.talk ol{padding-left:1.3rem;margin:.4rem 0 0}
+.talk li{margin:.45rem 0}
+@media (prefers-reduced-motion:reduce){
+  .scene .glow{animation:none}
+  .jar .liquid,.jars.wine .jar,.reveal{transition:none}
+  .shake{animation:none}
+}
+</style>
+</head>
+<body>
+<main id="app"></main>
+<script>
+/* Eigene Nachricht für das Ende – erscheint nach dem letzten Rätsel auf beiden Handys.
+   Zeilenumbruch mit \n, z. B. "Danke für diesen Abend.\nIn Liebe, Philipp" */
+const PERSONAL_MESSAGE = "Liebe Karina,\n\nin Kana hat Jesus sein erstes Zeichen bei einer Hochzeit gewirkt – mitten in einem Fest, mitten unter Menschen, die sich lieben. Und es war Maria, die gesehen hat, was fehlt, und es ihrem Sohn anvertraut hat.\n\nDanke, dass wir zusammen auf dem Weg sind. Mit dir wird so vieles Gewöhnliche zu etwas Besonderem.\n\nIch bitte die Gottesmutter, dass sie auch über uns wacht und ihrem Sohn sagt, was uns fehlt – und dass wir den Mut haben zu tun, was er uns sagt.\n\nLass uns zum Schluss zusammen ein Gegrüßet seist du, Maria beten.\n\nDein Philipp";
+
+/* --- SHA-256 (kompakt, ohne externe Abhängigkeiten) --- */
+function sha256(ascii){
+  function rr(v,a){return (v>>>a)|(v<<(32-a))}
+  const bytes=new TextEncoder().encode(ascii);
+  const K=[],H=[];let p=2,n=0;
+  const isP=x=>{for(let i=2;i*i<=x;i++)if(x%i===0)return false;return true};
+  while(n<64){if(isP(p)){if(n<8)H[n]=(Math.pow(p,1/2)*4294967296)|0;K[n++]=(Math.pow(p,1/3)*4294967296)|0}p++}
+  const l=bytes.length,bl=l*8;
+  const withPad=new Uint8Array(((l+9+63)>>6)<<6);withPad.set(bytes);withPad[l]=0x80;
+  const dv=new DataView(withPad.buffer);dv.setUint32(withPad.length-4,bl>>>0);dv.setUint32(withPad.length-8,Math.floor(bl/4294967296));
+  const h=H.slice();
+  for(let o=0;o<withPad.length;o+=64){
+    const w=new Array(64);
+    for(let i=0;i<16;i++)w[i]=dv.getUint32(o+i*4);
+    for(let i=16;i<64;i++){const s0=rr(w[i-15],7)^rr(w[i-15],18)^(w[i-15]>>>3),s1=rr(w[i-2],17)^rr(w[i-2],19)^(w[i-2]>>>10);w[i]=(w[i-16]+s0+w[i-7]+s1)|0}
+    let [a,b,c,d,e,f,g,hh]=h;
+    for(let i=0;i<64;i++){
+      const S1=rr(e,6)^rr(e,11)^rr(e,25),ch=(e&f)^(~e&g),t1=(hh+S1+ch+K[i]+w[i])|0;
+      const S0=rr(a,2)^rr(a,13)^rr(a,22),mj=(a&b)^(a&c)^(b&c),t2=(S0+mj)|0;
+      hh=g;g=f;f=e;e=(d+t1)|0;d=c;c=b;b=a;a=(t1+t2)|0}
+    h[0]=(h[0]+a)|0;h[1]=(h[1]+b)|0;h[2]=(h[2]+c)|0;h[3]=(h[3]+d)|0;h[4]=(h[4]+e)|0;h[5]=(h[5]+f)|0;h[6]=(h[6]+g)|0;h[7]=(h[7]+hh)|0}
+  return h.map(x=>(x>>>0).toString(16).padStart(8,'0')).join('');
+}
+function norm(s){return s.toUpperCase().replace(/Ä/g,'AE').replace(/Ö/g,'OE').replace(/Ü/g,'UE').replace(/ß/g,'SS').replace(/[^A-Z0-9]/g,'')}
+
+const CH = JSON.parse(new TextDecoder().decode(Uint8Array.from(atob("W3sidGl0bGUiOiAiRGVyIEtlbGxlciIsICJyZWYiOiAiSm9oIDIsMeKAkzMiLCAibGFiZWwiOiAiS2VsbGVyc2NobG9zcyIsICJudW1lcmljIjogdHJ1ZSwgInN0b3J5IjogIjxwPkR1IGhlYnN0IGRlbiBncm/Dn2VuIEtydWcgYW4sIHVtIG5hY2h6dXNjaGVua2VuIOKAkyB1bmQgZXIgaXN0IGxlaWNodC4gVmllbCB6dSBsZWljaHQuIEVpbiBCbGljayBoaW5laW46IGVpbiBSZXN0LCBrYXVtIGdlbnVnIGbDvHIgZHJlaSBCZWNoZXIuPC9wPjxwPkVpbiBGZXN0IG9obmUgV2VpbiBpc3QgaW4gR2FsaWzDpGEgZWluZSBTY2hhbmRlLCDDvGJlciBkaWUgbWFuIGltIERvcmYgbm9jaCBpbiBKYWhyZW4gcmVkZW4gd2lyZC4gRGVyIEJyw6R1dGlnYW0gZGFyZiBlcyBuaWNodCBtZXJrZW4sIGRpZSBHw6RzdGUgc2Nob24gZ2FyIG5pY2h0LjwvcD48cD5WaWVsbGVpY2h0IGxpZWd0IGltIFZvcnJhdHNrZWxsZXIgbm9jaCBldHdhcy4gRG9jaCBkZXIgS2VsbGVybWVpc3RlciBoYXQgZGllIFTDvHIgbWl0IGVpbmVtIFphaGxlbnNjaGxvc3MgZ2VzaWNoZXJ0LCBiZXZvciBlciBzaWNoIHVudGVyIGRpZSBHw6RzdGUgZ2VtaXNjaHQgaGF0IOKAkyB1bmQgamV0enQgaXN0IGVyIG5pcmdlbmRzIHp1IGZpbmRlbi4gVmllciBaaWZmZXJuLiBJcmdlbmR3byBtdXNzIGVyIHNpY2ggZGllIEtvbWJpbmF0aW9uIG5vdGllcnQgaGFiZW4uPC9wPiIsICJhIjogIjxwPkF1ZiBkZW0gR2FiZW50aXNjaCBsaWVndCBkaWUgTGlzdGUgZGVyIEhvY2h6ZWl0c2dhYmVuLiBEZXIgV2VpbiBpc3QgbmFjaCBLcsO8Z2VuIGdlesOkaGx0OjwvcD48dWwgY2xhc3M9XCJwbGFpblwiPjxsaT5IYXVzIGRlcyBBc2FyamEsIGF1cyBNYWdkYWxhIOKAkyA1IEtyw7xnZTwvbGk+PGxpPkhhdXMgZGVzIE5hdGhhbmFlbCwgYXVzIEthbmEg4oCTIDYgS3LDvGdlPC9saT48bGk+SGF1cyBkZXMgSm9uYSwgYXVzIEJldHNhaWRhIOKAkyAyIEtyw7xnZTwvbGk+PGxpPkhhdXMgZGVzIEVsaSwgYXVzIE5hemFyZXQg4oCTIDggS3LDvGdlPC9saT48bGk+SGF1cyBkZXMgWmViZWTDpHVzLCBhdXMgS2FmYXJuYXVtIOKAkyAzIEtyw7xnZTwvbGk+PC91bD4iLCAiYiI6ICI8cD5BbiBkZXIgS2VsbGVydMO8ciBzdGVja3QgZWluIFpldHRlbCBpbiBkZXIgSGFuZHNjaHJpZnQgZGVzIEtlbGxlcm1laXN0ZXJzOjwvcD48YmxvY2txdW90ZT5EYXMgU2NobG9zcyB0csOkZ3QgZGllIEdhYmVuIGRlciBHw6RzdGUsIGRpZSB2b24gd2VpdGhlciBrYW1lbiDigJMgaW4gZGVyIFJlaWhlbmZvbGdlLCBpbiBkZXIgbWVpbiBCb3RlIHNpZSBlaW5nZWxhZGVuIGhhdC4gRGllIExldXRlIGF1cyBLYW5hIHrDpGhsZW4gbmljaHQsIGRpZSB3b2huZW4gamEgaGllci48YnI+PGJyPk1laW4gQm90ZSBnaW5nIHp1ZXJzdCBpbiBkaWUgU3RhZHQsIGluIGRlciBkZXIgU29obiBkZXMgWmltbWVybWFubnMgYXVmd3VjaHMuIFZvbiBkb3J0IHN0aWVnIGVyIGhpbmFiIGFuIGRlbiBTZWUsIGluIGRpZSBTdGFkdCwgZGVyZW4gTmFtZSDigJ5UdXJt4oCcIGJlZGV1dGV0LiBEYW5uIGdpbmcgZXIgYW0gVWZlciB3ZWl0ZXIgaW4gZGllIFN0YWR0LCBpbiBkZXIgZGFzIFpvbGxoYXVzIHN0ZWh0IHVuZCB3byBlaW4gcsO2bWlzY2hlciBIYXVwdG1hbm4gZGllIFN5bmFnb2dlIGdlYmF1dCBoYXQuIFp1bGV0enQga2FtIGVyIGluIGRpZSBIZWltYXQgdm9uIEFuZHJlYXMgdW5kIFBldHJ1cy48L2Jsb2NrcXVvdGU+IiwgImhpbnRzIjogWyJJaHIgYnJhdWNodCBiZWlkZSBUZXh0ZTogRWluZXIgdm9uIGV1Y2gga2VubnQgU3TDpGR0ZSB1bmQgWmFobGVuLCBkZXIgYW5kZXJlIGRpZSBSZWloZW5mb2xnZS4gRGllIE9ydHNiZXNjaHJlaWJ1bmdlbiBzcGllbGVuIGF1ZiBCaWJlbHN0ZWxsZW4gYW4uIiwgIkplc3VzIHd1Y2hzIGluIE5hemFyZXQgYXVmLiDigJ5NYWdkYWxh4oCcIGtvbW10IHZvbSBoZWJyw6Rpc2NoZW4g4oCeTWlnZGFs4oCcLCBUdXJtLiBEZXIgSGF1cHRtYW5uIG1pdCBkZXIgU3luYWdvZ2UgKExrIDcsNSkgdW5kIGRhcyBab2xsaGF1cyBnZWjDtnJlbiBuYWNoIEthZmFybmF1bS4gQW5kcmVhcyB1bmQgUGV0cnVzIHN0YW1tdGVuIGF1cyBCZXRzYWlkYSAoSm9oIDEsNDQpLiIsICJSZWloZW5mb2xnZTogTmF6YXJldCDigJMgTWFnZGFsYSDigJMgS2FmYXJuYXVtIOKAkyBCZXRzYWlkYS4gTGVzdCBkaWUgS3LDvGdlIGluIGRpZXNlciBSZWloZW5mb2xnZSBhYi4iXSwgInNvbHZlZCI6ICI8cD5EYXMgU2NobG9zcyBzcHJpbmd0IG1pdCBlaW5lbSBLbGFja2VuIGF1Zi4gSWhyIHN0ZWlndCBkaWUgU3R1ZmVuIGhpbmFiLCBkaWUgw5ZsbGFtcGUgdm9yIGV1Y2guIExlZXJlIEFtcGhvcmVuLCBTdGF1YiwgZWluZSB1bWdlc3TDvHJ6dGUgS2FubmUuIEtlaW4gVHJvcGZlbiBtZWhyLjwvcD48cD5BbHMgaWhyIHdpZWRlciBoaW5hdWZrb21tdCwgc3RlaHQgTWFyaWEsIGRpZSBNdXR0ZXIgZGVzIFJhYmJpcyBhdXMgTmF6YXJldCwgYW4gZGVyIFTDvHIgenVtIFNhYWwuIFNpZSBoYXQgZXVyZSBHZXNpY2h0ZXIgZ2VzZWhlbiB1bmQgdmVyc3RhbmRlbi4gTGVpc2UgZ2VodCBzaWUgenUgaWhyZW0gU29obiB1bmQgc2FndDog4oCeU2llIGhhYmVuIGtlaW5lbiBXZWluIG1laHIu4oCcPC9wPiIsICJoYXNoIjogIjQ0MjQ3NDhiNTJkN2UzOGIxYzkyMzliNzNkMDk2ODM1YzNhZWNlYjhhY2M0NjYxOTc4ZjQzMjBhZTg3OTg5NzEiLCAiaWNvbiI6ICJrZXkifSwgeyJ0aXRsZSI6ICJXYXMgZXIgZXVjaCBzYWd0IiwgInJlZiI6ICJKb2ggMiw04oCTNSIsICJsYWJlbCI6ICJXYWNoc3RhZmVsIiwgIm51bWVyaWMiOiBmYWxzZSwgInN0b3J5IjogIjxwPkplc3VzIGFudHdvcnRldCBpaHIgZXR3YXMsIGRhcyBpaHIgbmljaHQgdmVyc3RlaHQg4oCTIGV0d2FzIHZvbiBlaW5lciBTdHVuZGUsIGRpZSBub2NoIG5pY2h0IGdla29tbWVuIHNlaS4gRG9jaCBNYXJpYSBsw6Rzc3Qgc2ljaCBuaWNodCBiZWlycmVuLiBTaWUgd2VuZGV0IHNpY2ggenUgZXVjaCB1bmQgc2FndCBtaXQgZmVzdGVyIFN0aW1tZTog4oCeV2FzIGVyIGV1Y2ggc2FndCwgZGFzIHR1dC7igJw8L3A+PHA+RGFubiBzcHJpY2h0IEplc3VzIGV1Y2ggYW4uIEdlbmF1IGluIGRpZXNlbSBBdWdlbmJsaWNrIHNldHplbiBUcm9tbWVsbiB1bmQgRmzDtnRlbiBlaW4sIGRpZSBHw6RzdGUga2xhdHNjaGVuLCBqZW1hbmQgcnVmdCBuYWNoIGRlbSBCcmF1dHBhYXIg4oCTIHVuZCBzZWluZSBXb3J0ZSBnZWhlbiBpbSBMw6RybSB1bnRlci48L3A+PHA+TWFyaWEgaGF0IGFsbGVzIGdlaMO2cnQuIFNpZSBkcsO8Y2t0IGV1Y2ggZWluZSBrbGVpbmUgV2FjaHN0YWZlbCBpbiBkaWUgSGFuZC4g4oCeU28gc2NocmVpYnQgbWFuIGluIGRpZXNlbSBIYXVzLCB3ZW5uIGVzIG5pY2h0IGplZGVyIGxlc2VuIHNvbGzigJwsIHNhZ3Qgc2llIGzDpGNoZWxuZCB1bmQgZGV1dGV0IHp1ciBUw7xyLjwvcD4iLCAiYSI6ICI8cD5BdWYgZGVyIFdhY2hzdGFmZWwgc3RlaGVuIG51ciBaYWhsZW4sIHNvcmdmw6RsdGlnIGluIERyZWllcmdydXBwZW4gZ2VyaXR6dDo8L3A+PHAgY2xhc3M9XCJjb2Rlc1wiPjPCtzXCtzQgJm5ic3A7IDXCtzbCtzMgJm5ic3A7IDLCtzEwwrcyICZuYnNwOyAxwrc3wrc0ICZuYnNwOyAxwrc4wrc2PC9wPjxwPkRhcnVudGVyIGVpbiBXb3J0LCBkYXMgSmVzdXMgZ2VzYWd0IGhhdDogS3LDvGdlLjwvcD4iLCAiYiI6ICI8cD7DnGJlciBkZXIgSGF1c3TDvHIgaMOkbmd0IGRlciBTZWdlbiwgbWl0IGRlbSBkZXIgQnLDpHV0aWdhbSBzZWluZSBHw6RzdGUgZW1wZmFuZ2VuIGhhdC4gRXIgc3RlaHQgaW4gZsO8bmYgWmVpbGVuIGF1ZiBlaW5lbSBIb2x6YnJldHQ6PC9wPjxibG9ja3F1b3RlIGNsYXNzPVwic2VnZW5cIj5HZXNlZ25ldCBzZWkgZGVyIFRhZywgYW4gZGVtIHp3ZWkgSGVyemVuIGVpbnMgd2VyZGVuLjxicj5HZXNlZ25ldCBzZWkgZGFzIEJyb3QsIGRhcyB3aXIgdGVpbGVuLCB1bmQgZGVyIEJlY2hlciwgZGVuIHdpciBoZWJlbi48YnI+RGVyIEhlcnIgd29obmUgaW4gZGllc2VtIEhhdXMsIHdpZSBkYXMgTGljaHQgaW4gZGVyIExhbXBlLjxicj5FciBzY2hlbmtlIEZyZXVkZSwgd28gTWFuZ2VsIGlzdCwgdW5kIEbDvGxsZSwgd28gZGllIEtyw7xnZSBsZWVyIHNpbmQuPGJyPldhcyBlciBldWNoIHNhZ3QsIGRhcyB0dXQuPC9ibG9ja3F1b3RlPiIsICJoaW50cyI6IFsiRGllIFphaGxlbiBhdWYgZGVyIFdhY2hzdGFmZWwgZ2Vow7ZyZW4genVtIFNlZ2VuIMO8YmVyIGRlciBUw7xyLiBKZWRlIERyZWllcmdydXBwZSB6ZWlndCBhdWYgZ2VuYXUgZWluZW4gQnVjaHN0YWJlbi4iLCAiWmVpbGUg4oCTIFdvcnQg4oCTIEJ1Y2hzdGFiZS4gRGllIGVyc3RlIEdydXBwZSAzwrc1wrc0IGJlZGV1dGV0OiBkcml0dGUgWmVpbGUsIGbDvG5mdGVzIFdvcnQsIHZpZXJ0ZXIgQnVjaHN0YWJlLiIsICJEaWUgZXJzdGVuIGJlaWRlbiBCdWNoc3RhYmVuIHNpbmQgUyB1bmQgVC4gRGFzIFdvcnQgc2FndCBldWNoLCB3b3JhdXMgZGllIEtyw7xnZSBzZWluIG3DvHNzZW4uIl0sICJzb2x2ZWQiOiAiPHA+SmV0enQgdmVyc3RlaHQgaWhyLCB3YXMgZXIgZ2VzYWd0IGhhdDogRsO8bGx0IGRpZSBLcsO8Z2UgYXVzIFN0ZWluIG1pdCBXYXNzZXIuPC9wPjxwPldhc3Nlcj8gRGllIEfDpHN0ZSB3b2xsZW4gV2Vpbi4gSWhyIHNlaHQgZXVjaCBhbi4gQWJlciBNYXJpYSBuaWNrdCBldWNoIHp1LCB1bmQgaXJnZW5kZXR3YXMgYW4gZGVyIFJ1aGUgZGllc2VzIE1hbm5lcyBsw6Rzc3QgZXVjaCBuaWNodCB3aWRlcnNwcmVjaGVuLjwvcD48cD5OdXIg4oCTIGltIEhvZiBzdGVoZW4gR2Vmw6TDn2UgYWxsZXIgQXJ0LiBXZWxjaGUgaGF0IGVyIGdlbWVpbnQ/PC9wPiIsICJoYXNoIjogIjFhYTE4OTllZmRjYjAwMWY4M2FmZDA4NGU2NDEzZjljMzMzZmMwZGM3NTQ1MGZmOGE3YTI3ZDkxOWQ1OGFlY2YiLCAiaWNvbiI6ICJ0YWJsZXQifSwgeyJ0aXRsZSI6ICJTZWNocyBzdGVpbmVybmUgS3LDvGdlIiwgInJlZiI6ICJKb2ggMiw2IiwgImxhYmVsIjogIktyw7xnZSIsICJudW1lcmljIjogZmFsc2UsICJzdG9yeSI6ICI8cD5EZXIgSG9mIGxpZWd0IGltIE1vbmRsaWNodC4gQW4gZGVyIE1hdWVyIHN0ZWhlbiBlbGYgR2Vmw6TDn2UgaW4gZWluZXIgUmVpaGUsIGplZGVzIG1pdCBlaW5lbSBlaW5nZXJpdHp0ZW4gWmVpY2hlbiwgZGFtaXQgbmllbWFuZCBzaWUgdmVyd2VjaHNlbHQ6IFZvcnJhdHNrcsO8Z2UsIEtlc3NlbCwgV2Fzc2VyYmVow6RsdGVyIGbDvHIgZGllIEvDvGNoZS48L3A+PHA+RG9jaCBlaW4gcGFhciB2b24gaWhuZW4gc2luZCBldHdhcyBCZXNvbmRlcmVzLiBTaWUgc3RlaGVuIGbDvHIgZGllIFJlaW5pZ3VuZyBuYWNoIGrDvGRpc2NoZXIgU2l0dGUgYmVyZWl0IOKAkyBmw7xyIGRhcyBXYXNjaGVuIGRlciBIw6RuZGUgdW5kIGRlciBCZWNoZXIgdm9yIGRlbSBNYWhsLjwvcD4iLCAiYSI6ICI8cD5JaHIgZ2VodCBkaWUgUmVpaGUgYWIsIHZvbiBsaW5rcyBuYWNoIHJlY2h0czo8L3A+PG9sIGNsYXNzPVwidmVzc2Vsc1wiPjxsaT5Sw7Z0bGljaCBnZWJyYW5udGVyLCBnbGFzaWVydGVyIEtydWcsIGV0d2EgODAgTGl0ZXIg4oCTIFplaWNoZW4gUzwvbGk+PGxpPkdyYXVlciBLcnVnLCBhdXMgZWluZW0gQmxvY2sgZ2VtZWnDn2VsdCwgZXR3YSA4MCBMaXRlciDigJMgWmVpY2hlbiBEPC9saT48bGk+R3JhdWVyLCBnZW1lacOfZWx0ZXIgS3J1ZywgZXR3YSAxMTUgTGl0ZXIg4oCTIFplaWNoZW4gSTwvbGk+PGxpPkdyYXVlciwgZ2VtZWnDn2VsdGVyIEtydWcsIHJpZXNpZywgZXR3YSAxNTUgTGl0ZXIg4oCTIFplaWNoZW4gQTwvbGk+PGxpPkdyw7xubGljaCBhbmdlbGF1ZmVuZXIgS2Vzc2VsLCBldHdhIDExNSBMaXRlciDigJMgWmVpY2hlbiBMPC9saT48bGk+R2VtZWnDn2VsdGVyIEtydWcgYXVzIGhlbGxlbSBLYWxrc3RlaW4sIGV0d2EgODAgTGl0ZXIg4oCTIFplaWNoZW4gRTwvbGk+PGxpPkdlbWVpw59lbHRlciBLcnVnIGF1cyBoZWxsZW0gS2Fsa3N0ZWluLCBldHdhIDEyMCBMaXRlciDigJMgWmVpY2hlbiBOPC9saT48bGk+S2xlaW5lciBnZW1lacOfZWx0ZXIgQmVjaGVyLCBldHdhIDIwIExpdGVyIOKAkyBaZWljaGVuIE88L2xpPjxsaT5HcmF1ZXIsIGdlbWVpw59lbHRlciBLcnVnLCBldHdhIDc1IExpdGVyIOKAkyBaZWljaGVuIEU8L2xpPjxsaT5Sw7Z0bGljaCBnZWJyYW5udGVyIEtydWcsIGV0d2EgMTE1IExpdGVyIOKAkyBaZWljaGVuIFQ8L2xpPjxsaT5HZW1lacOfZWx0ZXIgS3J1ZyBhdXMgaGVsbGVtIEthbGtzdGVpbiwgZXR3YSAxMTAgTGl0ZXIg4oCTIFplaWNoZW4gUjwvbGk+PC9vbD4iLCAiYiI6ICI8cD5EZXIgYWx0ZSBIYXVzdmVyd2FsdGVyIGVya2zDpHJ0IGV1Y2gsIHdhcyBlciDDvGJlciBkaWUgUmVpbmlndW5nc2tyw7xnZSB3ZWnDnzo8L3A+PHVsIGNsYXNzPVwicGxhaW5cIj48bGk+4oCeRWluIEdlZsOkw58gYXVzIFRvbiwgZGFzIHVucmVpbiBnZXdvcmRlbiBpc3QsIG11c3MgbWFuIHplcmJyZWNoZW4uIERhcnVtIGtvbW10IGRhcyBSZWluaWd1bmdzd2Fzc2VyIG5pZSBpbiBHZWJyYW5udGVzLuKAnDwvbGk+PGxpPuKAnkF1Y2ggTWV0YWxsIG5laG1lbiB3aXIgbmljaHQuIE51ciB3YXMgYXVzIGRlbSBGZWxzIGdlaGF1ZW4gaXN0LCBrYW5uIG5pY2h0IHVucmVpbiB3ZXJkZW4u4oCcPC9saT48bGk+4oCeSmVkZXIgUmVpbmlndW5nc2tydWcgZmFzc3QgendlaSBvZGVyIGRyZWkgTWHDnyDigJMgbmljaHQgd2VuaWdlciB1bmQgbmljaHQgbWVoci7igJw8L2xpPjxsaT7igJ5FaW4gTWHDnywgZWluIE1ldHJldGVzLCBzaW5kIHVuZ2Vmw6RociB2aWVyemlnIExpdGVyLuKAnDwvbGk+PGxpPuKAnkVzIHNpbmQgZ2VuYXUgc2VjaHMuIExlc3QgaWhyZSBaZWljaGVuIGluIGRlciBSZWloZSwgaW4gZGVyIHNpZSBzdGVoZW4u4oCcPC9saT48L3VsPiIsICJoaW50cyI6IFsiTnVyIEdlZsOkw59lIGF1cyBTdGVpbiB6w6RobGVuLCB1bmQgbnVyIHNvbGNoZSwgZGllIHp3ZWkgb2RlciBkcmVpIE1hw58gZmFzc2VuLiIsICJSw7Z0bGljaCBnZWJyYW5udCBoZWnDn3QgVG9uLCBncsO8bmxpY2ggYW5nZWxhdWZlbiBoZWnDn3QgQnJvbnplLiBad2VpIGJpcyBkcmVpIE1hw58gc2luZCB1bmdlZsOkaHIgODAgYmlzIDEyMCBMaXRlci4iLCAiRXMgc2luZCBkaWUgR2Vmw6TDn2UgMiwgMywgNiwgNywgOSB1bmQgMTEuIExlc3QgaWhyZSBaZWljaGVuIHZvbiBsaW5rcyBuYWNoIHJlY2h0cy4iXSwgInNvbHZlZCI6ICI8cD5TZWNocyBLcsO8Z2UsIHNlY2hzIFplaWNoZW4g4oCTIHVuZCB6dXNhbW1lbiBuZW5uZW4gc2llIGdlbmF1IGRpZSwgZGllIGpldHp0IGdlZnJhZ3Qgc2luZC4gS2VpbiBTcGVpc2VtZWlzdGVyLCBrZWluIEJyw6R1dGlnYW0sIGtlaW4gdm9ybmVobWVyIEdhc3QuIEloci48L3A+PHA+RGllIEtyw7xnZSBzaW5kIGZhc3QgbGVlciwgZGFzIFdhc3NlciBpc3QgbmFjaCBkcmVpIFRhZ2VuIEZlc3QgbMOkbmdzdCB2ZXJicmF1Y2h0LiBFcyB3aXJkIGVpbiBsYW5nZXIgV2VnIHp1bSBCcnVubmVuLjwvcD4iLCAiaGFzaCI6ICI2ZjgzZTcyNzg3MzlhZTdiYjVmN2RkMzc5Y2IxOWE4MjEyY2U4NGYwMDllYjMwZDg0ZDIyOGEyOGI2NzJmMjNiIiwgImljb24iOiAiamFyIn0sIHsidGl0bGUiOiAiQmlzIGFuIGRlbiBSYW5kIiwgInJlZiI6ICJKb2ggMiw3IiwgImxhYmVsIjogIktlcmJob2x6IiwgIm51bWVyaWMiOiB0cnVlLCAic3RvcnkiOiAiPHA+QWxsZWluIHNjaGFmZnQgaWhyIGRhcyBuaWNodC4gSWhyIGhvbHQgdmllciB3ZWl0ZXJlIERpZW5lciBkYXp1OiBSdWJlbiwgVG9iaWFzLCBFenJhIHVuZCBNaWNoYS4gQWNodHplaG4gR8OkbmdlIHp1bSBEb3JmYnJ1bm5lbiBicmF1Y2h0IGVzLCBiaXMgYWxsZSBzZWNocyBLcsO8Z2UgYmlzIGFuIGRlbiBSYW5kIGdlZsO8bGx0IHNpbmQg4oCTIGRpZSBHYXNzZW4gaGludW50ZXIsIG1pdCB2b2xsZW4gR2Vmw6TDn2VuIHdpZWRlciBoaW5hdWYuPC9wPjxwPkplZGVyIGRlciB2aWVyIGhhdCBlaW4gYW5kZXJlcyBHZWbDpMOfIGdldHJhZ2VuIOKAkyBlaW5lbiBMZWRlcmVpbWVyLCBlaW5lbiBUb25rcnVnLCBlaW5lbiBIb2x6ZWltZXIgb2RlciBlaW5lIEt1cGZlcmthbm5lIOKAkyB1bmQgamVkZXIgaXN0IHVudGVyc2NoaWVkbGljaCBvZnQgZ2VnYW5nZW46IGRyZWksIHZpZXIsIGbDvG5mIG9kZXIgc2VjaHMgTWFsLjwvcD48cD5EZXIgSGF1c3ZlcndhbHRlciB3aWxsIGRhcyBLZXJiaG9seiBmw7xocmVuLCBkYW1pdCBqZWRlciBzZWluZW4gTG9obiBiZWtvbW10LiBFciBicmF1Y2h0IGRpZSBaYWhsIGRlciBHw6RuZ2UgaW4gZGllc2VyIFJlaWhlbmZvbGdlOiBSdWJlbiwgVG9iaWFzLCBFenJhLCBNaWNoYS4gRGllIHZpZXIgc2luZCBsw6RuZ3N0IHdpZWRlciBiZWltIEFicsOkdW1lbiDigJMgaWhyIG3DvHNzdCBlcyBhdXMgZGVtIHp1c2FtbWVuc2V0emVuLCB3YXMgaWhyIHVudGVyd2VncyBnZWjDtnJ0IGhhYnQuPC9wPiIsICJhIjogIjxwPkRhcyBoYWJ0IGlociB1bnRlcndlZ3MgYXVmZ2VzY2huYXBwdDo8L3A+PHVsIGNsYXNzPVwicGxhaW5cIj48bGk+V2VyIGRlbiBUb25rcnVnIHRydWcsIGdpbmcgw7ZmdGVyIGFscyBSdWJlbi48L2xpPjxsaT5FenJhIGdpbmcgc2VsdGVuZXIgYWxzIGFsbGUgYW5kZXJlbi48L2xpPjxsaT5EZXIgTGVkZXJlaW1lciB3YXIgd2VkZXIgYmVpIE1pY2hhIG5vY2ggYmVpIEV6cmEuPC9saT48L3VsPiIsICJiIjogIjxwPkRhcyBoYWJ0IGlociB1bnRlcndlZ3MgYXVmZ2VzY2huYXBwdDo8L3A+PHVsIGNsYXNzPVwicGxhaW5cIj48bGk+VG9iaWFzIGdpbmcgZ2VuYXUgZWlubWFsIMO2ZnRlciBhbHMgTWljaGEuPC9saT48bGk+V2VyIGRpZSBLdXBmZXJrYW5uZSB0cnVnLCBnaW5nIGdlbmF1IGVpbm1hbCDDtmZ0ZXIgYWxzIEV6cmEuPC9saT48bGk+RXpyYSB0cnVnIHdlZGVyIGVpbmVuIFRvbmtydWcgbm9jaCBlaW5lIEthbm5lLjwvbGk+PC91bD4iLCAiaGludHMiOiBbIkxlZ3QgZXVjaCBlaW5lIGtsZWluZSBUYWJlbGxlIGFuOiBEaWVuZXIsIEdlZsOkw58sIEfDpG5nZS4gSWhyIGJyYXVjaHQgYWxsZSBzZWNocyBBdXNzYWdlbi4iLCAiRXpyYSBnaW5nIGRyZWkgTWFsIHVuZCB0cnVnIGRlbiBIb2x6ZWltZXIuIFdlciBkaWUgS3VwZmVya2FubmUgdHJ1ZywgZ2luZyBhbHNvIHZpZXIgTWFsLiIsICJSdWJlbiB0cnVnIGRpZSBLdXBmZXJrYW5uZS4gRGVuIFJlc3QgYmVrb21tdCBpaHIgamV0enQgaGVyYXVzLiJdLCAic29sdmVkIjogIjxwPkRhcyBLZXJiaG9seiBzdGltbXQsIGRpZSBLcsO8Z2Ugc2luZCByYW5kdm9sbC4gRGFzIFdhc3NlciBzdGVodCBiaXMgYW4gZGVuIFJhbmQsIHN0aWxsIHVuZCBrbGFyIGltIExhbXBlbmxpY2h0LjwvcD48cD5KZXN1cyBrb21tdCBpbiBkZW4gSG9mIHVuZCBzaWVodCBkaWUgS3LDvGdlIGFuLiBFciBzYWd0IG51cjog4oCeU2Now7ZwZnQgbnVuIHVuZCBicmluZ3QgZXMgZGVtIFNwZWlzZW1laXN0ZXIu4oCcPC9wPjxwPk1pdCB6aXR0ZXJuZGVuIEjDpG5kZW4gdGF1Y2h0IGlociBkaWUgS2VsbGUgZWluLiBXYXMgaWhyIGhlcmF1c3ppZWh0LCBpc3QgZHVua2VsIHVuZCBkdWZ0ZXQuIElociBicmluZ3QgZGVuIEJlY2hlciBoaW5laW4uIERlciBTcGVpc2VtZWlzdGVyIGtvc3RldCwgaMOkbHQgaW5uZSwga29zdGV0IG5vY2ggZWlubWFsIOKAkyB1bmQgZWlsdCBkYW5uIG9obmUgZWluIFdvcnQgZGF2b24sIHF1ZXIgZHVyY2ggZGVuIFNhYWwuPC9wPiIsICJoYXNoIjogImE1NWJkY2UxY2I3YzJiZTM5M2UwMzUxNGIwZmIzY2RhOTEzODY3MzBlMTMzYjNmZTM5ZjE1NmY1YWFiNTUzOTMiLCAiaWNvbiI6ICJ3ZWxsIn0sIHsidGl0bGUiOiAiQnJpbmd0IGVzIGRlbSBTcGVpc2VtZWlzdGVyIiwgInJlZiI6ICJKb2ggMiw44oCTOSIsICJsYWJlbCI6ICJTcHVyZW4iLCAibnVtZXJpYyI6IGZhbHNlLCAic3RvcnkiOiAiPHA+U28gc2NobmVsbCBoYXQgaWhuIG5vY2ggbmllbWFuZCBsYXVmZW4gc2VoZW4uIEluIGRlciBFaWxlIGhhdCBkZXIgU3BlaXNlbWVpc3RlciBXZWluIGF1cyBkZW0gQmVjaGVyIHZlcnNjaMO8dHRldCwgdW5kIHNlaW5lIFRyb3BmZW4gemllaGVuIGVpbmUgZHVua2xlIFNwdXIgw7xiZXIgZGllIGhlbGxlbiBGbGllc2VuIGRlcyBTYWFscy48L3A+PHA+SW0gR2V3w7xobCBkZXIgVGFuemVuZGVuIGhhYnQgaWhyIGlobiBhdXMgZGVuIEF1Z2VuIHZlcmxvcmVuLiBadSB3ZW0gaXN0IGVyIGdlbGF1ZmVuPzwvcD4iLCAiYSI6ICI8cD5JaHIgc2VodCB2b24gZGVyIEdhbGVyaWUgYXVmIGRlbiBCb2RlbiBkZXMgU2FhbHMuIEF1ZiBqZWRlciBGbGllc2UgaXN0IGVpbiBCdWNoc3RhYmUgZWluZ2VsZWd0OjwvcD48ZGl2IGNsYXNzPVwiY29tcGFzc1wiPk5vcmRlbjwvZGl2PjxkaXYgY2xhc3M9XCJncmlkXCI+PHNwYW4+Qjwvc3Bhbj48c3Bhbj5SPC9zcGFuPjxzcGFuPks8L3NwYW4+PHNwYW4+TDwvc3Bhbj48c3Bhbj5TPC9zcGFuPjxzcGFuPk88L3NwYW4+PHNwYW4+QTwvc3Bhbj48c3Bhbj5UPC9zcGFuPjxzcGFuPkk8L3NwYW4+PHNwYW4+Tjwvc3Bhbj48c3Bhbj5IPC9zcGFuPjxzcGFuPkU8L3NwYW4+PHNwYW4+VTwvc3Bhbj48c3Bhbj5HPC9zcGFuPjxzcGFuPlc8L3NwYW4+PHNwYW4+RDwvc3Bhbj48c3Bhbj5OPC9zcGFuPjxzcGFuPk08L3NwYW4+PHNwYW4+QTwvc3Bhbj48c3Bhbj5GPC9zcGFuPjxzcGFuPlM8L3NwYW4+PHNwYW4+TDwvc3Bhbj48c3Bhbj5FPC9zcGFuPjxzcGFuPko8L3NwYW4+PHNwYW4+Qzwvc3Bhbj48L2Rpdj4iLCAiYiI6ICI8cD5FaW4gR2FzdCBoYXQgZ2VuYXUgZ2VzZWhlbiwgd2llIGRlciBTcGVpc2VtZWlzdGVyIGdlbGF1ZmVuIGlzdDo8L3A+PGJsb2NrcXVvdGU+RXIga2FtIGhlcmVpbiBpbiBkZXIgRWNrZSB6d2lzY2hlbiBkZW0gSGVybW9uIHVuZCBkZW0gZ3Jvw59lbiBNZWVyLiBFaW4gU2Nocml0dCB6dW0gU2VlIGhpbi4gWndlaSBTY2hyaXR0ZSBpbiBSaWNodHVuZyBKZXJ1c2FsZW0uIEVpbiBTY2hyaXR0IHp1bSBTZWUgaGluLiBFaW4gU2Nocml0dCB6dW0gSGVybW9uIGhpbi4gRWluIFNjaHJpdHQgenVtIFNlZSBoaW4uIFp3ZWkgU2Nocml0dGUgaW4gUmljaHR1bmcgSmVydXNhbGVtLiBFaW4gU2Nocml0dCB6dW0gZ3Jvw59lbiBNZWVyIGhpbi48YnI+PGJyPkF1ZiBqZWRlciBGbGllc2UsIGRpZSBlciBiZXRyYXQsIGF1Y2ggYXVmIGRlciBlcnN0ZW4sIGxpZcOfIGVyIGVpbmVuIFRyb3BmZW4uPC9ibG9ja3F1b3RlPiIsICJoaW50cyI6IFsiRGllIEJlc2NocmVpYnVuZyBuZW5udCBIaW1tZWxzcmljaHR1bmdlbiDigJMgbnVyIGluIGRlciBTcHJhY2hlIGRlciBMYW5kc2NoYWZ0IHJ1bmQgdW0gS2FuYS4iLCAiRGVyIFNlZSBHZW5lemFyZXRoIGxpZWd0IMO2c3RsaWNoIHZvbiBLYW5hLCBkYXMgTWl0dGVsbWVlciB3ZXN0bGljaCwgSmVydXNhbGVtIGltIFPDvGRlbiwgZGVyIEJlcmcgSGVybW9uIGltIE5vcmRlbi4iLCAiU3RhcnRldCBpbiBkZXIgTm9yZHdlc3QtRWNrZSB1bmQgbGVzdCBqZWRlIGJldHJldGVuZSBGbGllc2UuIMOEIHdpcmQgYWxzIEFFIGdlc2NocmllYmVuLiJdLCAic29sdmVkIjogIjxwPkRlciBTcGVpc2VtZWlzdGVyIHJ1ZnQgZGVuIEJyw6R1dGlnYW0gYmVpc2VpdGUgdW5kIHNhZ3Qgc28gbGF1dCwgZGFzcyBlcyBkaWUgaGFsYmUgVGFmZWwgaMO2cnQ6IOKAnkplZGVyIHNldHp0IHp1ZXJzdCBkZW4gZ3V0ZW4gV2VpbiB2b3IsIHVuZCB3ZW5uIGRpZSBHw6RzdGUgYmV0cnVua2VuIHNpbmQsIGRlbiBzY2hsZWNodGVyZW4uIER1IGFiZXIgaGFzdCBkZW4gZ3V0ZW4gV2VpbiBiaXMgamV0enQgenVyw7xja2JlaGFsdGVuIeKAnDwvcD48cD5EZXIgQnLDpHV0aWdhbSB3ZWnDnyBuaWNodCwgd2FzIGVyIHNhZ2VuIHNvbGwuIEVyIGzDpGNoZWx0IHZlcmxlZ2VuIHVuZCBuaW1tdCBkYXMgTG9iIGFuLjwvcD48cD5EZXIgU3BlaXNlbWVpc3RlciB3dXNzdGUgbmljaHQsIHdvaGVyIGRlciBXZWluIGthbS4gRGVyIEJyw6R1dGlnYW0gYXVjaCBuaWNodC4gQWJlciBkaWUgRGllbmVyLCBkaWUgZGFzIFdhc3NlciBnZXNjaMO2cGZ0IGhhdHRlbiwgd3Vzc3RlbiBlcy48L3A+IiwgImhhc2giOiAiYWVjYTM0NWRhZTU1MTdiZmI3ZTA1YzI3ODllMTUyMmY2YjhkYWNjYzVlNzRjNDkzYmMxN2IzZTc4ZGM2ZjA0MCIsICJpY29uIjogImRyb3BzIn0sIHsidGl0bGUiOiAiRGFzIGVyc3RlIFplaWNoZW4iLCAicmVmIjogIkpvaCAyLDEw4oCTMTEiLCAibGFiZWwiOiAiSW5zY2hyaWZ0IiwgIm51bWVyaWMiOiBmYWxzZSwgInN0b3J5IjogIjxwPkVzIGlzdCBzcMOkdCBnZXdvcmRlbi4gRGllIGxldHp0ZW4gR8Okc3RlIHNpbmQgZ2VnYW5nZW4sIGRpZSBMYW1wZW4gYnJlbm5lbiBoZXJ1bnRlciwgdW5kIGltIEhvZiBzdGVoZW4gc2VjaHMgS3LDvGdlIHZvbGxlciBXZWluLCB2b24gZGVtIGRhcyBnYW56ZSBEb3JmIG5vY2ggdGFnZWxhbmcgdHJpbmtlbiB3aXJkLjwvcD48cD5JaHIgc2VpZCB6dSBhdWZnZXfDvGhsdCB6dW0gU2NobGFmZW4uIEFtIEhvZnRvciBlbnRkZWNrdCBpaHIgZWluZW4gU3RlaW4sIGRlbiBpaHIgbm9jaCBuaWUgYmVtZXJrdCBoYWJ0LiBGw7xuZiBsZWVyZSBGZWxkZXIgc2luZCBkYXJpbiBlaW5nZWxhc3Nlbi4gV2VyIGhpZXIgZWluIFdvcnQgZWlucml0enQsIHNvIHNhZ3QgbWFuIGltIEhhdXMsIHNjaGxpZcOfdCBkZW4gVGFnIGFiLjwvcD4iLCAiYSI6ICI8cD5OZWJlbiBkZW4gRmVsZGVybiBpc3QgZWluZ2VyaXR6dCwgYXVzIHdlbGNoZW0gRnVuZHN0w7xjayBkZXIgQnVjaHN0YWJlIHN0YW1tdDo8L3A+PG9sIGNsYXNzPVwidmVzc2Vsc1wiPjxsaT5hdXMgZGVtIFdvcnQsIHp1IGRlbSBldWNoIGRpZSBTcHVyZW4gZsO8aHJ0ZW48L2xpPjxsaT5hdXMgZGVtIFdvcnQsIHp1IGRlbSBldWNoIGRpZSBTcHVyZW4gZsO8aHJ0ZW48L2xpPjxsaT5hdXMgZGVtIFdvcnQgYXVmIE1hcmlhcyBXYWNoc3RhZmVsPC9saT48bGk+YXVzIGRlbSBXb3J0LCB6dSBkZW0gZXVjaCBkaWUgU3B1cmVuIGbDvGhydGVuPC9saT48bGk+YXVzIGRlbSBXb3J0IGF1ZiBkZW4gc2VjaHMgS3LDvGdlbjwvbGk+PC9vbD48cD5aw6RobHQgZGllIEJ1Y2hzdGFiZW4gc28sIHdpZSBzaWUgaW0gRnVuZGJ1Y2ggc3RlaGVuLjwvcD4iLCAiYiI6ICI8cD5VbnRlciBkZW0gU3RlaW4gaXN0IGVpbmdlcml0enQsIGRlciB3aWV2aWVsdGUgQnVjaHN0YWJlIGVzIGpld2VpbHMgaXN0OjwvcD48b2wgY2xhc3M9XCJ2ZXNzZWxzXCI+PGxpPmRpZSB6d2VpdGUgWmlmZmVyIHZvbSBLZXJiaG9sejwvbGk+PGxpPmRpZSBsZXR6dGUgWmlmZmVyIHZvbSBLZWxsZXJzY2hsb3NzPC9saT48bGk+ZGllIGRyaXR0ZSBaaWZmZXIgdm9tIEtlbGxlcnNjaGxvc3M8L2xpPjxsaT5kaWUgendlaXRlIFppZmZlciB2b20gS2VsbGVyc2NobG9zczwvbGk+PGxpPmRpZSBsZXR6dGUgWmlmZmVyIHZvbSBLZXJiaG9sejwvbGk+PC9vbD4iLCAiaGludHMiOiBbIkVpbmVyIHZvbiBldWNoIHdlacOfLCBhdXMgd2VsY2hlbSBXb3J0IGplZGVyIEJ1Y2hzdGFiZSBrb21tdCwgZGVyIGFuZGVyZSwgYW4gd2VsY2hlciBTdGVsbGUuIEV1ZXIgRnVuZGJ1Y2ggZW50aMOkbHQgYWxsZSBXw7ZydGVyIHVuZCBaYWhsZW4uIiwgIkRhcyBlcnN0ZSBGZWxkOiB6d2VpdGUgWmlmZmVyIHZvbSBLZXJiaG9seiBpc3QgNi4gQWxzbyBkZXIgc2VjaHN0ZSBCdWNoc3RhYmUgdm9uIEJSQUVVVElHQU0uIiwgIkRhcyBXb3J0IHN0ZWh0IGbDvHIgZXR3YXMsIGRhcyBHb3R0IHNlaW5lbSBWb2xrIGjDpGx0IOKAkyB1bmQgd2FzIHp3ZWkgTWVuc2NoZW4gc2ljaCB2ZXJzcHJlY2hlbi4iXSwgInNvbHZlZCI6ICIiLCAiaGFzaCI6ICI3NDQ5MWY2ZGIzY2Q3NTlkZDdhMzY1YjE3ZGFkNjgzZTQzMjkxNGVhMGQ4NGVjZWRkMDQyZmZjNjg2YzY4NmYwIiwgImljb24iOiAiZ2F0ZSJ9XQ=="),c=>c.charCodeAt(0))));
+
+/* --- Spielstand --- */
+const fresh=()=>({role:null,phase:'start',ch:0,found:[],hints:CH.map(()=>0),notes:CH.map(()=>''),start:null});
+let S=fresh();
+const KEY="kana-spielstand-v2";
+async function save(){
+  const v=JSON.stringify(S);
+  try{if(window.storage){await window.storage.set(KEY,v,false);return}}catch(e){}
+  try{localStorage.setItem(KEY,v)}catch(e){}
+}
+async function load(){
+  let v=null;
+  try{if(window.storage){const r=await window.storage.get(KEY,false);if(r&&r.value)v=r.value}}catch(e){}
+  if(!v){try{v=localStorage.getItem(KEY)}catch(e){}}
+  if(v){try{S=Object.assign(fresh(),JSON.parse(v))}catch(e){}}
+}
+
+/* --- Bausteine --- */
+const app=document.getElementById('app');
+const JAR='M9 4h12v4c6 3 8 9 8 18s-3 16-6 18H7c-3-2-6-9-6-18S3 11 9 8z';
+function jars(filled,animateLast){
+  let s=`<div class="jars" aria-label="${filled} von 6 Krügen gefüllt">`;
+  for(let i=0;i<6;i++){
+    const full=i<filled && !(animateLast && i===filled-1);
+    s+=`<svg class="jar${full?' full':''}" data-i="${i}" viewBox="0 0 30 48" aria-hidden="true"><defs><clipPath id="c${i}"><path d="${JAR}"/></clipPath></defs>
+      <rect class="liquid" clip-path="url(#c${i})" x="0" y="8" width="30" height="38"/><path class="body" d="${JAR}"/></svg>`;
+  }
+  return s+'</div>';
+}
+function fillLast(n){requestAnimationFrame(()=>requestAnimationFrame(()=>{const j=app.querySelector(`.jar[data-i="${n-1}"]`);if(j)j.classList.add('full')}))}
+
+const ICONS={
+ key:'<circle cx="15" cy="24" r="8"/><circle cx="15" cy="24" r="2.5"/><path d="M23 24h19M36 24v6M41 24v5"/>',
+ tablet:'<rect x="7" y="9" width="30" height="31" rx="2"/><path d="M12 17h20M12 23h20M12 29h13"/><path d="M33 44l11-15"/>',
+ jar:'<path d="M18 6h12v5c7 3 9 10 9 18s-3 13-6 15H15c-3-2-6-7-6-15s2-15 9-18z"/><path d="M14 22h20"/>',
+ well:'<path d="M9 30h30v12H9z"/><path d="M13 30V10M35 30V10M9 10h30M24 10v9"/><path d="M20 19h8l-1 6h-6z"/>',
+ drops:'<path d="M14 7c3 5 5 8 5 11a5 5 0 0 1-10 0c0-3 2-6 5-11z"/><path d="M30 17c3 5 5 8 5 11a5 5 0 0 1-10 0c0-3 2-6 5-11z"/><path d="M19 30c2.4 4 4 6.4 4 8.8a4 4 0 0 1-8 0c0-2.4 1.6-4.8 4-8.8z"/>',
+ gate:'<path d="M8 43V21a16 16 0 0 1 32 0v22"/><path d="M14 43V23a10 10 0 0 1 20 0v20"/><path d="M4 43h40"/>'
+};
+const icon=k=>`<svg class="icon" viewBox="0 0 48 48" aria-hidden="true">${ICONS[k]||''}</svg>`;
+
+function sceneSVG(){
+  const stars=[[22,18],[58,34],[95,12],[130,40],[176,20],[214,9],[246,36],[290,16],[332,30],[312,52],[40,58],[150,62],[268,62],[200,46],[110,30]]
+    .map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="${i%3?0.9:1.4}" fill="#E9E2D0" opacity="${i%2?.55:.9}"/>`).join('');
+  const lamps=[[58,86],[96,96],[134,102],[172,104],[210,102],[248,96],[286,87]]
+    .map(([x,y])=>`<g class="glow"><circle cx="${x}" cy="${y+7}" r="9" fill="#D9A441" opacity=".28" filter="url(#bl)"/><circle cx="${x}" cy="${y+7}" r="3.2" fill="#F2C76A"/></g><line x1="${x}" y1="${y}" x2="${x}" y2="${y+4}" stroke="#A9A291" stroke-width="1"/>`).join('');
+  return `<svg class="scene" viewBox="0 0 360 210" role="img" aria-label="Ein Haus in Kana bei Nacht, Lampen leuchten über dem Hof">
+  <defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#12152A"/><stop offset="1" stop-color="#2E2B4A"/></linearGradient>
+  <filter id="bl"><feGaussianBlur stdDeviation="4"/></filter></defs>
+  <rect width="360" height="210" fill="url(#sky)"/>${stars}
+  <circle cx="300" cy="44" r="13" fill="#E9E2D0"/><circle cx="306" cy="40" r="12" fill="#1A1C34"/>
+  <path d="M0 140 C60 112 110 126 170 118 S280 104 360 122 V210 H0Z" fill="#23263F"/>
+  <path d="M0 158 C80 146 150 152 220 146 S320 140 360 150 V210 H0Z" fill="#1D2036"/>
+  <rect x="168" y="112" width="132" height="62" fill="#3A3550"/><rect x="164" y="108" width="140" height="6" fill="#4A4462"/>
+  <rect x="120" y="128" width="54" height="46" fill="#332F48"/><rect x="117" y="125" width="60" height="5" fill="#423C58"/>
+  <path d="M222 174v-26a12 12 0 0 1 24 0v26z" fill="#D9A441" opacity=".85"/>
+  <rect x="186" y="130" width="12" height="14" fill="#D9A441" opacity=".7"/><rect x="270" y="130" width="12" height="14" fill="#D9A441" opacity=".7"/>
+  <rect x="138" y="142" width="10" height="12" fill="#D9A441" opacity=".55"/>
+  <path d="M40 82 Q172 120 304 82" fill="none" stroke="#A9A291" stroke-width="1"/>
+  <line x1="40" y1="82" x2="40" y2="174" stroke="#4A4462" stroke-width="3"/><line x1="304" y1="82" x2="304" y2="108" stroke="#4A4462" stroke-width="3"/>
+  ${lamps}
+  <rect x="0" y="174" width="360" height="36" fill="#17192D"/>
+  ${[60,84,108,252,276,300].map(x=>`<path transform="translate(${x-9} 168) scale(.62)" d="${JAR}" fill="#2A2D46" stroke="#A9A291" stroke-width="2.4"/>`).join('')}
+  </svg>`;
+}
+
+function fundbuch(){
+  const notes = S.found.length? '<ul class="plain">'+S.found.map((f,i)=>`<li>${CH[i].label}: <strong>${f}</strong></li>`).join('')+'</ul>' : '<p>Noch leer. Hier sammelt ihr eure Lösungen.</p>';
+  return `<details><summary>Fundbuch</summary>${notes}<button class="quiet" id="resetBtn" onclick="reset(this)">Spiel neu beginnen</button></details>`;
+}
+function armed(btn,label,then){
+  if(btn.classList.contains('armed')){btn.classList.remove('armed');then();return}
+  const old=btn.textContent;btn.classList.add('armed');btn.textContent=label;
+  setTimeout(()=>{if(btn.isConnected&&btn.classList.contains('armed')){btn.classList.remove('armed');btn.textContent=old}},3500);
+}
+
+/* --- Bildschirme --- */
+function startScreen(){
+  app.innerHTML=`${sceneSVG()}<h1>Die Hochzeit zu Kana</h1><p class="ref">Ein Rätselabend für zwei nach Johannes 2</p>
+  <p>Ihr seid zwei Diener im Haus des Bräutigams. In dieser Nacht geht der Wein aus – und ihr werdet Zeugen von etwas, das niemand sonst im Saal mitbekommt.</p>
+  <ul class="rules">
+   <li>Jeder spielt auf seinem eigenen Handy und sieht andere Hinweise.</li>
+   <li>Lest euch eure Tafeln gegenseitig vor, aber zeigt einander nicht die Bildschirme.</li>
+   <li>Habt ihr eine Lösung, gebt sie auf beiden Handys ein.</li>
+   <li>Für jedes Kapitel gibt es drei Hinweise, falls ihr festhängt.</li>
+   <li>Legt Zettel und Stift bereit. Ihr braucht etwa 90 Minuten.</li>
+  </ul>
+  <div class="roles">
+   <button onclick="pick('a')">Ich bin der erste Diener<small>Das andere Handy wählt den zweiten.</small></button>
+   <button class="b" onclick="pick('b')">Ich bin der zweite Diener<small>Das andere Handy wählt den ersten.</small></button>
+  </div>`;
+}
+function prologueScreen(){
+  app.innerHTML=`${jars(0)}<h2>Am dritten Tag</h2><p class="ref">Prolog</p>
+  <div class="story"><p>Kana, ein Dorf in den Hügeln Galiläas. Seit drei Tagen wird hier Hochzeit gefeiert, wie es sich gehört: mit Musik und Tanz, mit Brot und Wein für das ganze Dorf und die Gäste von auswärts.</p>
+  <p>Ihr zwei gehört zum Gesinde des Bräutigams. Ihr tragt Platten, füllt Becher, räumt ab und schlaft wenig. Unter den Gästen ist ein junger Rabbi aus Nazaret mit seinen ersten Jüngern – und seine Mutter Maria, die beim Bräutigam ein und aus geht.</p>
+  <p>Es ist der Abend des dritten Tages. Die Lampen im Hof werden angezündet. Im Hof stehen sechs steinerne Krüge, fast leer, und niemand beachtet sie.</p>
+  <p>Noch nicht.</p></div>
+  <button class="big" onclick="go('play')">Die Nacht beginnt</button>`;
+}
+function chapterScreen(){
+  const c=CH[S.ch], isA=S.role==='a', n=S.hints[S.ch];
+  let hints='';
+  for(let i=0;i<n;i++)hints+=`<div class="hint"><strong>Hinweis ${i+1}:</strong> ${c.hints[i]}</div>`;
+  const more = n<3 ? `<button class="quiet" id="hintBtn" onclick="hint(this)">${n===0?'Hinweis zeigen':'Nächsten Hinweis zeigen'}</button>`:'';
+  app.innerHTML=`${jars(S.found.length)}
+   <div class="head">${icon(c.icon)}<div><p class="chapno">Kapitel ${S.ch+1} von 6</p><h2>${c.title}</h2></div></div>
+   <p class="ref">${c.ref}</p><div class="story">${c.story}</div>
+   <section class="tablet ${S.role}"><p class="who">${isA?'Was der erste Diener sieht':'Was der zweite Diener sieht'}</p>${isA?c.a:c.b}</section>
+   <div class="entry"><input id="ans" autocomplete="off" autocapitalize="characters" spellcheck="false" ${c.numeric?'inputmode="numeric"':''} placeholder="Eure Lösung" aria-label="Lösung"><button type="button" onclick="check()">Prüfen</button></div>
+   <div class="msg" id="msg" role="status"></div>${hints}${more}
+   <details${S.notes[S.ch]?' open':''}><summary>Notizen</summary><textarea id="notes" placeholder="Platz für eure Überlegungen. Wird nur auf diesem Handy gespeichert.">${esc(S.notes[S.ch])}</textarea></details>
+   ${fundbuch()}`;
+  document.getElementById('notes').addEventListener('input',e=>{S.notes[S.ch]=e.target.value;clearTimeout(window._nt);window._nt=setTimeout(save,500)});
+}
+function interludeScreen(){
+  const c=CH[S.ch-1];
+  app.innerHTML=`${jars(S.found.length,true)}
+   <div class="head">${icon(c.icon)}<div><p class="chapno">Kapitel ${S.ch} gelöst</p><h2>${c.title}</h2></div></div>
+   <div class="interlude story">${c.solved}</div>
+   <p class="wait">Wartet, bis auch das andere Handy hier angekommen ist.</p>
+   <button class="big" onclick="go('play')">Weiter zu Kapitel ${S.ch+1}</button>${fundbuch()}`;
+  fillLast(S.found.length);
+}
+function endScreen(){
+  const min=Math.max(1,Math.round((Date.now()-S.start)/60000)), used=S.hints.reduce((a,b)=>a+b,0);
+  app.innerHTML=`<div id="end">${jars(6,true)}<h2>Das erste Zeichen</h2><p class="ref">Joh 2,11</p>
+   <p class="final">Ihr ritzt das Wort in den Stein. Und während ihr noch davor steht, wird euch klar, was ihr in dieser Nacht gesehen habt:</p>
+   <div class="reveal">
+   <p class="final">Das war das erste Zeichen, das Jesus tat, in Kana in Galiläa. Er offenbarte seine Herrlichkeit, und seine Jünger glaubten an ihn.</p>
+   <p>Der Speisemeister hat den Wein gelobt, der Bräutigam hat die Ehre bekommen. Gewusst, woher er kam, haben nur die Diener. Ihr zwei.</p>
+   <p class="ref">Gelöst in etwa ${min} ${min===1?"Minute":"Minuten"}, mit ${used} ${used===1?'Hinweis':'Hinweisen'}.</p>
+   ${PERSONAL_MESSAGE?`<div class="personal">${esc(PERSONAL_MESSAGE)}</div>`:''}
+   <div class="talk"><h3>Für euch zwei, beim letzten Glas</h3><ol>
+    <li>Wo habt ihr erlebt, dass aus etwas ganz Gewöhnlichem plötzlich etwas Besonderes wurde?</li>
+    <li>Maria sagt: „Was er euch sagt, das tut.“ Wo fällt euch dieses Vertrauen gerade leicht, wo schwer?</li>
+    <li>Der beste Wein kam zuletzt. Worauf freut ihr euch noch, gemeinsam?</li></ol></div>
+   ${fundbuch()}</div></div>`;
+  const e=document.getElementById('end');
+  fillLast(6);
+  setTimeout(()=>{const j=e.querySelector('.jars');if(j)j.classList.add('wine')},1700);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>e.classList.add('ready')));
+}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+/* --- Ablauf --- */
+function render(){
+  if(!S.role)startScreen();
+  else if(S.ch>=CH.length)endScreen();
+  else if(S.phase==='prologue')prologueScreen();
+  else if(S.phase==='inter'&&S.ch>0)interludeScreen();
+  else chapterScreen();
+  window.scrollTo(0,0);
+}
+function pick(r){S.role=r;S.start=S.start||Date.now();S.phase=S.found.length?'play':'prologue';save();render()}
+function go(p){S.phase=p;save();render()}
+function hint(btn){armed(btn,'Wirklich? Noch einmal tippen',()=>{S.hints[S.ch]++;save();const y=window.scrollY;chapterScreen();window.scrollTo(0,y)})}
+function check(){
+  const inp=document.getElementById('ans'), v=norm(inp.value), msg=document.getElementById('msg');
+  if(!v){msg.textContent='Gebt zuerst eine Lösung ein.';return}
+  if(sha256('kana|'+v)===CH[S.ch].hash){
+    S.found[S.ch]=v; S.ch++; S.phase='inter'; save(); render();
+  } else {
+    msg.textContent='Das stimmt noch nicht. Vergleicht eure Tafeln noch einmal.';
+    inp.classList.remove('shake'); void inp.offsetWidth; inp.classList.add('shake');
+  }
+}
+function reset(btn){armed(btn,'Alles löschen? Noch einmal tippen',async()=>{S=fresh();await save();render()})}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='ans'){e.preventDefault();check()}});
+load().then(render);
+</script>
+</body>
+</html>
